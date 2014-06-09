@@ -1,0 +1,486 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ACBFA610194586DC00CA4DCF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA60F194586DC00CA4DCF /* Foundation.framework */; };
+		ACBFA612194586DC00CA4DCF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA611194586DC00CA4DCF /* CoreGraphics.framework */; };
+		ACBFA614194586DC00CA4DCF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA613194586DC00CA4DCF /* UIKit.framework */; };
+		ACBFA61A194586DC00CA4DCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = ACBFA618194586DC00CA4DCF /* InfoPlist.strings */; };
+		ACBFA61C194586DC00CA4DCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBFA61B194586DC00CA4DCF /* main.m */; };
+		ACBFA620194586DC00CA4DCF /* ApplifyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBFA61F194586DC00CA4DCF /* ApplifyAppDelegate.m */; };
+		ACBFA623194586DC00CA4DCF /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACBFA621194586DC00CA4DCF /* Main_iPhone.storyboard */; };
+		ACBFA626194586DC00CA4DCF /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACBFA624194586DC00CA4DCF /* Main_iPad.storyboard */; };
+		ACBFA629194586DC00CA4DCF /* ApplifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBFA628194586DC00CA4DCF /* ApplifyViewController.m */; };
+		ACBFA62B194586DC00CA4DCF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACBFA62A194586DC00CA4DCF /* Images.xcassets */; };
+		ACBFA632194586DC00CA4DCF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA631194586DC00CA4DCF /* XCTest.framework */; };
+		ACBFA633194586DC00CA4DCF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA60F194586DC00CA4DCF /* Foundation.framework */; };
+		ACBFA634194586DC00CA4DCF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACBFA613194586DC00CA4DCF /* UIKit.framework */; };
+		ACBFA63C194586DC00CA4DCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = ACBFA63A194586DC00CA4DCF /* InfoPlist.strings */; };
+		ACBFA63E194586DC00CA4DCF /* MyMediAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBFA63D194586DC00CA4DCF /* MyMediAppTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		ACBFA635194586DC00CA4DCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACBFA604194586DC00CA4DCF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ACBFA60B194586DC00CA4DCF;
+			remoteInfo = MyMediApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		ACBFA60C194586DC00CA4DCF /* MyMediApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyMediApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACBFA60F194586DC00CA4DCF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		ACBFA611194586DC00CA4DCF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		ACBFA613194586DC00CA4DCF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		ACBFA617194586DC00CA4DCF /* MyMediApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyMediApp-Info.plist"; sourceTree = "<group>"; };
+		ACBFA619194586DC00CA4DCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		ACBFA61B194586DC00CA4DCF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		ACBFA61D194586DC00CA4DCF /* MyMediApp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyMediApp-Prefix.pch"; sourceTree = "<group>"; };
+		ACBFA61E194586DC00CA4DCF /* ApplifyAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplifyAppDelegate.h; sourceTree = "<group>"; };
+		ACBFA61F194586DC00CA4DCF /* ApplifyAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplifyAppDelegate.m; sourceTree = "<group>"; };
+		ACBFA622194586DC00CA4DCF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		ACBFA625194586DC00CA4DCF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		ACBFA627194586DC00CA4DCF /* ApplifyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplifyViewController.h; sourceTree = "<group>"; };
+		ACBFA628194586DC00CA4DCF /* ApplifyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplifyViewController.m; sourceTree = "<group>"; };
+		ACBFA62A194586DC00CA4DCF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		ACBFA630194586DC00CA4DCF /* MyMediAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyMediAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACBFA631194586DC00CA4DCF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		ACBFA639194586DC00CA4DCF /* MyMediAppTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyMediAppTests-Info.plist"; sourceTree = "<group>"; };
+		ACBFA63B194586DC00CA4DCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		ACBFA63D194586DC00CA4DCF /* MyMediAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyMediAppTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ACBFA609194586DC00CA4DCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA612194586DC00CA4DCF /* CoreGraphics.framework in Frameworks */,
+				ACBFA614194586DC00CA4DCF /* UIKit.framework in Frameworks */,
+				ACBFA610194586DC00CA4DCF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ACBFA62D194586DC00CA4DCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA632194586DC00CA4DCF /* XCTest.framework in Frameworks */,
+				ACBFA634194586DC00CA4DCF /* UIKit.framework in Frameworks */,
+				ACBFA633194586DC00CA4DCF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ACBFA603194586DC00CA4DCF = {
+			isa = PBXGroup;
+			children = (
+				ACBFA615194586DC00CA4DCF /* MyMediApp */,
+				ACBFA637194586DC00CA4DCF /* MyMediAppTests */,
+				ACBFA60E194586DC00CA4DCF /* Frameworks */,
+				ACBFA60D194586DC00CA4DCF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ACBFA60D194586DC00CA4DCF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA60C194586DC00CA4DCF /* MyMediApp.app */,
+				ACBFA630194586DC00CA4DCF /* MyMediAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ACBFA60E194586DC00CA4DCF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA60F194586DC00CA4DCF /* Foundation.framework */,
+				ACBFA611194586DC00CA4DCF /* CoreGraphics.framework */,
+				ACBFA613194586DC00CA4DCF /* UIKit.framework */,
+				ACBFA631194586DC00CA4DCF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ACBFA615194586DC00CA4DCF /* MyMediApp */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA61E194586DC00CA4DCF /* ApplifyAppDelegate.h */,
+				ACBFA61F194586DC00CA4DCF /* ApplifyAppDelegate.m */,
+				ACBFA621194586DC00CA4DCF /* Main_iPhone.storyboard */,
+				ACBFA624194586DC00CA4DCF /* Main_iPad.storyboard */,
+				ACBFA627194586DC00CA4DCF /* ApplifyViewController.h */,
+				ACBFA628194586DC00CA4DCF /* ApplifyViewController.m */,
+				ACBFA62A194586DC00CA4DCF /* Images.xcassets */,
+				ACBFA616194586DC00CA4DCF /* Supporting Files */,
+			);
+			path = MyMediApp;
+			sourceTree = "<group>";
+		};
+		ACBFA616194586DC00CA4DCF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA617194586DC00CA4DCF /* MyMediApp-Info.plist */,
+				ACBFA618194586DC00CA4DCF /* InfoPlist.strings */,
+				ACBFA61B194586DC00CA4DCF /* main.m */,
+				ACBFA61D194586DC00CA4DCF /* MyMediApp-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		ACBFA637194586DC00CA4DCF /* MyMediAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA63D194586DC00CA4DCF /* MyMediAppTests.m */,
+				ACBFA638194586DC00CA4DCF /* Supporting Files */,
+			);
+			path = MyMediAppTests;
+			sourceTree = "<group>";
+		};
+		ACBFA638194586DC00CA4DCF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ACBFA639194586DC00CA4DCF /* MyMediAppTests-Info.plist */,
+				ACBFA63A194586DC00CA4DCF /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ACBFA60B194586DC00CA4DCF /* MyMediApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACBFA641194586DC00CA4DCF /* Build configuration list for PBXNativeTarget "MyMediApp" */;
+			buildPhases = (
+				ACBFA608194586DC00CA4DCF /* Sources */,
+				ACBFA609194586DC00CA4DCF /* Frameworks */,
+				ACBFA60A194586DC00CA4DCF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MyMediApp;
+			productName = MyMediApp;
+			productReference = ACBFA60C194586DC00CA4DCF /* MyMediApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ACBFA62F194586DC00CA4DCF /* MyMediAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACBFA644194586DC00CA4DCF /* Build configuration list for PBXNativeTarget "MyMediAppTests" */;
+			buildPhases = (
+				ACBFA62C194586DC00CA4DCF /* Sources */,
+				ACBFA62D194586DC00CA4DCF /* Frameworks */,
+				ACBFA62E194586DC00CA4DCF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ACBFA636194586DC00CA4DCF /* PBXTargetDependency */,
+			);
+			name = MyMediAppTests;
+			productName = MyMediAppTests;
+			productReference = ACBFA630194586DC00CA4DCF /* MyMediAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACBFA604194586DC00CA4DCF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = Applify;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Applify;
+				TargetAttributes = {
+					ACBFA62F194586DC00CA4DCF = {
+						TestTargetID = ACBFA60B194586DC00CA4DCF;
+					};
+				};
+			};
+			buildConfigurationList = ACBFA607194586DC00CA4DCF /* Build configuration list for PBXProject "MyMediApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = ACBFA603194586DC00CA4DCF;
+			productRefGroup = ACBFA60D194586DC00CA4DCF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ACBFA60B194586DC00CA4DCF /* MyMediApp */,
+				ACBFA62F194586DC00CA4DCF /* MyMediAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ACBFA60A194586DC00CA4DCF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA626194586DC00CA4DCF /* Main_iPad.storyboard in Resources */,
+				ACBFA62B194586DC00CA4DCF /* Images.xcassets in Resources */,
+				ACBFA623194586DC00CA4DCF /* Main_iPhone.storyboard in Resources */,
+				ACBFA61A194586DC00CA4DCF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ACBFA62E194586DC00CA4DCF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA63C194586DC00CA4DCF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ACBFA608194586DC00CA4DCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA629194586DC00CA4DCF /* ApplifyViewController.m in Sources */,
+				ACBFA620194586DC00CA4DCF /* ApplifyAppDelegate.m in Sources */,
+				ACBFA61C194586DC00CA4DCF /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ACBFA62C194586DC00CA4DCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACBFA63E194586DC00CA4DCF /* MyMediAppTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ACBFA636194586DC00CA4DCF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ACBFA60B194586DC00CA4DCF /* MyMediApp */;
+			targetProxy = ACBFA635194586DC00CA4DCF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		ACBFA618194586DC00CA4DCF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACBFA619194586DC00CA4DCF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		ACBFA621194586DC00CA4DCF /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACBFA622194586DC00CA4DCF /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		ACBFA624194586DC00CA4DCF /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACBFA625194586DC00CA4DCF /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		ACBFA63A194586DC00CA4DCF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACBFA63B194586DC00CA4DCF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		ACBFA63F194586DC00CA4DCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ACBFA640194586DC00CA4DCF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ACBFA642194586DC00CA4DCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MyMediApp/MyMediApp-Prefix.pch";
+				INFOPLIST_FILE = "MyMediApp/MyMediApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		ACBFA643194586DC00CA4DCF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MyMediApp/MyMediApp-Prefix.pch";
+				INFOPLIST_FILE = "MyMediApp/MyMediApp-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		ACBFA645194586DC00CA4DCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MyMediApp.app/MyMediApp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MyMediApp/MyMediApp-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "MyMediAppTests/MyMediAppTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		ACBFA646194586DC00CA4DCF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MyMediApp.app/MyMediApp";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MyMediApp/MyMediApp-Prefix.pch";
+				INFOPLIST_FILE = "MyMediAppTests/MyMediAppTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ACBFA607194586DC00CA4DCF /* Build configuration list for PBXProject "MyMediApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACBFA63F194586DC00CA4DCF /* Debug */,
+				ACBFA640194586DC00CA4DCF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ACBFA641194586DC00CA4DCF /* Build configuration list for PBXNativeTarget "MyMediApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACBFA642194586DC00CA4DCF /* Debug */,
+				ACBFA643194586DC00CA4DCF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		ACBFA644194586DC00CA4DCF /* Build configuration list for PBXNativeTarget "MyMediAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACBFA645194586DC00CA4DCF /* Debug */,
+				ACBFA646194586DC00CA4DCF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACBFA604194586DC00CA4DCF /* Project object */;
+}
