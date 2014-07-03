@@ -9,6 +9,16 @@
 #import "AllAppointmentsListViewController.h"
 
 @interface AllAppointmentsListViewController ()
+{
+    UIButton *CreateNewAppointmentsButton;
+    
+    UIView *TopBarView;
+    UIImageView *BackGroundImageView;
+    UIButton *SortButton;
+    UIButton *SearchButton;
+    
+    UIImageView *DemoImageView;
+}
 
 @end
 
@@ -26,13 +36,220 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+    self.view.backgroundColor=[UIColor colorWithRed:224/255.0 green:222/255.0 blue:222/255.0 alpha:1.0];
+   
+    
+    TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,60)];
+    TopBarView.backgroundColor=[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0];
+    TopBarView.userInteractionEnabled=TRUE;
+    
+ 
+    SortButton=[[UIButton alloc]initWithFrame:CGRectMake(10, 25,50 ,30)];
+    [SortButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [SortButton addTarget:self action:@selector(SortButtonAction)
+         forControlEvents:UIControlEventTouchUpInside];
+    [SortButton addTarget:self action:@selector(SortActionNormal) forControlEvents:UIControlEventTouchDown];
+    SortButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size: 12];
+    SortButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [SortButton setTitle:@"Sort" forState:(UIControlState)UIControlStateNormal];
+    SortButton.titleEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 0);
+    SortButton.backgroundColor=[UIColor clearColor];
+    SortButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    SortButton.layer.borderWidth = 1.0f;
+    SortButton.layer.cornerRadius = 3;
+    SortButton.clipsToBounds = YES;
+    [TopBarView addSubview:SortButton];
+    
+    UIView *lineView=[[UIView alloc]initWithFrame:CGRectMake(SortButton.frame.size.width+SortButton.frame.origin.x+10,25,1,30)];
+    lineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    lineView.backgroundColor=[UIColor darkGrayColor];
+    lineView.layer.borderWidth = 1.0f;
+    [TopBarView addSubview:lineView];
+    
+    UIImage *CreateNewAppintmentImage=[UIImage imageNamed:@"CreateNewAppointment.png"];
+    
+    UIButton *LoginButtonHidden=[[UIButton alloc]initWithFrame:CGRectMake(265, 20, CreateNewAppintmentImage.size.width+10, CreateNewAppintmentImage.size.height+20)];
+    LoginButtonHidden.backgroundColor=[UIColor clearColor];
+    [LoginButtonHidden addTarget:self action:@selector(CreateNewAppointments)
+                forControlEvents:UIControlEventTouchUpInside];
+    [TopBarView addSubview:LoginButtonHidden];
+    
+    
+    CreateNewAppointmentsButton=[[UIButton alloc]initWithFrame:CGRectMake(275, 25,CreateNewAppintmentImage.size.width ,CreateNewAppintmentImage.size.height)];
+    CreateNewAppointmentsButton.backgroundColor=[UIColor clearColor];
+    [CreateNewAppointmentsButton setImage:CreateNewAppintmentImage forState:UIControlStateNormal];
+  //  [CreateNewAppointmentsButton addTarget:self action:@selector(CreateNewAppointments) forControlEvents:UIControlEventTouchUpInside];
+    [TopBarView addSubview:CreateNewAppointmentsButton];
+    
+    
+    UIImage  *SearchButtonImage=[UIImage imageNamed:@"search_icon.png"];
+    SearchButton=[[UIButton alloc]initWithFrame:CGRectMake(SortButton.frame.size.width+SortButton.frame.origin.y+5, 30,SearchButtonImage.size.width ,SearchButtonImage.size.height)];
+    SearchButton.backgroundColor=[UIColor clearColor];
+    [SearchButton setImage:SearchButtonImage forState:UIControlStateNormal];
+    [TopBarView addSubview:SearchButton];
+    
+     UIView *lineView1=[[UIView alloc]initWithFrame:CGRectMake(265,25,1,30)];
+    lineView1.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    lineView1.backgroundColor=[UIColor darkGrayColor];
+    lineView1.layer.borderWidth = 1.0f;
+    [TopBarView addSubview:lineView1];
+    
+    
+    [self.view addSubview:TopBarView];
+    
+    
+    
+    UIImage *BackGroundImage=[UIImage imageNamed:@"Back_pattern.png"];
+    BackGroundImageView=[[UIImageView alloc]initWithFrame:CGRectMake(20, TopBarView.frame.size.height+TopBarView.frame.origin.y+20, 300, 440)];
+    BackGroundImageView.backgroundColor=[UIColor clearColor];
+    BackGroundImageView.image=BackGroundImage;
+    BackGroundImageView.userInteractionEnabled=TRUE;
+    
+    [self setMaskTo:BackGroundImageView byRoundingCorners:UIRectCornerTopLeft];
 
+    UIImage *DemoImage=[UIImage imageNamed:@"Staticapponments_page.png"];
+    DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(25, 50, DemoImage.size.width, DemoImage.size.height)];
+    DemoImageView.image=DemoImage;
+    [BackGroundImageView addSubview:DemoImageView];
+    
+    [self.view addSubview:BackGroundImageView];
+    
+    UIView *BottomView=[[UIView alloc]initWithFrame:CGRectMake(0, BackGroundImageView.frame.size.height+BackGroundImageView.frame.origin.y, self.view.frame.size.width, 50)];
+    BottomView.backgroundColor=[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0];
+    BottomView.userInteractionEnabled=TRUE;
+   
+    
+    UIImage *HomeImage=[UIImage  imageNamed:@"home_iconNav.png"];
+    UIImage *HomeAfterClick=[UIImage imageNamed:@"home_icocn_non_selected.png"];
+    
+    
+  
+    
+    UIButton *HomeButton=[[UIButton alloc]initWithFrame:CGRectMake(25, 10, HomeImage.size.width,HomeImage.size.height)];
+    HomeButton.backgroundColor=[UIColor clearColor];
+    [HomeButton setImage:HomeImage forState:UIControlStateNormal];
+    [HomeButton setImage:HomeAfterClick forState:UIControlStateSelected];
+    [HomeButton setImage:HomeAfterClick forState:UIControlStateHighlighted];
+    [HomeButton addTarget:self action:@selector(HomeButtonActionDown) forControlEvents:UIControlEventTouchUpInside];
+    [BottomView addSubview:HomeButton];
+
+    
+    
+    UIImage *  MedicalRecordsImageDefault=[UIImage imageNamed:@"medical_records.png"];
+    UIImage  * MedicalRecordsImageAferClick=[UIImage imageNamed:@"medical_records_selected.png"];
+    
+    UIButton *MedicalRecordButton=[[UIButton alloc]initWithFrame:CGRectMake(HomeButton.frame.origin.x+HomeButton.frame.size.width+25, 10, MedicalRecordsImageDefault.size.width, MedicalRecordsImageDefault.size.height)];
+    MedicalRecordButton.backgroundColor=[UIColor clearColor];
+    [MedicalRecordButton setImage:MedicalRecordsImageDefault forState:UIControlStateNormal];
+    [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateSelected];
+    [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateHighlighted];
+    //[MedicalRecordButton addTarget:self action:@selector(MedicalButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [MedicalRecordButton addTarget:self action:@selector(MedicalButtonActionDown) forControlEvents:UIControlEventTouchDown];
+    [BottomView addSubview:MedicalRecordButton];
+    
+    
+    UIImage * AppointmentsImageDefault=[UIImage  imageNamed:@"appoinment_icon.png"];
+    UIImage *AppointmentsImageAfterClick=[UIImage  imageNamed:@"appoinment_selected_icon.png"];
+    
+    
+    UIButton *AppointmentButton=[[UIButton alloc]initWithFrame:CGRectMake(MedicalRecordButton.frame.size.width+MedicalRecordButton.frame.origin.x+25, 10, AppointmentsImageDefault.size.width, AppointmentsImageDefault.size.height)];
+    AppointmentButton.backgroundColor=[UIColor clearColor];
+    [AppointmentButton setImage:AppointmentsImageDefault forState:UIControlStateNormal];
+    [AppointmentButton setImage:AppointmentsImageAfterClick forState:UIControlStateSelected];
+    [AppointmentButton setImage:AppointmentsImageAfterClick forState:UIControlStateHighlighted];
+    //[AppointmentButton addTarget:self action:@selector(AppointmentsButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [AppointmentButton addTarget:self action:@selector(AppointmentsButtonDown) forControlEvents:UIControlEventTouchDown];
+    [BottomView addSubview:AppointmentButton];
+    
+    UIImage  *selectBarImage=[UIImage imageNamed:@"selected_bar.png"];
+    UIImageView *SelectBarImageView=[[UIImageView alloc]initWithFrame:CGRectMake(MedicalRecordButton.frame.origin.x+MedicalRecordButton.frame.size.width+25, 0, selectBarImage.size.width, selectBarImage.size.height)];
+    SelectBarImageView.image=selectBarImage;
+    [BottomView addSubview:SelectBarImageView];
+
+    
+    
+    UIImage *MapImageDefault=[UIImage imageNamed:@"location_iconNav.png"];
+    UIImage *MapImageAfterClick=[UIImage imageNamed:@"location_icon_selected.png"];
+    
+    UIButton *MapButton=[[UIButton alloc]initWithFrame:CGRectMake(AppointmentButton.frame.size.width+AppointmentButton.frame.origin.x+25, 10, MapImageDefault.size.width, MapImageDefault.size.height)];
+    MapButton.backgroundColor=[UIColor clearColor];
+    [MapButton setImage:MapImageDefault forState:UIControlStateNormal];
+    [MapButton setImage:MapImageAfterClick forState:UIControlStateSelected];
+    [MapButton setImage:MapImageAfterClick forState:UIControlStateHighlighted];
+    [MapButton addTarget:self action:@selector(MapButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [BottomView addSubview:MapButton];
+    
+    UIImage *SliderBarDefault=[UIImage imageNamed:@"side_barNav.png"];
+    
+    UIButton *SlidMenuButton=[[UIButton alloc]initWithFrame:CGRectMake(MapButton.frame.size.width+MapButton.frame.origin.x+25, 10, SliderBarDefault.size.width, SliderBarDefault.size.height)];
+    SlidMenuButton.backgroundColor=[UIColor clearColor];
+    [SlidMenuButton setImage:SliderBarDefault forState:UIControlStateNormal];
+    [SlidMenuButton addTarget:self action:@selector(SlidMenuButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [BottomView addSubview:SlidMenuButton];
+    
+    
+     [self.view addSubview:BottomView];
+    
+    
+    [self HideActivityIndicator];
+}
+- (void)setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
+{
+    UIBezierPath *rounded = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                                  byRoundingCorners:corners
+                                                        cornerRadii:CGSizeMake(25, 25)];
+    CAShapeLayer *shape = [[CAShapeLayer alloc] init];
+    [shape setPath:rounded.CGPath];
+    view.layer.mask = shape;
+}
+-(void)HomeButtonActionDown{
+    
+    [[soundManager shared]buttonSound];
+    UserHomeScreenViewController *UserHome=[UserHomeScreenViewController alloc];
+    [self.navigationController pushViewController:UserHome animated:YES];
+    
+}
+-(void)MedicalButtonActionDown{
+    
+}
+-(void)AppointmentsButtonDown{
+    
+}
+-(void)MapButtonAction{
+    
+}
+-(void)SlidMenuButtonAction{
+    
+}
+-(void)SortButtonAction{
+     SortButton.backgroundColor=[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0];
+}
+-(void)SortActionNormal{
+    SortButton.backgroundColor=[UIColor whiteColor];
+    [SortButton setTitleColor:[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0] forState:UIControlStateSelected];
+    [SortButton setTitleColor:[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0] forState:UIControlStateHighlighted];
+}
+-(void)CreateNewAppointments{
+    
+    [[soundManager shared]buttonSound];
+    CreateNewAppointmentViewController *CreateAppointment=[[CreateNewAppointmentViewController alloc]init];
+    [self.navigationController pushViewController:CreateAppointment animated:YES];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (void)ShowActivityIndicatorWithTitle:(NSString *)Title
+{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+- (void)HideActivityIndicator
+{
+    [SVProgressHUD dismiss];
 }
 
 /*

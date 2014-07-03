@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BottomNavigationUIView.h"
 
-@interface ListOfAppoinmentViewController : UIViewController
-
+@end
+@interface UserHomeScreenViewController : UIViewController<BottomNavigationView,UIImagePickerControllerDelegate,UIPickerViewDelegate,UINavigationControllerDelegate,UIScrollViewDelegate,UIActionSheetDelegate,UIScrollViewDelegate>
+{
+    BottomNavigationUIView *nav;
+}
 @end

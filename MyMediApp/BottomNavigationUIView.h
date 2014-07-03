@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BottomNavigationUIView : UIView
+@protocol BottomNavigationView;
 
+@interface BottomNavigationUIView : UIView
+{
+    
+    id<BottomNavigationView>calldelegate;
+}
+@property (retain) id<BottomNavigationView> calldelegate;
 @end
+@protocol BottomNavigationView <NSObject>

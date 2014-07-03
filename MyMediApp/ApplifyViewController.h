@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ApplifyViewController : UIViewController
+@interface ApplifyViewController : UIViewController<UIScrollViewDelegate>
 
 @end

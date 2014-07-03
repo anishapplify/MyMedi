@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MedicalRecordsHomeViewController : UIViewController
+@interface MedicalRecordsHomeViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UIScrollViewDelegate>
 
 @end

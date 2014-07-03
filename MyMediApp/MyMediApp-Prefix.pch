@@ -13,4 +13,34 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+#import "soundManager.h"
+#import "CreateAccountViewController.h"
+#import "ProfileDetailViewController.h"
+#import "VerifyAccountDetailViewController.h"
+#import "LoginViewController.h"
+#import "UserHomeScreenViewController.h"
+#import "CreateNewAppointmentViewController.h"
+#import "MFUnderlinedTextView.h"
+#import "SVProgressHUD.h"
+#import "Reachability.h"
+#import "EmergencyViewController.h"
+#import "ShortCutsViewController.h"
+#import "MedicalRecordsHomeViewController.h"
+#import "BottomNavigationUIView.h"
+#import "AsyncImageView.h"
+#import "RecentAppointmentViewController.h"
+#import "UPComingAppointmentViewController.h"
+#import "SettingScreenViewController.h"
+#import "AllAppointmentsListViewController.h"
+#import "ListOfMedicalRerodsViewController.h"
+#import "UserHomeScreenViewController.h"
+#import "NMCustomLabelStyle.h"
+#import "NMCustomLabel.h"
+#import "AsyncImageView.h"
+#import "ApplifyViewController.h"
+
+#define kBaseUrl @"http://production.click-labs.com:1339/get_all_group_categories"
+#define kOFFSET_FOR_KEYBOARD 130
 #endif
+

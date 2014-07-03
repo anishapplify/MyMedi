@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShortCutsViewController : UIViewController
+@interface ShortCutsViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate>
+{
+    
+    
+}
 
 @end

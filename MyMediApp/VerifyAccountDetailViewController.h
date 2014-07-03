@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VerifyAccountDetailViewController : UIViewController
+@interface VerifyAccountDetailViewController : UIViewController<UITextFieldDelegate>
 
 @end
