@@ -52,6 +52,7 @@
 		D441C221196C1CEC008E8C27 /* medical_records_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D441C218196C1CEC008E8C27 /* medical_records_selected@2x.png */; };
 		D441C222196C1CEC008E8C27 /* medical_records@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D441C219196C1CEC008E8C27 /* medical_records@2x.png */; };
 		D441C223196C1CEC008E8C27 /* side_barNav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D441C21A196C1CEC008E8C27 /* side_barNav@2x.png */; };
+		D46D23AF197FE19B001865B3 /* MedicalRecordsHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46D23AE197FE19B001865B3 /* MedicalRecordsHomeViewController.m */; };
 		D4779341195ADE10008B8840 /* SignIn_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4779340195ADE10008B8840 /* SignIn_icon@2x.png */; };
 		D4779347195AE810008B8840 /* nextArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4779346195AE810008B8840 /* nextArrow@2x.png */; };
 		D4779349195AF068008B8840 /* Headshot-Placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D4779348195AF068008B8840 /* Headshot-Placeholder@2x.png */; };
@@ -163,7 +164,6 @@
 		F89810511951032400695146 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F89810501951032400695146 /* libz.dylib */; };
 		F8E65D4C197B093000FE29C0 /* cart_product_info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F8E65D4B197B093000FE29C0 /* cart_product_info@2x.png */; };
 		F8E65D50197B2F9400FE29C0 /* Sliding_bar.png in Resources */ = {isa = PBXBuildFile; fileRef = F8E65D4F197B2F9400FE29C0 /* Sliding_bar.png */; };
-		F8E87A7919799647001A0B3C /* MedicalRecordsHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F8E87A7819799647001A0B3C /* MedicalRecordsHomeViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,6 +228,7 @@
 		D441C218196C1CEC008E8C27 /* medical_records_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "medical_records_selected@2x.png"; sourceTree = "<group>"; };
 		D441C219196C1CEC008E8C27 /* medical_records@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "medical_records@2x.png"; sourceTree = "<group>"; };
 		D441C21A196C1CEC008E8C27 /* side_barNav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "side_barNav@2x.png"; sourceTree = "<group>"; };
+		D46D23AE197FE19B001865B3 /* MedicalRecordsHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalRecordsHomeViewController.m; sourceTree = "<group>"; };
 		D4779340195ADE10008B8840 /* SignIn_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SignIn_icon@2x.png"; sourceTree = "<group>"; };
 		D4779346195AE810008B8840 /* nextArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nextArrow@2x.png"; sourceTree = "<group>"; };
 		D4779348195AF068008B8840 /* Headshot-Placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Headshot-Placeholder@2x.png"; sourceTree = "<group>"; };
@@ -391,7 +392,6 @@
 		F8E65D4F197B2F9400FE29C0 /* Sliding_bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sliding_bar.png; sourceTree = "<group>"; };
 		F8E87A741979962F001A0B3C /* CreateNewAppointmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewAppointmentViewController.h; sourceTree = "<group>"; };
 		F8E87A7719799647001A0B3C /* MedicalRecordsHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MedicalRecordsHomeViewController.h; sourceTree = "<group>"; };
-		F8E87A7819799647001A0B3C /* MedicalRecordsHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MedicalRecordsHomeViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -800,7 +800,7 @@
 			isa = PBXGroup;
 			children = (
 				F8E87A7719799647001A0B3C /* MedicalRecordsHomeViewController.h */,
-				F8E87A7819799647001A0B3C /* MedicalRecordsHomeViewController.m */,
+				D46D23AE197FE19B001865B3 /* MedicalRecordsHomeViewController.m */,
 			);
 			name = MedicalRecordsController;
 			sourceTree = "<group>";
@@ -1177,7 +1177,6 @@
 				D4A729FC1946F91F000E93A0 /* VerifyAccountDetailViewController.m in Sources */,
 				D4C02A871949BDCD0042C2CE /* MFUnderlinedTextView.m in Sources */,
 				D4A1859119794CAA00C9F2AD /* UINoteView.m in Sources */,
-				F8E87A7919799647001A0B3C /* MedicalRecordsHomeViewController.m in Sources */,
 				ACBFA629194586DC00CA4DCF /* ApplifyViewController.m in Sources */,
 				D4C597FD19516C2C008CABCA /* EmergencyViewController.m in Sources */,
 				D4941997196A65510004DC0C /* AFURLConnectionOperation.m in Sources */,
@@ -1200,6 +1199,7 @@
 				F89810471950FD8000695146 /* ASIInputStream.m in Sources */,
 				F893CBC9195E9C800051CB87 /* NMCustomLabel.m in Sources */,
 				F898104F1950FDCA00695146 /* SVProgressHUD.m in Sources */,
+				D46D23AF197FE19B001865B3 /* MedicalRecordsHomeViewController.m in Sources */,
 				F89810431950FD8000695146 /* ASIDataDecompressor.m in Sources */,
 				ACBFA61C194586DC00CA4DCF /* main.m in Sources */,
 				D48B462B1951AB9B0008200D /* ShortCutsViewController.m in Sources */,

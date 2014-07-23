@@ -51,11 +51,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "427792108.011195"
+            timestampString = "427808206.011138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2499"
-            endingLineNumber = "2499"
+            startingLineNumber = "2582"
+            endingLineNumber = "2582"
             landmarkName = "-serverCallLoadMoreRows"
             landmarkType = "5">
          </BreakpointContent>
@@ -67,12 +67,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "427791904.713958"
+            timestampString = "427807340.893852"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1101"
-            endingLineNumber = "1101"
-            landmarkName = "-APICallForUserAppointment"
+            startingLineNumber = "2298"
+            endingLineNumber = "2298"
+            landmarkName = "-searchBar:textDidChange:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyMediApp/UserHomeScreenViewController.m"
+            timestampString = "427808296.708514"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2320"
+            endingLineNumber = "2320"
+            landmarkName = "-searchBar:textDidChange:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MyMediApp/UserHomeScreenViewController.m"
+            timestampString = "427808400.868787"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2316"
+            endingLineNumber = "2316"
+            landmarkName = "-searchBar:textDidChange:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

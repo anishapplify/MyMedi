@@ -1902,10 +1902,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(void)BackButtonAction{
     
+   
     [self scrollViewDidTapped];
-    
-    [[soundManager shared] buttonSound];
-    
+    [self endAnimation];
     [self.navigationController popViewControllerAnimated:YES];
     
 }
@@ -2303,6 +2302,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
     }
     
+}
+
+-(void) endAnimation
+{
+    informationStatus=1;
+    [self InformationAction];
+
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"touch");

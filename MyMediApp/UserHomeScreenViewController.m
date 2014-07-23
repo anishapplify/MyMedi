@@ -134,12 +134,22 @@
     
     UISearchBar *SearchBar;
     
-    NSDictionary *appointmentsDictionary;
-    NSArray *appointmentSectionTitles;
+    
+    NSMutableArray  *dummyArray;
+    
+    NSMutableDictionary *appointmentsDictionary;
+    NSMutableArray *appointmentSectionTitles;
     NSMutableArray *appointmentIDArrayForDelete;
     
     NSString *rowTappedForDelete;
     NSMutableArray *sectionAppointments;
+    
+    NSMutableArray *totalData;
+    
+    
+    NSMutableArray *temp_appointmentSectionTitles;
+    NSMutableDictionary *temp_appointmentsDictionary;
+    NSMutableArray *temp_sectionAppointments;
     
 }
 @end
@@ -174,17 +184,38 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    totalData = [[NSMutableArray alloc]init];
+    dummyArray = [[NSMutableArray alloc]init];
    
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
-   
-    appointmentSectionTitles = [NSArray arrayWithObjects:@"July",@"August",@"September",@"October",@"November",@"December",@"January",@"February",@"March",@"April",@"May",@"June", nil];
+    
+    appointmentSectionTitles = [[NSMutableArray alloc]init];
+    [appointmentSectionTitles insertObject:@"July" atIndex:0];
+    [appointmentSectionTitles insertObject:@"August" atIndex:1];
+    [appointmentSectionTitles insertObject:@"September" atIndex:2];
+    [appointmentSectionTitles insertObject:@"October" atIndex:3];
+    [appointmentSectionTitles insertObject:@"November" atIndex:4];
+    [appointmentSectionTitles insertObject:@"December" atIndex:5];
+    [appointmentSectionTitles insertObject:@"January" atIndex:6];
+    [appointmentSectionTitles insertObject:@"February" atIndex:7];
+    [appointmentSectionTitles insertObject:@"March" atIndex:8];
+    [appointmentSectionTitles insertObject:@"April" atIndex:9];
+    [appointmentSectionTitles insertObject:@"May" atIndex:10];
+    [appointmentSectionTitles insertObject:@"June" atIndex:11];
+    
+    temp_appointmentSectionTitles = [[NSMutableArray alloc]initWithArray:appointmentSectionTitles];
+    
+    NSLog(@"temp_appointmentSectionTitles is %@",temp_appointmentSectionTitles);
 
     
     NSLog(@"heightheightheight=%f",self.view.frame.size.height);
-    appointmentsDictionary = [[NSDictionary alloc]init];
+    appointmentsDictionary = [[NSMutableDictionary alloc]init];
+    temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
     appointmentIDArrayForDelete =[[NSMutableArray alloc]init];
     
     sectionAppointments = [[NSMutableArray alloc]init];
+    temp_sectionAppointments = [[NSMutableArray alloc]init];
   
   
     
@@ -450,7 +481,7 @@ else
     CreateNewMedicalButton=[[UIButton alloc]initWithFrame:CGRectMake(275, 20,[UIImage imageNamed:@"add_button.png"].size.width ,[UIImage imageNamed:@"add_button.png"].size.height)];
     CreateNewMedicalButton.backgroundColor=[UIColor clearColor];
     [CreateNewMedicalButton setImage:[UIImage imageNamed:@"add_button.png"] forState:UIControlStateNormal];
-    //[CreateNewMedicalButton addTarget:self action:@selector(CreateNewMedicalReport) forControlEvents:UIControlEventTouchUpInside];
+    [CreateNewMedicalButton addTarget:self action:@selector(CreateNewMedicalReport) forControlEvents:UIControlEventTouchUpInside];
     [MedicalTopBarView addSubview:CreateNewMedicalButton];
     [MedicalHomeGroundView addSubview:MedicalTopBarView];
     
@@ -1112,38 +1143,38 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
             }
             else
             {
-                
-                
                 appointmentsDictionary = nil;
+                temp_appointmentsDictionary = nil;
+                
                 appointmentsDictionary = [[NSMutableDictionary alloc]init];
+                temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
                 appointmentsDictionary = json;
+                temp_appointmentsDictionary = [json mutableCopy];
+                
+
+                
+                
+                NSLog(@"All Keys of APpointments is %@",[appointmentsDictionary allKeys]);
                 
             
+                for (int i = 0; i<12; i++)
+                {
+                    [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
+        
+                }
+                NSLog(@"total Data is %@",totalData);
                 
-//                for (int i = 0; i<12; i++)
-//                {
-//                    [appointmentIDArrayForDelete addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
-//        
-//                }
-//                
-//                 NSLog(@"appointmentIDArrayForDelete is %@",appointmentIDArrayForDelete);
-//                
-//               //  NSLog(@"ArrayForAppointmentName is %@",ArrayForAppointmentName);
-//                
-//                
-//                for (int i = 0; i<12; i++)
-//                {
-//                    for (int j=0; j<[[appointmentIDArrayForDelete objectAtIndex:i]count]; j++)
-//                    {
-//                        [appointmentIDsTag addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-//                        
-//                        [ArrayForAppointmentID addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-//                        
-//                    }
-//                }
-//                
-//                [ArrayForAppointmentName removeAllObjects];
                 
+                
+                for (int i = 0; i<12; i++)
+                {
+                    for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
+                    {
+                        [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
+                    }
+                }
+                
+                NSLog(@"dummy array is %@",dummyArray);
                 [self AddAppointmentTableViewFunction];                     // CREATING TABLE
             }
             
@@ -1777,16 +1808,15 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 #pragma mark -UITableView Datasource and Delegate methods
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [appointmentSectionTitles count];
+    return [temp_appointmentSectionTitles count];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger) section
 {
-    //section text as a label
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
     headerLabel.textAlignment = NSTextAlignmentCenter;
     headerLabel.font = [UIFont fontWithName:helveticaRegular size:12];
-    headerLabel.text = [appointmentSectionTitles objectAtIndex:section];
+    headerLabel.text = [temp_appointmentSectionTitles objectAtIndex:section];
     headerLabel.backgroundColor = [UIColor grayColor];
     return headerLabel;
 }
@@ -1794,11 +1824,12 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:section];
-    sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
-    
-    NSLog(@"[sectionAppointments count] ==>%d",[sectionAppointments count]);
-    return [sectionAppointments count];
+    NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:section];
+    temp_sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+    sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+
+    NSLog(@"[sectionAppointments count] ==>%@",[sectionAppointments valueForKey:@"appointmentname"]);
+    return [temp_sectionAppointments count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1825,17 +1856,17 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
         btnRemove = nil;
     }
 
-        NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:indexPath.section];
-        sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
+        NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:indexPath.section];
+        temp_sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
     
-    NSString *appointmentname   =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentname"];
-    NSString *appointmenttime   =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttime"];
-   // NSString *consultantname    =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"consultantname"];
-   // NSString *hospital          =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"hospital"];
-   // NSString *notes             =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"notes"];
+    NSString *appointmentname   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentname"];
+    NSString *appointmenttime   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttime"];
+   // NSString *consultantname    =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"consultantname"];
+   // NSString *hospital          =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"hospital"];
+   // NSString *notes             =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"notes"];
     
-    NSString *provider          =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
-    NSString *appointType =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
+    NSString *provider          =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
+    NSString *appointType       =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
    
     
     
@@ -2039,17 +2070,17 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
         NSLog(@"cellIndexPath=%d",cellIndexPath.row);
         
         
-        NSString *sectionTitle          =       [appointmentSectionTitles objectAtIndex:cellIndexPath.section];
-        sectionAppointments             =       [appointmentsDictionary valueForKey:sectionTitle];
-        NSString *appointmentID         =       [[sectionAppointments objectAtIndex:cellIndexPath.row] valueForKey:@"appointmentid"];
+        NSString *sectionTitle          =       [temp_appointmentSectionTitles objectAtIndex:cellIndexPath.section];
+        temp_sectionAppointments        =       [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        NSString *appointmentID         =       [[temp_sectionAppointments objectAtIndex:cellIndexPath.row] valueForKey:@"appointmentid"];
         
         NSLog(@"appointmentID to delete is %@",appointmentID);
-        NSLog(@"Section Appointment is %@",sectionAppointments );
+        NSLog(@"Section Appointment is %@",temp_sectionAppointments );
         
       
         
         
-        NSLog(@"[sectionAppointments count] ==>%d",[sectionAppointments count]);
+        NSLog(@"[sectionAppointments count] ==>%d",[temp_sectionAppointments count]);
         
         
         
@@ -2251,6 +2282,58 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 {
     [self.view endEditing:YES];
 }
+
+
+-(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
+{
+    if ([searchText length]==0)
+    {
+        
+        temp_appointmentSectionTitles = [appointmentSectionTitles mutableCopy];
+        temp_appointmentsDictionary = [appointmentsDictionary mutableCopy];
+        temp_sectionAppointments = [sectionAppointments mutableCopy];
+        
+    }
+    else
+    {
+         NSLog(@"sectionAppointments=%@",sectionAppointments);
+        [temp_appointmentSectionTitles removeAllObjects];
+        [temp_appointmentsDictionary removeAllObjects];
+        [temp_sectionAppointments removeAllObjects];
+        
+         NSLog(@"sectionAppointments=%@",[sectionAppointments valueForKey:@"appointmentname"]);
+        
+     
+        
+        
+        
+        int g = 0;
+        NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:g];
+        NSLog(@"Ankit is %@",[[appointmentsDictionary valueForKey:sectionTitle]valueForKey:@"appointmentname"]);
+        NSLog(@"dummyArray is %@",[dummyArray objectAtIndex:0 ]);
+        
+          NSLog(@"dummyArray is %@",dummyArray);
+        
+        for (NSString *string in dummyArray)
+        {
+           // NSLog(@"temp_appointmentSectionTitles=%@",[sectionAppointments valueForKey:@"appointmentname"]);
+            
+            NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            if (r.location != NSNotFound)
+            {
+              //  [temp_appointmentSectionTitles addObject:[appointmentSectionTitles objectAtIndex:g]];
+               // [temp_sectionAppointments addObject:[sectionAppointments objectAtIndex:g]];
+                
+            }
+            g++;
+        }
+        
+    }
+    
+    
+    [AddAppointmentTableView reloadData];
+}
+
 
 
 //-(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
