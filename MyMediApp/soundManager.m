@@ -27,7 +27,7 @@ BS_player_blue3 =[[AVAudioPlayer alloc]initWithContentsOfURL:[NSURL fileURLWithP
 BS_player_blue3.delegate=self;
 [BS_player_blue3 prepareToPlay];
       
-          [BS_player_blue3 play];
+          [BS_player_blue3 stop];
 
 }
 

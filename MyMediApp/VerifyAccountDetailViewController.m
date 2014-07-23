@@ -40,7 +40,7 @@
     self.view.backgroundColor=[UIColor colorWithRed:224/255.0 green:222/255.0 blue:222/255.0 alpha:1.0];
 
     TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,70)];
-    TopBarView.backgroundColor=[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0];
+    TopBarView.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     TopBarView.userInteractionEnabled=TRUE;
     
     lineView=[[UIView alloc]initWithFrame:CGRectMake(270,35,1,25)];
@@ -48,20 +48,11 @@
     lineView.backgroundColor=[UIColor darkGrayColor];
     lineView.layer.borderWidth = 1.0f;
     [TopBarView addSubview:lineView];
-    
 
-    UIImage *SignImage=[UIImage imageNamed:@"SignIn_icon.png"];
     
-    
-    UIButton *LoginButtonHidden=[[UIButton alloc]initWithFrame:CGRectMake(265, 30, SignImage.size.width+10, SignImage.size.height)];
-    LoginButtonHidden.backgroundColor=[UIColor clearColor];
-    [LoginButtonHidden addTarget:self action:@selector(nextviewController)
-                forControlEvents:UIControlEventTouchUpInside];
-    [TopBarView addSubview:LoginButtonHidden];
-    
-    UIButton *LoginButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 25, SignImage.size.width, SignImage.size.height)];
+    UIButton *LoginButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 25, [UIImage imageNamed:@"tick.png"].size.width, [UIImage imageNamed:@"tick.png"].size.height)];
     LoginButton.backgroundColor=[UIColor clearColor];
-    [LoginButton setImage:SignImage forState:UIControlStateNormal];
+    [LoginButton setImage:[UIImage imageNamed:@"tick.png"] forState:UIControlStateNormal];
     [LoginButton addTarget:self action:@selector(nextviewController)
           forControlEvents:UIControlEventTouchUpInside];
     //    LoginButton.titleEdgeInsets = UIEdgeInsetsMake(5, 100, 0, 0);
@@ -83,8 +74,8 @@
     
     VerifyAccountLable=[[UILabel alloc]initWithFrame:CGRectMake(90, 30, 130, 30)];
     VerifyAccountLable.text=@"Verify Account";
-    VerifyAccountLable.font=[UIFont fontWithName:@"Comfortaa-Bold" size:15];
-    VerifyAccountLable.textColor=[UIColor whiteColor];
+    VerifyAccountLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    VerifyAccountLable.textColor=[UIColor blackColor];
     VerifyAccountLable.textAlignment=NSTextAlignmentCenter;
     VerifyAccountLable.backgroundColor=[UIColor clearColor];
     [TopBarView addSubview:VerifyAccountLable];
@@ -93,8 +84,7 @@
     CenterView=[[UIView alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
     CenterView.backgroundColor=[UIColor whiteColor];
     
-    
-   
+
     
 //    lineView=[[UIView alloc]initWithFrame:CGRectMake(111,VerifyAccountLable.frame.origin.y+30,90,1)];
 //    lineView.layer.borderColor = [UIColor blackColor].CGColor;
@@ -104,37 +94,35 @@
    
     
     
-    UIImage *PhoneImage=[UIImage imageNamed:@"verify_account_ok_screen.png"];
-    
-    UIImageView *PhoneImageView=[[UIImageView alloc]initWithFrame:CGRectMake(70, VerifyAccountLable.frame.size.height+VerifyAccountLable.frame.origin.y, PhoneImage.size.width, PhoneImage.size.height)];
-    PhoneImageView.image=PhoneImage;
+    UIImageView *PhoneImageView=[[UIImageView alloc]initWithFrame:CGRectMake(100, VerifyAccountLable.frame.size.height+VerifyAccountLable.frame.origin.y,[UIImage imageNamed:@"verify_account_ok_screen.png"].size.width, [UIImage imageNamed:@"verify_account_ok_screen.png"].size.height)];
+    PhoneImageView.image=[UIImage imageNamed:@"verify_account_ok_screen.png"];
     [CenterView addSubview:PhoneImageView];
     
    
     
-    PinTextField = [[UITextField alloc] initWithFrame:CGRectMake(110, 380, 100, 20)];
+    PinTextField = [[UITextField alloc] initWithFrame:CGRectMake(110, 370, 100, 40)];
     PinTextField.delegate = self;
-    [PinTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     PinTextField.placeholder = @"Sms Code*";
     PinTextField.textAlignment = NSTextAlignmentLeft;
-    paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
     PinTextField.leftView = paddingView;
     PinTextField.leftViewMode = UITextFieldViewModeAlways;
     PinTextField.textColor=[UIColor blackColor];
     PinTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     PinTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    [PinTextField setFont:[UIFont fontWithName:@"Comfortaa" size:15]];
+    [PinTextField setFont:[UIFont fontWithName:helveticaRegular size:15]];
     PinTextField.keyboardType=UIKeyboardTypeNumberPad;
     PinTextField.autocapitalizationType = NO;
+    PinTextField.backgroundColor=[UIColor grayColor];
     PinTextField.returnKeyType=UIReturnKeyNext;
     [CenterView addSubview:PinTextField];
     
     
     
-    UILabel *PinSmsLable=[[UILabel alloc]initWithFrame:CGRectMake(70, PinTextField.frame.size.height+PinTextField.frame.origin.y+10, 220, 20)];
+    UILabel *PinSmsLable=[[UILabel alloc]initWithFrame:CGRectMake(70, PinTextField.frame.size.height+PinTextField.frame.origin.y+20, 220, 20)];
     PinSmsLable.text=@"Generate OTP(one time password)";
-    PinSmsLable.textColor=[UIColor grayColor];
-    [PinSmsLable setFont:[UIFont fontWithName:@"HelveticaNeueLTCom-Roman" size:12]];
+    PinSmsLable.textColor=[UIColor whiteColor];
+    [PinSmsLable setFont:[UIFont fontWithName:helveticaRegular size:12]];
     PinSmsLable.backgroundColor=[UIColor clearColor];
     [CenterView addSubview:PinSmsLable];
     [self.view addSubview:CenterView];
@@ -154,6 +142,8 @@
     
     
     //[self.view addSubview:BackGroundImageView];
+    
+
 }
 - (void)setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
 {

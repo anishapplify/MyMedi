@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UPComingAppointmentViewController : UIViewController
+@interface UPComingAppointmentViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @end

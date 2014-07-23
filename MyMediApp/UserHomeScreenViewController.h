@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BottomNavigationUIView.h"
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "SWTableViewCell.h"
 
-@end
-@interface UserHomeScreenViewController : UIViewController<BottomNavigationView,UIImagePickerControllerDelegate,UIPickerViewDelegate,UINavigationControllerDelegate,UIScrollViewDelegate,UIActionSheetDelegate,UIScrollViewDelegate>
+@interface UserHomeScreenViewController : UIViewController<UIImagePickerControllerDelegate,UIPickerViewDelegate,UINavigationControllerDelegate,UIScrollViewDelegate,UIActionSheetDelegate,UIScrollViewDelegate, MKMapViewDelegate , CLLocationManagerDelegate,UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UIGestureRecognizerDelegate, SWTableViewCellDelegate>
 {
-    BottomNavigationUIView *nav;
+
 }
 @end

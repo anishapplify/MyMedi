@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "425872892.747666"
+            timestampString = "427780909.851098"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "673"
-            endingLineNumber = "673"
-            landmarkName = "-scrollViewDidEndDecelerating:"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
+            landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "425873106.025006"
+            timestampString = "427781010.507404"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "714"
-            endingLineNumber = "714"
-            landmarkName = "-MedicalButtonActionDown"
+            startingLineNumber = "366"
+            endingLineNumber = "366"
+            landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

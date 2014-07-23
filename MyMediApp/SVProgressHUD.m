@@ -324,8 +324,8 @@
     } 
     
     if(notification) {
-        [UIView animateWithDuration:animationDuration 
-                              delay:0 
+        [UIView animateWithDuration:animationDuration
+                              delay:0
                             options:UIViewAnimationOptionAllowUserInteraction 
                          animations:^{
                              [self moveToPoint:newCenter rotateAngle:rotateAngle];

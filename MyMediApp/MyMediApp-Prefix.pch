@@ -11,12 +11,13 @@
 #endif
 
 #ifdef __OBJC__
+
+
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 
 #import "soundManager.h"
 #import "CreateAccountViewController.h"
-#import "ProfileDetailViewController.h"
 #import "VerifyAccountDetailViewController.h"
 #import "LoginViewController.h"
 #import "UserHomeScreenViewController.h"
@@ -27,20 +28,31 @@
 #import "EmergencyViewController.h"
 #import "ShortCutsViewController.h"
 #import "MedicalRecordsHomeViewController.h"
-#import "BottomNavigationUIView.h"
 #import "AsyncImageView.h"
 #import "RecentAppointmentViewController.h"
 #import "UPComingAppointmentViewController.h"
 #import "SettingScreenViewController.h"
-#import "AllAppointmentsListViewController.h"
-#import "ListOfMedicalRerodsViewController.h"
 #import "UserHomeScreenViewController.h"
 #import "NMCustomLabelStyle.h"
 #import "NMCustomLabel.h"
 #import "AsyncImageView.h"
 #import "ApplifyViewController.h"
+#import "AccountViewController.h"
+#import "HelpScreenViewController.h"
+#import "ReportViewController.h"
+#import "LegalViewController.h"
+#import "AFHTTPRequestOperation.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "Constants.h"
+#import "CreateVerificationViewController.h"
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import "UINoteView.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <sqlite3.h>
+#import "SWTableViewCell.h"
+#import "NSMutableArray+SWUtilityButtons.h"
 
-#define kBaseUrl @"http://production.click-labs.com:1339/get_all_group_categories"
-#define kOFFSET_FOR_KEYBOARD 130
 #endif
-
+//#define NSLog(s,...)

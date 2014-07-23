@@ -9,19 +9,17 @@
 #import "ApplifyViewController.h"
 @interface ApplifyViewController ()
 {
-    
-    UIView *TopBarView;
     UIView *lineView;
-    
     UIButton*CreateButton;
     UIButton*SignButton;
 
     UIScrollView *ImageScrollView;
     UIPageControl *pageControl;
-    UIImageView *HomeImageView;
+    
+    UIImageView *FirstHomeImageView;
     UIImageView *SecondHomeImageView;
-    UIImage *HomeImage;
-    UIImage *HomeImageSecond;
+    UIImageView *ThirdHomeImageView;
+    UIView *BottomHomeView;
 }
 
 @end
@@ -32,186 +30,153 @@
 {
     [super viewDidLoad];
     
-    NSLog(@"height=%f",self.view.frame.size.height);
-     NSLog(@"height=%f",self.view.frame.size.width);
-    
-    self.view.backgroundColor=[UIColor blackColor];
-    TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,70)];
-    TopBarView.backgroundColor=[UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1.0];
-    TopBarView.userInteractionEnabled=TRUE;
-    
-    CreateButton=[UIButton buttonWithType:UIButtonTypeCustom];
-    CreateButton.frame=CGRectMake(135, 35, 110, 30);
-    CreateButton.backgroundColor=[UIColor clearColor];
-    [CreateButton setTitle:@"CREATE ACCOUNT" forState:UIControlStateNormal];
-    [CreateButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
-    [CreateButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    CreateButton.titleLabel.font = [UIFont fontWithName:@"Comfortaa" size: 13];
-    [CreateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    CreateButton.clipsToBounds = YES;
-    [CreateButton addTarget:self action:@selector(createButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    [TopBarView addSubview:CreateButton];
-    
-    
-    lineView=[[UIView alloc]initWithFrame:CGRectMake(CreateButton.frame.size.width+CreateButton.frame.origin.x+7,40,1,20)];
-    lineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    lineView.backgroundColor=[UIColor darkGrayColor];
-    lineView.layer.borderWidth = 2.0f;
-    [TopBarView addSubview:lineView];
-    
-    SignButton=[[UIButton alloc]initWithFrame:CGRectMake(CreateButton.frame.origin.x+CreateButton.frame.size.width+9, 35, 60, 30)];
-    SignButton.backgroundColor=[UIColor clearColor];
-    [SignButton addTarget:self action:@selector(SignInButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    [SignButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [SignButton setTitle:@"SIGN IN" forState:UIControlStateNormal];
-    SignButton.titleLabel.font = [UIFont fontWithName:@"Comfortaa" size: 13];
-    [SignButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
-    [SignButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    SignButton.clipsToBounds = YES;
-    [TopBarView addSubview:SignButton];
-    [self.view addSubview:TopBarView];
-    
-    
-    HomeImage=[UIImage imageNamed:@"FirstHomeScreenScroll.jpg"];
-    HomeImageSecond=[UIImage imageNamed:@"SecondHomeScreen.jpg"];
-    
-    ImageScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, TopBarView.frame.origin.y+TopBarView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-    ImageScrollView.backgroundColor=[UIColor clearColor];
-    ImageScrollView.pagingEnabled=TRUE;
-    ImageScrollView.delegate=self;
-    [ImageScrollView setContentSize:CGSizeMake(640, self.view.frame.size.height)];
-    ImageScrollView.showsHorizontalScrollIndicator=NO;
-    
-    HomeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, -30, 320, self.view.frame.size.height)];
-    HomeImageView.image=HomeImage;
-    
-    SecondHomeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(HomeImageView.frame.size.width+HomeImageView.frame.origin.x,-30, 320, self.view.frame.size.height)];
-    SecondHomeImageView.image=HomeImageSecond;
-    [ImageScrollView addSubview:HomeImageView];
-    [ImageScrollView addSubview:SecondHomeImageView];
-    [self.view addSubview:ImageScrollView];
-    
-    pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(130, 530, 50, 30)];
-    pageControl.numberOfPages = 2;
-    pageControl.backgroundColor=[UIColor clearColor];
-    pageControl.pageIndicatorTintColor = [UIColor blackColor];
-    [self.view addSubview:pageControl];
-    
-  //UserHomeScreenViewController  *listAppointment=[[UserHomeScreenViewController alloc]init];
-  //[self.navigationController pushViewController:listAppointment animated:YES];
-    
-}
--(void)startOffline{
-    
-}
--(void)loginWithAccessToken{
-    
-    [self ShowActivityIndicatorWithTitle:@"Loading..."];
-    Reachability *reach = [Reachability reachabilityForInternetConnection];
-    NetworkStatus netStatus = [reach currentReachabilityStatus];
-    if (netStatus == NotReachable)
+    self.view.backgroundColor=[UIColor whiteColor];
+
+    if([[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] valueForKey:@"accesstoken"])
     {
-        UIAlertView *alertview3=[[UIAlertView alloc] initWithTitle:nil message:@"No internet connection available" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Retry", nil];
-        alertview3.tag = 69;
-        [alertview3 show];
+        
+        UIImageView *SplashImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, [UIImage imageNamed:@"SplashScreen.png"].size.height)];
+        SplashImageView.image=[UIImage imageNamed:@"SplashScreen.png"];
+        [self.view addSubview:SplashImageView];
+        
+       //UserHomeScreenViewController *veri=[[UserHomeScreenViewController  alloc]init];
+       // [self.navigationController pushViewController:veri animated:YES];
+       [self ShowActivityIndicatorWithTitle:@"Loading..."];
+        [self performSelector:@selector(loginWithAccessToken) withObject:nil afterDelay:0.1];
+
     }
     else
     {
-       
-        NSString *post =[NSString stringWithFormat:@"access_token=%@",@""];
-        NSLog(@"post %@",post);
-        NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
+        ImageScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 480)];
+        ImageScrollView.backgroundColor=[UIColor clearColor];
+        ImageScrollView.pagingEnabled=TRUE;
+        ImageScrollView.delegate=self;
+        [ImageScrollView setContentSize:CGSizeMake(960, 460)];
+        ImageScrollView.showsHorizontalScrollIndicator=NO;
+        ImageScrollView.showsVerticalScrollIndicator=NO;
         
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
-        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@index.php?action=email_login",kBaseUrl]]];
+        FirstHomeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320,480)];
+        FirstHomeImageView.image=[UIImage imageNamed:@"home_mymedi.jpg"];
+        [ImageScrollView addSubview:FirstHomeImageView];
         
-        [request setHTTPMethod:@"POST"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        SecondHomeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(FirstHomeImageView.frame.size.width+FirstHomeImageView.frame.origin.x,0, 320, 480)];
+        SecondHomeImageView.image=[UIImage imageNamed:@"cloud.jpg"];
+        [ImageScrollView addSubview:SecondHomeImageView];
         
-        [request setHTTPBody:postData];
+        ThirdHomeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(SecondHomeImageView.frame.size.width+SecondHomeImageView.frame.origin.x,0, 320, 480)];
+        ThirdHomeImageView.image=[UIImage imageNamed:@"secure.jpg"];
+        [ImageScrollView addSubview:ThirdHomeImageView];
+        [self.view addSubview:ImageScrollView];
         
-        NSError *error1 = nil;
+        pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(130, 460, 50, 30)];
+        pageControl.numberOfPages = 3;
+        pageControl.backgroundColor=[UIColor clearColor];
+        pageControl.pageIndicatorTintColor = [UIColor blackColor];
+        pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
+        [self.view addSubview:pageControl];
         
-        NSURLResponse *response = nil;
-        NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error1];
-        // NSLog(@"data=%@",data);
-        if (data)
-        {
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error1];
-            NSLog(@"JSON%@",json);
-            if([json valueForKey:@"error"])
-            {
-                UIAlertView *alertview3=[[UIAlertView alloc] initWithTitle:nil message:[json valueForKey:@"error"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:Nil, nil];
-                alertview3.tag = 1;
-                [alertview3 show];
-            }
-            else if([json objectForKey:@"data"])
-            {
-                NSArray *dataArray = [[NSArray alloc] initWithArray:[json objectForKey:@"data"]];
-                NSDictionary *data = [[NSDictionary alloc] initWithDictionary:[dataArray objectAtIndex:0]];
-                NSLog(@"%@",data);
-                
-                [[NSUserDefaults standardUserDefaults] setObject:[data valueForKey:@"access_token"] forKey:@"token"];
-                [[NSUserDefaults standardUserDefaults] setObject:[data valueForKey:@"user_image"] forKey:@"userImage"];
-                [[NSUserDefaults standardUserDefaults] setObject:[data valueForKey:@"user_name"] forKey:@"userName"];
-                [[NSUserDefaults standardUserDefaults] setObject:[data valueForKey:@"user_email"] forKey:@"userEmail"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
-                NSLog(@"user name=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"token"]);
-                NSLog(@"userName=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"userName"]);
-                NSLog(@"userEmail=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"userEmail"]);
-                
-               // UserHomeScreenViewController *ListOfAppointment=[[UserHomeScreenViewController alloc]init];
-               // [self.navigationController pushViewController:ListOfAppointment animated:YES];
-                
-                [self HideActivityIndicator];
-            }
-        }
+        BottomHomeView=[[UIView alloc]initWithFrame:CGRectMake(0, 505, self.view.frame.size.width,65)];
+        BottomHomeView.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
+        BottomHomeView.userInteractionEnabled=TRUE;
+        
+        SignButton=[[UIButton alloc]initWithFrame:CGRectMake(17, 13, 140, 40)];
+        SignButton.backgroundColor=[UIColor colorWithRed:190/255.0 green:190/255.0 blue:190/255.0 alpha:1.0];
+        [SignButton addTarget:self action:@selector(SignInButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [SignButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [SignButton setTitle:@"Log In" forState:UIControlStateNormal];
+        SignButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+        [SignButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
+        [SignButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+        SignButton.clipsToBounds = YES;
+        SignButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+        SignButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        SignButton.layer.cornerRadius = 5;
+        [BottomHomeView addSubview:SignButton];
+
+        CreateButton=[UIButton buttonWithType:UIButtonTypeCustom];
+        CreateButton.frame=CGRectMake(SignButton.frame.size.width+SignButton.frame.origin.x+5, 13, 140, 40);
+        CreateButton.backgroundColor=[UIColor colorWithRed:31/255.0 green:185/255.0 blue:242/255.0 alpha:1.0];
+        [CreateButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+         [CreateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [CreateButton setTitleColor:[UIColor grayColor] forState:UIControlStateSelected];
+        [CreateButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+        CreateButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+        CreateButton.clipsToBounds = YES;
+        CreateButton.layer.cornerRadius=5;
+        CreateButton.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+        CreateButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        [CreateButton addTarget:self action:@selector(createButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [BottomHomeView addSubview:CreateButton];
+        [self.view addSubview:BottomHomeView];
+        
     }
 }
--(void)viewWillAppear:(BOOL)animated{
-    
-    if([[NSUserDefaults standardUserDefaults] valueForKey:@"access_token"])
-    {
+-(void)loginWithAccessToken
+{
         Reachability *reach = [Reachability reachabilityForInternetConnection];
         NetworkStatus netStatus = [reach currentReachabilityStatus];
         if (netStatus == NotReachable)
         {
-           // [self startOffline];
+            [self HideActivityIndicator];
+            UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [unable show];
         }
         else
         {
-           // [self loginWithAccessToken];
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            NSDictionary *params = @{
+                                     @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                     };
+            NSLog(@"Parameter=>%@",params);
+            
+            [manager POST:[NSString stringWithFormat:@"%@/login_through_accesstoken",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+            
+            {
+                NSLog(@"JSON--->%@",json);
+                if([json objectForKey:@"error"])
+                {
+                    UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [myAlertView show];
+                }
+                else
+                {
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+                     NSLog(@"login data=%@",[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]valueForKey:@"user"]);
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+            
+                    UserHomeScreenViewController *veri=[[UserHomeScreenViewController  alloc]init];
+                    [self.navigationController pushViewController:veri animated:YES];
+                }
+                
+                [self HideActivityIndicator];
+                NSLog(@"JSON: %@", json);
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Error: %@", error.description);
+                [self HideActivityIndicator];
+                UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [unable show];
+            }];
+            
         }
-    }
-    else{
-        
-        //UserHomeScreenViewController *creat=[[UserHomeScreenViewController alloc]init];
-        //[self.navigationController pushViewController:creat animated:YES];
-    }
 }
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
     CGFloat pageWidth = scrollView.frame.size.width;
     float fractionalPage = scrollView.contentOffset.x / pageWidth;
     NSInteger page = lround(fractionalPage);
     pageControl.currentPage=page;
 }
--(void)createButtonAction{
-    
+-(void)createButtonAction
+{
      [[soundManager shared] buttonSound];
      CreateAccountViewController *CreateAccount=[[CreateAccountViewController alloc]init];
     [self.navigationController pushViewController:CreateAccount animated:YES];
 }
 -(void)SignInButtonAction{
-    
-     [[soundManager shared] buttonSound];
+    [[soundManager shared] buttonSound];
     LoginViewController *LoginViewControllerPass=[[LoginViewController alloc]init];
     [self.navigationController pushViewController:LoginViewControllerPass animated:YES];
-    
-    
 }
 - (void)didReceiveMemoryWarning
 {
@@ -221,16 +186,35 @@
 -(void)ShowActivityIndicatorWithTitle:(NSString *)Title
 {
     [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
-    
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
-    
 }
 -(void)HideActivityIndicator
 {
-    
     [SVProgressHUD dismiss];
-    
 }
-
-
+-(void)dealloc
+{
+    
+    [BottomHomeView removeFromSuperview];
+    [lineView removeFromSuperview];
+    
+    [CreateButton removeFromSuperview];
+    [SignButton removeFromSuperview];
+    
+    [ImageScrollView removeFromSuperview];
+    [pageControl removeFromSuperview];
+    [FirstHomeImageView removeFromSuperview];
+    [SecondHomeImageView removeFromSuperview];
+    [ThirdHomeImageView removeFromSuperview];
+    
+    BottomHomeView=nil;
+    lineView=nil;
+    CreateButton=nil;
+    SignButton=nil;
+    ImageScrollView=nil;
+    pageControl=nil;
+    FirstHomeImageView=nil;
+    SecondHomeImageView=nil;
+    ThirdHomeImageView=nil;
+}
 @end
