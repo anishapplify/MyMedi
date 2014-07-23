@@ -1529,6 +1529,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     AppointmentDatePicker  = [[UIDatePicker alloc]init];
     
+    [AppointmentDatePicker setMinimumDate:[NSDate date]];
+    
     [AppointmentDatePicker setFrame:CGRectMake(100, 518, 320, 100)];
     
     AppointmentDatePicker.datePickerMode = UIDatePickerModeDateAndTime;

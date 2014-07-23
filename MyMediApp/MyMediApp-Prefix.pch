@@ -55,4 +55,4 @@
 #import "NSMutableArray+SWUtilityButtons.h"
 
 #endif
-//#define NSLog(s,...)
+#define NSLog(s,...)

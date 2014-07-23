@@ -148,7 +148,6 @@
     
     
     
-    [[soundManager shared]buttonSound];
     
     alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Log Out" message:@"Are you sure you want to log out?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
     alertviewLogout.tag=3;

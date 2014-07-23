@@ -137,28 +137,9 @@
     NSDictionary *appointmentsDictionary;
     NSArray *appointmentSectionTitles;
     NSMutableArray *appointmentIDArrayForDelete;
-    NSMutableArray *appointmentIDsTag;
     
-     NSMutableArray *tempArrayForAppointmentID;
-     NSMutableArray *tempArrayForAppointmentName;
-     NSMutableArray *tempArrayForAppointmentTime;
-     NSMutableArray *tempArrayForConsultantName;
-     NSMutableArray *tempArrayForHospital;
-     NSMutableArray *tempArrayForNotes;
-     NSMutableArray *tempArrayForProvider;
-    
-    
-    NSMutableArray *ArrayForAppointmentID;
-    NSMutableArray *ArrayForAppointmentName;
-    NSMutableArray *ArrayForAppointmentTime;
-    NSMutableArray *ArrayForConsultantName;
-    NSMutableArray *ArrayForHospital;
-    NSMutableArray *ArrayForNotes;
-    NSMutableArray *ArrayForProvider;
-
-    NSArray *tempappointmentSectionTitles;
-    
-    int rowTappedForDelete;
+    NSString *rowTappedForDelete;
+    NSMutableArray *sectionAppointments;
     
 }
 @end
@@ -181,6 +162,7 @@
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isNewAppointmentCreatedByUser"] == YES)
     {
         NSLog(@"API RUN");
+        [self ShowActivityIndicatorWithTitle:@"Loading..."];
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewAppointmentCreatedByUser"];
         [self APICallForUserAppointment];       // API CALL FOR USER APPOINTMENTS
     }
@@ -196,34 +178,15 @@
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
    
     appointmentSectionTitles = [NSArray arrayWithObjects:@"July",@"August",@"September",@"October",@"November",@"December",@"January",@"February",@"March",@"April",@"May",@"June", nil];
-    tempappointmentSectionTitles  = [appointmentSectionTitles mutableCopy];
-    NSLog(@"tempappointmentSectionTitles is %@",tempappointmentSectionTitles);
 
     
     NSLog(@"heightheightheight=%f",self.view.frame.size.height);
     appointmentsDictionary = [[NSDictionary alloc]init];
-    appointmentIDArrayForDelete = [[NSMutableArray alloc]init];
-    appointmentIDsTag =[[NSMutableArray alloc]init];
+    appointmentIDArrayForDelete =[[NSMutableArray alloc]init];
     
-    
-    ArrayForAppointmentID = [[NSMutableArray alloc]init];
-    ArrayForAppointmentName = [[NSMutableArray alloc]init];
-    ArrayForAppointmentTime = [[NSMutableArray alloc]init];
-    ArrayForConsultantName = [[NSMutableArray alloc]init];
-    ArrayForHospital = [[NSMutableArray alloc]init];
-    ArrayForNotes = [[NSMutableArray alloc]init];
-    ArrayForProvider = [[NSMutableArray alloc]init];
-
-    
-    
-    tempArrayForAppointmentID = [[NSMutableArray alloc]init];
-    tempArrayForAppointmentName = [[NSMutableArray alloc]init];
-    tempArrayForAppointmentTime = [[NSMutableArray alloc]init];
-    tempArrayForConsultantName = [[NSMutableArray alloc]init];
-    tempArrayForHospital = [[NSMutableArray alloc]init];
-    tempArrayForNotes = [[NSMutableArray alloc]init];
-    tempArrayForProvider = [[NSMutableArray alloc]init];
-
+    sectionAppointments = [[NSMutableArray alloc]init];
+  
+  
     
     self.view.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
    
@@ -1133,129 +1096,55 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [myAlertView show];
             }
-            else if([json objectForKey:@"log"])
+            else
+                
+                if ([[json objectForKey:@"log"]isEqualToString:@"No apointment yet!"])
             {
                 NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
                 
                 AppointmentDemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(50, 80, [UIImage imageNamed:@"Staticapponments_page.png"].size.width,[UIImage imageNamed:@"Staticapponments_page.png"].size.height)];
                 AppointmentDemoImageView.image=[UIImage imageNamed:@"Staticapponments_page.png"];
                 [AppointmentSubView addSubview:AppointmentDemoImageView];
+                [SearchBar removeFromSuperview];
+                [AddAppointmentTableView removeFromSuperview];
+                AddAppointmentTableView=nil;
+                SearchBar=nil;
             }
             else
             {
                 
                 
-            
+                appointmentsDictionary = nil;
+                appointmentsDictionary = [[NSMutableDictionary alloc]init];
                 appointmentsDictionary = json;
                 
-                [appointmentIDArrayForDelete removeAllObjects];
-                [ArrayForAppointmentName removeAllObjects];
-                [ArrayForAppointmentTime removeAllObjects];
-                [ArrayForConsultantName removeAllObjects];
-                [ArrayForHospital removeAllObjects];
-                [ArrayForNotes removeAllObjects];
-                [ArrayForProvider removeAllObjects];
+            
                 
-                [tempArrayForAppointmentID removeAllObjects];
-                [tempArrayForAppointmentName removeAllObjects];
-                [tempArrayForAppointmentTime removeAllObjects];
-                [tempArrayForConsultantName removeAllObjects];
-                [tempArrayForHospital removeAllObjects];
+//                for (int i = 0; i<12; i++)
+//                {
+//                    [appointmentIDArrayForDelete addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
+//        
+//                }
+//                
+//                 NSLog(@"appointmentIDArrayForDelete is %@",appointmentIDArrayForDelete);
+//                
+//               //  NSLog(@"ArrayForAppointmentName is %@",ArrayForAppointmentName);
+//                
+//                
+//                for (int i = 0; i<12; i++)
+//                {
+//                    for (int j=0; j<[[appointmentIDArrayForDelete objectAtIndex:i]count]; j++)
+//                    {
+//                        [appointmentIDsTag addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
+//                        
+//                        [ArrayForAppointmentID addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
+//                        
+//                    }
+//                }
+//                
+//                [ArrayForAppointmentName removeAllObjects];
                 
-                [tempArrayForNotes removeAllObjects];
-                [tempArrayForProvider removeAllObjects];
-                
-                
-                for (int i = 0; i<12; i++)
-                {
-                    [appointmentIDArrayForDelete addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
-                    [ArrayForAppointmentName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
-                    [ArrayForAppointmentTime addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmenttime"]];
-                    [ArrayForConsultantName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"consultantname"]];
-                    [ArrayForHospital addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"hospital"]];
-                    [ArrayForNotes addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"notes"]];
-                    [ArrayForProvider addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"provider"]];
-                }
-                
-               //  NSLog(@"appointmentIDArrayForDelete is %@",appointmentIDArrayForDelete);
-                
-               //  NSLog(@"ArrayForAppointmentName is %@",ArrayForAppointmentName);
-                
-                
-                for (int i = 0; i<12; i++)
-                {
-                    for (int j=0; j<[[appointmentIDArrayForDelete objectAtIndex:i]count]; j++)
-                    {
-                        [appointmentIDsTag addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        
-                        [ArrayForAppointmentID addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                     //   NSLog(@"ArrayForAppointmentID=%@",ArrayForAppointmentID);
-                        
-                        [ArrayForAppointmentName addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        [ArrayForAppointmentTime addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        [ArrayForConsultantName addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        [ArrayForHospital addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        [ArrayForNotes addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        [ArrayForProvider addObject:[[appointmentIDArrayForDelete objectAtIndex:i] objectAtIndex:j]];
-                        
-                       
-                        
-                        
-                        [tempArrayForAppointmentID addObject:[ArrayForAppointmentID objectAtIndex:i]];
-                        [tempArrayForAppointmentName addObject:[[ArrayForAppointmentName objectAtIndex:i] objectAtIndex:j]];
-                        [tempArrayForAppointmentTime addObject:[[ArrayForAppointmentTime objectAtIndex:i] objectAtIndex:j]];
-                        [tempArrayForConsultantName addObject:[[ArrayForConsultantName objectAtIndex:i] objectAtIndex:j]];
-                        [tempArrayForHospital addObject:[[ArrayForHospital objectAtIndex:i] objectAtIndex:j]];
-                        [tempArrayForNotes addObject:[[ArrayForNotes objectAtIndex:i] objectAtIndex:j]];
-                        [tempArrayForProvider addObject:[[ArrayForProvider objectAtIndex:i] objectAtIndex:j]];
-                        
-                        
-                        
-                        
-//                        [tempArrayForAppointmentID addObject:[[ArrayForAppointmentName objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForAppointmentName addObject:[[ArrayForAppointmentName objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForAppointmentTime addObject:[[ArrayForAppointmentTime objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForConsultantName addObject:[[ArrayForConsultantName objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForHospital addObject:[[ArrayForHospital objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForNotes addObject:[[ArrayForNotes objectAtIndex:i] objectAtIndex:j]];
-//                        [tempArrayForProvider addObject:[[ArrayForProvider objectAtIndex:i] objectAtIndex:j]];
-                        
-                                        
-                    }
-                }
-                
-                [ArrayForAppointmentName removeAllObjects];
-                [ArrayForAppointmentTime removeAllObjects];
-                [ArrayForConsultantName removeAllObjects];
-                [ArrayForHospital removeAllObjects];
-                [ArrayForNotes removeAllObjects];
-                [ArrayForProvider removeAllObjects];
-                [ArrayForAppointmentID removeAllObjects];
-                
-//NSLog(@"tempArrayForAppointmentName is %@",[tempArrayForAppointmentName objectAtIndex:0]);
-                
-                
-                
-                [ArrayForAppointmentName addObjectsFromArray:tempArrayForAppointmentName];
-                
-                
-               //  NSLog(@"ArrayForAppointmentName is %@",ArrayForAppointmentName);
-                
-                 [ArrayForAppointmentTime addObjectsFromArray:tempArrayForAppointmentTime];
-                 [ArrayForConsultantName addObjectsFromArray:tempArrayForConsultantName];
-                 [ArrayForHospital addObjectsFromArray:tempArrayForHospital];
-                 [ArrayForNotes addObjectsFromArray:tempArrayForNotes];
-                 [ArrayForProvider addObjectsFromArray:tempArrayForProvider];
-                 [ArrayForAppointmentID addObjectsFromArray:tempArrayForAppointmentID];
-                
-                
-               
-                // NSLog(@"tempArrayForAppointmentName is %@",ArrayForAppointmentName);
-//                NSLog(@"tempArrayForAppointmentTime is %@",tempArrayForAppointmentTime);
-//                 NSLog(@"tempArrayForConsultantName is %@",tempArrayForConsultantName);
-                
-                
-                 [self AddAppointmentTableViewFunction];                     // CREATING TABLE
+                [self AddAppointmentTableViewFunction];                     // CREATING TABLE
             }
             
             [self HideActivityIndicator];
@@ -1888,7 +1777,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 #pragma mark -UITableView Datasource and Delegate methods
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [tempappointmentSectionTitles count];
+    return [appointmentSectionTitles count];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger) section
@@ -1906,7 +1795,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:section];
-    NSArray *sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
+    sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
     
     NSLog(@"[sectionAppointments count] ==>%d",[sectionAppointments count]);
     return [sectionAppointments count];
@@ -1924,7 +1813,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     if (cell == nil)
     {
         
-        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+        cell = [[SWTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
         cell.leftUtilityButtons = [self leftButtons];
         cell.rightUtilityButtons = [self rightButtons];
         cell.delegate = self;
@@ -1937,9 +1826,8 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     }
 
         NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:indexPath.section];
-        NSArray *sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
+        sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
     
-    //NSString *appointmentID     =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentid"];
     NSString *appointmentname   =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentname"];
     NSString *appointmenttime   =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttime"];
    // NSString *consultantname    =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"consultantname"];
@@ -1947,40 +1835,13 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
    // NSString *notes             =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"notes"];
     
     NSString *provider          =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
-    NSString *appointName =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
-    //
-    //NSString *appointmentID     =       [tempArrayForAppointmentID objectAtIndex:indexPath.row];
+    NSString *appointType =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
    
-    
-    
-   
-    
-    
-//    NSString *appointmentname   =       [tempArrayForAppointmentName objectAtIndex:indexPath.row];
-//    NSString *appointmenttime   =       [tempArrayForAppointmentTime objectAtIndex:indexPath.row];
-//    NSString *consultantname    =       [tempArrayForConsultantName objectAtIndex:indexPath.row];
-//    NSString *hospital          =       [tempArrayForHospital objectAtIndex:indexPath.row];
-//    NSString *notes             =       [tempArrayForNotes objectAtIndex:indexPath.row];
-   // NSString *provider          =       [tempArrayForProvider objectAtIndex:indexPath.row];
-
-    
-    
-     //NSLog(@"appointmentID is %@",appointmentID);
-//     NSLog(@"appointmentname is %@",appointmentname);
-//     NSLog(@"appointmenttime is %@",appointmenttime);
-//     NSLog(@"consultantname is %@",consultantname);
-//     NSLog(@"hospital is %@",hospital);
-//     NSLog(@"notes is %@",notes);
-//     NSLog(@"appointmentIDsTag is %d",appointmentIDsTag.count);
-
     
     
     UIButton *CellButtonClick;
     CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
-   CellButtonClick.tag = [[tempArrayForAppointmentID objectAtIndex:indexPath.row] integerValue];
     CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
-  //  CellButtonClick.backgroundColor=[UIColor yellowColor];
-   // [CellButtonClick setTitle: appointmentID forState:UIControlStateNormal];
     [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     CellButtonClick.layer.masksToBounds = NO;
     CellButtonClick.exclusiveTouch=YES;
@@ -1988,11 +1849,9 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
     [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
     CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    [CellButtonClick addTarget:self action:@selector(FunctionToFindTag:) forControlEvents:UIControlEventTouchUpInside];
     CellButtonClick.layer.borderWidth = 0.5f;
     
  
-    NSLog(@"tempArrayForAppointmentName=%@",[tempArrayForAppointmentName objectAtIndex:indexPath.row]);
     
     UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
     AppointmentNameTitleShow.textColor = [UIColor blackColor];
@@ -2011,7 +1870,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     TypeNameTitleShow.textColor = [UIColor grayColor];
     TypeNameTitleShow.backgroundColor = [UIColor clearColor];
     TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
-    TypeNameTitleShow.text =  appointName;
+    TypeNameTitleShow.text =  appointType;
     [TypeNameTitleShow sizeToFit];
     TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
     TypeNameTitleShow.minimumScaleFactor=0.3;
@@ -2180,26 +2039,46 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
         NSLog(@"cellIndexPath=%d",cellIndexPath.row);
         
         
-        NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:cellIndexPath.section];
-        NSArray *sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
-        NSString *appointmentID     =       [[sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentid"];
+        NSString *sectionTitle          =       [appointmentSectionTitles objectAtIndex:cellIndexPath.section];
+        sectionAppointments             =       [appointmentsDictionary valueForKey:sectionTitle];
+        NSString *appointmentID         =       [[sectionAppointments objectAtIndex:cellIndexPath.row] valueForKey:@"appointmentid"];
+        
+        NSLog(@"appointmentID to delete is %@",appointmentID);
+        NSLog(@"Section Appointment is %@",sectionAppointments );
+        
+      
         
         
-       // appointmentIDsTag
-        
-//        NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:index];
-//        NSArray *sectionAppointments = [appointmentsDictionary valueForKey:sectionTitle];
-//        
-//        NSString *appointmentID     =       [[sectionAppointments objectAtIndex:index] valueForKey:@"appointmentid"];
-
-        //NSLog(@"idToDelete is %@",appointmentID);
+        NSLog(@"[sectionAppointments count] ==>%d",[sectionAppointments count]);
         
         
         
+        
+        rowTappedForDelete = appointmentID ;
+        
+        
+       UIAlertView * alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Are you sure you want to delete?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
+        alertviewLogout.tag=3;
+        
+        [alertviewLogout show];
        
-       // [self DeleteAPICallFunction];
+        
+        
+        
     }
 }
+#pragma mark Alert view delegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+        if(buttonIndex ==1)
+        {
+            [self DeleteAPICallFunction : rowTappedForDelete];
+        }
+}
+
+
+
 - (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
 {
     // allow just one cell's utility button to be open at once
@@ -2225,8 +2104,9 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 }
 
 #pragma mark DeleteAPICall
--(void) DeleteAPICallFunction
+-(void) DeleteAPICallFunction :(NSString*)deleteTag
 {
+
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     NetworkStatus netStatus = [reach currentReachabilityStatus];
     if (netStatus == NotReachable)
@@ -2239,12 +2119,12 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     {
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        NSDictionary *params = @{ @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+        NSDictionary *params = @{ @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
+                                  @"appointmentid":deleteTag
                                  };
-        
         NSLog(@"Parameter=>%@",params);
-        
-        [manager POST:[NSString stringWithFormat:@"%@/get_all_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+        [self ShowActivityIndicatorWithTitle:@"Loading..."];
+        [manager POST:[NSString stringWithFormat:@"%@/delete_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
             NSLog(@"JSON--->%@",json);
             if([json objectForKey:@"error"])
             {
@@ -2255,17 +2135,12 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
             {
                 NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
                 
-                AppointmentDemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(50, 80, [UIImage imageNamed:@"Staticapponments_page.png"].size.width,[UIImage imageNamed:@"Staticapponments_page.png"].size.height)];
-                AppointmentDemoImageView.image=[UIImage imageNamed:@"Staticapponments_page.png"];
-                [AppointmentSubView addSubview:AppointmentDemoImageView];
-            }
-            else
-            {
-                appointmentsDictionary = json;
-                appointmentSectionTitles = [NSArray arrayWithObjects:@"January",@"February",@"March",@"April",@"May",@"June",@"July",@"August",@"September",@"October",@"November",@"December", nil];
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"log"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
                 
-                NSLog(@"appointmentSectionTitles -->> %@",appointmentSectionTitles);
-                [self AddAppointmentTableViewFunction];                     // CREATING TABLE
+                [self APICallForUserAppointment];
+//                [AddAppointmentTableView reloadData];
+
             }
             
             [self HideActivityIndicator];
@@ -2317,6 +2192,8 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     [AppointmentSubView addSubview:SearchBar];
     
     
+    [AddAppointmentTableView removeFromSuperview];
+    AddAppointmentTableView = nil;
     AddAppointmentTableView=[[UITableView alloc]init];
     AddAppointmentTableView.frame=CGRectMake(0, SearchBar.frame.size.height+SearchBar.frame.origin.y+5, self.view.frame.size.width, 390);
     
@@ -2706,11 +2583,6 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     }
 }
 
--(IBAction)FunctionToFindTag:(id)sender{
-    
-    NSLog(@"value=%d",[sender tag]);
-    rowTappedForDelete = [sender tag];
-}
 
 -(void)serverCallForRecentAppointments{
     
