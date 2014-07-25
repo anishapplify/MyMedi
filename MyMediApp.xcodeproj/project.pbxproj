@@ -148,6 +148,7 @@
 		F8435458197D87D300F09183 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F8435457197D87D300F09183 /* libsqlite3.dylib */; };
 		F843545A197D87E100F09183 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F8435459197D87E100F09183 /* libxml2.dylib */; };
 		F857C416197B4EC50039806C /* Rounded-Rectangle-9@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F857C415197B4EC50039806C /* Rounded-Rectangle-9@2x.png */; };
+		F892BD6019818556005E55F1 /* EditAppointmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F892BD5F19818556005E55F1 /* EditAppointmentViewController.m */; };
 		F893CBC9195E9C800051CB87 /* NMCustomLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F893CBC6195E9C800051CB87 /* NMCustomLabel.m */; };
 		F893CBCA195E9C800051CB87 /* NMCustomLabelStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = F893CBC8195E9C800051CB87 /* NMCustomLabelStyle.m */; };
 		F89810411950FD8000695146 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = F898102C1950FD8000695146 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -358,6 +359,8 @@
 		F8435457197D87D300F09183 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		F8435459197D87E100F09183 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		F857C415197B4EC50039806C /* Rounded-Rectangle-9@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Rounded-Rectangle-9@2x.png"; sourceTree = "<group>"; };
+		F892BD5E19818556005E55F1 /* EditAppointmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditAppointmentViewController.h; sourceTree = "<group>"; };
+		F892BD5F19818556005E55F1 /* EditAppointmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditAppointmentViewController.m; sourceTree = "<group>"; };
 		F893CBC5195E9C800051CB87 /* NMCustomLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMCustomLabel.h; sourceTree = "<group>"; };
 		F893CBC6195E9C800051CB87 /* NMCustomLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMCustomLabel.m; sourceTree = "<group>"; };
 		F893CBC7195E9C800051CB87 /* NMCustomLabelStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMCustomLabelStyle.h; sourceTree = "<group>"; };
@@ -479,11 +482,12 @@
 				D4A729FD19470BEB000E93A0 /* LoginViewController */,
 				D4C02A70194975350042C2CE /* Create Account */,
 				D4B29ED51948240900B9F090 /* Appointment Controllers */,
+				D4AA375A195311D000FFB50A /* MedicalRecordsController */,
 				D4AA7C0D1959A01900B61ACC /* VerificationViewController */,
 				D48B46281951AB6B0008200D /* ShortCuts */,
 				D4C597FA19516BF9008CABCA /* EmergencyController */,
-				D4AA375A195311D000FFB50A /* MedicalRecordsController */,
 				D4C069E51959608D000CDD27 /* SettingScreenView */,
+				F892BD5D19818523005E55F1 /* EditScreen View */,
 				D4A80AF119641D7700441460 /* Account Screen */,
 				D4A80AF519641F6000441460 /* Help Screen */,
 				D4A80AF91964207100441460 /* Report Screen */,
@@ -935,6 +939,15 @@
 			name = EmergencyController;
 			sourceTree = "<group>";
 		};
+		F892BD5D19818523005E55F1 /* EditScreen View */ = {
+			isa = PBXGroup;
+			children = (
+				F892BD5E19818556005E55F1 /* EditAppointmentViewController.h */,
+				F892BD5F19818556005E55F1 /* EditAppointmentViewController.m */,
+			);
+			name = "EditScreen View";
+			sourceTree = "<group>";
+		};
 		F898102A1950FD3900695146 /* ASI Request */ = {
 			isa = PBXGroup;
 			children = (
@@ -1178,6 +1191,7 @@
 				D4C02A871949BDCD0042C2CE /* MFUnderlinedTextView.m in Sources */,
 				D4A1859119794CAA00C9F2AD /* UINoteView.m in Sources */,
 				ACBFA629194586DC00CA4DCF /* ApplifyViewController.m in Sources */,
+				F892BD6019818556005E55F1 /* EditAppointmentViewController.m in Sources */,
 				D4C597FD19516C2C008CABCA /* EmergencyViewController.m in Sources */,
 				D4941997196A65510004DC0C /* AFURLConnectionOperation.m in Sources */,
 				F89810461950FD8000695146 /* ASIHTTPRequest.m in Sources */,

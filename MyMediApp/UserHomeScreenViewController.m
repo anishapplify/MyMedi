@@ -15,6 +15,7 @@
 
     UIView *BackGroundBlackView;
     UIScrollView *ScrollerView;
+    UIView *MedicalSubView;
     UIPageControl *pageControl;
     UIButton *EmergencyButton;
     UIButton *ShortCutButton;
@@ -130,14 +131,17 @@
     CLLocationManager *locationManager;
     
     UITableView *AddAppointmentTableView;
+    UITableView *AddMedicalRerocdsTableView;
     UIView *AppointmentSubView;
     
     UISearchBar *SearchBar;
+     UISearchBar *MedicalSearchBar;
     
     
     NSMutableArray  *dummyArray;
     
     NSMutableDictionary *appointmentsDictionary;
+    NSMutableDictionary *medicalrecordsDictionary;
     NSMutableArray *appointmentSectionTitles;
     NSMutableArray *appointmentIDArrayForDelete;
     
@@ -149,7 +153,81 @@
     
     NSMutableArray *temp_appointmentSectionTitles;
     NSMutableDictionary *temp_appointmentsDictionary;
+    NSMutableDictionary *MedicalRecordstemp_appointmentsDictionary;
     NSMutableArray *temp_sectionAppointments;
+    
+    
+    UIView *ViewForSearching;
+    UITableView *SearchTableView;
+    NSMutableArray *array_AppointmentName;
+    
+    NSMutableArray *array_AppointmentID;
+    
+    NSMutableArray *array_AppointmentTime;
+    
+    NSMutableArray *array_AppointmentType;
+    
+    NSMutableArray *array_ConsultantName;
+    
+    NSMutableArray *array_Hospital;
+    
+    NSMutableArray *array_Notes;
+    
+    NSMutableArray *array_Provider;
+    
+    NSMutableArray *array_TimeStamp;
+    
+    
+    
+    
+    
+    NSMutableArray *array_AppointmentNam_Main;
+    
+    NSMutableArray *array_AppointmentID_Main;
+    
+    NSMutableArray *array_AppointmentTime_Main;
+    
+    NSMutableArray *array_AppointmentType_Main;
+    
+    NSMutableArray *array_ConsultantName_Main;
+    
+    NSMutableArray *array_Hospital_Main;
+    
+    NSMutableArray *array_Notes_Main;
+    
+    NSMutableArray *array_Provider_Main;
+    
+    NSMutableArray *array_TimeStamp_Main;
+    
+    
+    
+    
+    
+    
+    
+    NSMutableArray *temp_array_AppointmentName;
+    
+    NSMutableArray *temp_array_AppointmentID;
+    
+    NSMutableArray *temp_array_AppointmentTime;
+    
+    NSMutableArray *temp_array_AppointmentType;
+    
+    NSMutableArray *temp_array_ConsultantName;
+    
+    NSMutableArray *temp_array_Hospital;
+    
+    NSMutableArray *temp_array_Notes;
+    
+    NSMutableArray *temp_array_Provider;
+    
+    NSMutableArray *temp_array_TimeStamp;
+    
+    
+    UIView *tableViewForMainTable;
+    
+    
+    
     
 }
 @end
@@ -169,13 +247,23 @@
 {
     [super viewWillAppear:animated];
     
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isNewMedicalCreatedByUser"] == YES)
+    {
+        NSLog(@"API RUN");
+        [self ShowActivityIndicatorWithTitle:@"Loading..."];
+        [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewMedicalCreatedByUser"];
+        
+        [self APICallForUserMedicalAppointment];       // API CALL FOR USER MEDICAL APPOINTMENTS
+    }
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isNewAppointmentCreatedByUser"] == YES)
     {
         NSLog(@"API RUN");
         [self ShowActivityIndicatorWithTitle:@"Loading..."];
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewAppointmentCreatedByUser"];
+        
         [self APICallForUserAppointment];       // API CALL FOR USER APPOINTMENTS
     }
+   
     else
     {
         NSLog(@"API NOT RUN");
@@ -189,6 +277,11 @@
     dummyArray = [[NSMutableArray alloc]init];
    
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
+     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewMedicalCreatedByUser"];
+     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"AppointmentIdGetValue"];
+    [[NSUserDefaults standardUserDefaults]synchronize];
     
     appointmentSectionTitles = [[NSMutableArray alloc]init];
     [appointmentSectionTitles insertObject:@"July" atIndex:0];
@@ -204,6 +297,70 @@
     [appointmentSectionTitles insertObject:@"May" atIndex:10];
     [appointmentSectionTitles insertObject:@"June" atIndex:11];
     
+    
+    array_AppointmentName = [[NSMutableArray alloc]init];
+    
+    array_AppointmentID = [[NSMutableArray alloc]init];
+    
+    array_AppointmentTime = [[NSMutableArray alloc]init];
+    
+    array_AppointmentType = [[NSMutableArray alloc]init];
+    
+    array_ConsultantName = [[NSMutableArray alloc]init];
+    
+    array_Hospital = [[NSMutableArray alloc]init];
+    
+    array_Notes = [[NSMutableArray alloc]init];
+    
+    array_Provider = [[NSMutableArray alloc]init];
+    
+    array_TimeStamp = [[NSMutableArray alloc]init];
+    
+    
+    
+    
+    
+    temp_array_AppointmentName = [[NSMutableArray alloc]init];
+    
+    temp_array_AppointmentID = [[NSMutableArray alloc]init];
+    
+    temp_array_AppointmentTime = [[NSMutableArray alloc]init];
+    
+    temp_array_AppointmentType = [[NSMutableArray alloc]init];
+    
+    temp_array_ConsultantName = [[NSMutableArray alloc]init];
+    
+    temp_array_Hospital = [[NSMutableArray alloc]init];
+    
+    temp_array_Notes = [[NSMutableArray alloc]init];
+    
+    temp_array_Provider = [[NSMutableArray alloc]init];
+    
+    temp_array_TimeStamp = [[NSMutableArray alloc]init];
+    
+    
+    
+    
+    
+    array_AppointmentNam_Main = [[NSMutableArray alloc]init];
+    
+    array_AppointmentID_Main = [[NSMutableArray alloc]init];
+    
+    array_AppointmentTime_Main = [[NSMutableArray alloc]init];
+    
+    array_AppointmentType_Main = [[NSMutableArray alloc]init];
+    
+    array_ConsultantName_Main = [[NSMutableArray alloc]init];
+    
+    array_Hospital_Main = [[NSMutableArray alloc]init];
+    
+    array_Notes_Main = [[NSMutableArray alloc]init];
+    
+    array_Provider_Main = [[NSMutableArray alloc]init];
+    
+    array_TimeStamp_Main = [[NSMutableArray alloc]init];
+    
+    
     temp_appointmentSectionTitles = [[NSMutableArray alloc]initWithArray:appointmentSectionTitles];
     
     NSLog(@"temp_appointmentSectionTitles is %@",temp_appointmentSectionTitles);
@@ -211,6 +368,7 @@
     
     NSLog(@"heightheightheight=%f",self.view.frame.size.height);
     appointmentsDictionary = [[NSMutableDictionary alloc]init];
+    medicalrecordsDictionary=[[NSMutableDictionary alloc]init];
     temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
     appointmentIDArrayForDelete =[[NSMutableArray alloc]init];
     
@@ -485,8 +643,8 @@ else
     [MedicalTopBarView addSubview:CreateNewMedicalButton];
     [MedicalHomeGroundView addSubview:MedicalTopBarView];
     
-    UIView *MedicalSubView=[[UIView alloc]initWithFrame:CGRectMake(0, MedicalTopBarView.frame.size.height+MedicalTopBarView.frame.origin.y, self.view.frame.size.width, 443)];
-    MedicalSubView.backgroundColor=[UIColor whiteColor];
+    MedicalSubView=[[UIView alloc]initWithFrame:CGRectMake(0, MedicalTopBarView.frame.size.height+MedicalTopBarView.frame.origin.y, self.view.frame.size.width, 443)];
+    MedicalSubView.backgroundColor=[UIColor colorWithRed:211/255.0 green:214/255.0 blue:219/255.0 alpha:1.0];
     MedicalSubView.clipsToBounds = YES;
     
     CALayer *rightBorder1 = [CALayer layer];
@@ -496,11 +654,6 @@ else
     
     [MedicalSubView.layer addSublayer:rightBorder1];
     
-    
-    
-DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imageNamed:@"medecal_records_tuts.png"].size.width, [UIImage imageNamed:@"medecal_records_tuts.png"].size.height)];
- DemoImageView.image=[UIImage imageNamed:@"medecal_records_tuts.png"];
-    [MedicalSubView addSubview:DemoImageView];
     
     
     [MedicalHomeGroundView addSubview:MedicalSubView];
@@ -525,7 +678,6 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     AppointmentTitleLable.textColor=[UIColor blackColor];
     AppointmentTitleLable.textAlignment=NSTextAlignmentCenter;
     [AppointmentTopBarView addSubview:AppointmentTitleLable];
-    
     
     
     AppointmentSortButton=[[UIButton alloc]initWithFrame:CGRectMake(10, 20,[UIImage imageNamed:@"sort_button.png"].size.width ,[UIImage imageNamed:@"sort_button.png"].size.height)];
@@ -570,7 +722,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     
     MapGroundView=[[UIView alloc]initWithFrame:CGRectMake(AppointmentGroudView.frame.size.width+AppointmentGroudView.frame.origin.x, 0, self.view.frame.size.width, 490)];
     MapGroundView.userInteractionEnabled=TRUE;
-   MapGroundView.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
+    MapGroundView.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
     
     MapTopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, -20, self.view.frame.size.width,70)];
@@ -586,7 +738,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     [MapGroundView  addSubview:MapTopBarView];
     
     MapSubView=[[UIView alloc]initWithFrame:CGRectMake(0, MapTopBarView.frame.size.height+MapTopBarView.frame.origin.y, self.view.frame.size.width, 443)];
-    MapSubView.backgroundColor=[UIColor whiteColor];
+    MapSubView.backgroundColor=[UIColor colorWithRed:211/255.0 green:214/255.0 blue:219/255.0 alpha:1.0];
     
     MapSubView.clipsToBounds = YES;
     CALayer *rightBorder2 = [CALayer layer];
@@ -1097,101 +1249,6 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 
 }
 
-
-#pragma mark UserAppointment API
--(void)APICallForUserAppointment
-{
-    Reachability *reach = [Reachability reachabilityForInternetConnection];
-    NetworkStatus netStatus = [reach currentReachabilityStatus];
-    if (netStatus == NotReachable)
-    {
-        [self HideActivityIndicator];
-        
-        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [unable show];
-    }
-    else
-    {
-               
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        NSDictionary *params = @{
-                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
-                                };
-        
-        NSLog(@"Parameter=>%@",params);
-        
-        [manager POST:[NSString stringWithFormat:@"%@/get_all_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
-            NSLog(@"JSON--->%@",json);
-            if([json objectForKey:@"error"])
-            {
-                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [myAlertView show];
-            }
-            else
-                
-                if ([[json objectForKey:@"log"]isEqualToString:@"No apointment yet!"])
-            {
-                NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
-                
-                AppointmentDemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(50, 80, [UIImage imageNamed:@"Staticapponments_page.png"].size.width,[UIImage imageNamed:@"Staticapponments_page.png"].size.height)];
-                AppointmentDemoImageView.image=[UIImage imageNamed:@"Staticapponments_page.png"];
-                [AppointmentSubView addSubview:AppointmentDemoImageView];
-                [SearchBar removeFromSuperview];
-                [AddAppointmentTableView removeFromSuperview];
-                AddAppointmentTableView=nil;
-                SearchBar=nil;
-            }
-            else
-            {
-                appointmentsDictionary = nil;
-                temp_appointmentsDictionary = nil;
-                
-                appointmentsDictionary = [[NSMutableDictionary alloc]init];
-                temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
-                appointmentsDictionary = json;
-                temp_appointmentsDictionary = [json mutableCopy];
-                
-
-                
-                
-                NSLog(@"All Keys of APpointments is %@",[appointmentsDictionary allKeys]);
-                
-            
-                for (int i = 0; i<12; i++)
-                {
-                    [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
-        
-                }
-                NSLog(@"total Data is %@",totalData);
-                
-                
-                
-                for (int i = 0; i<12; i++)
-                {
-                    for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
-                    {
-                        [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
-                    }
-                }
-                
-                NSLog(@"dummy array is %@",dummyArray);
-                [self AddAppointmentTableViewFunction];                     // CREATING TABLE
-            }
-            
-            [self HideActivityIndicator];
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
-         {
-             NSLog(@"Error: %@", error.description);
-             [self HideActivityIndicator];
-             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-             [unable show];
-         }];
-        
-    }
-}
-
-
 -(void)SyncButtonAction{
 
 }
@@ -1697,37 +1754,37 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 }
 -(void)CreateNewMedicalReport{
     
-    [[soundManager shared]buttonSound];
+     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
     MedicalRecordsHomeViewController *CreateAppointment=[[MedicalRecordsHomeViewController alloc]init];
     [self.navigationController pushViewController:CreateAppointment animated:YES];
 }
 -(void)CreateNewAppointments{
     
-    [[soundManager shared]buttonSound];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     CreateNewAppointmentViewController *CreateAppointment=[[CreateNewAppointmentViewController alloc]init];
     [self.navigationController pushViewController:CreateAppointment animated:YES];
 }
 -(void)AccountScreen{
     
-    [[soundManager shared]buttonSound];
+  
     AccountViewController *Account=[[AccountViewController alloc]init];
     [self.navigationController pushViewController:Account animated:YES];
 }
 -(void)settingsScreen
 {
-    [[soundManager shared]buttonSound];
+  
     SettingScreenViewController *setingScreen=[[SettingScreenViewController alloc]init];
     [self.navigationController pushViewController:setingScreen animated:YES];
 }
 -(void)HelpScreen
 {
-    [[soundManager shared]buttonSound];
+  
     HelpScreenViewController *HelpScreen=[[HelpScreenViewController alloc]init];
     [self.navigationController pushViewController:HelpScreen animated:YES];
 }
 -(void)ReportScreen
 {
-    [[soundManager shared]buttonSound];
+  
     ReportViewController *ReportScreen=[[ReportViewController alloc]init];
     [self.navigationController pushViewController:ReportScreen animated:YES];
 }
@@ -1808,28 +1865,68 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 #pragma mark -UITableView Datasource and Delegate methods
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [temp_appointmentSectionTitles count];
+    if(tableView.tag==56700)
+    {
+        return [temp_appointmentSectionTitles count];
+    }
+    else if(tableView.tag == 4949)
+    {
+         return 1;
+    }
+    else{
+      return [temp_appointmentSectionTitles count];
+    }
+
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger) section
 {
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
-    headerLabel.textAlignment = NSTextAlignmentCenter;
-    headerLabel.font = [UIFont fontWithName:helveticaRegular size:12];
-    headerLabel.text = [temp_appointmentSectionTitles objectAtIndex:section];
-    headerLabel.backgroundColor = [UIColor grayColor];
-    return headerLabel;
+    if(tableView.tag==56700)
+    {
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
+        headerLabel.textAlignment = NSTextAlignmentCenter;
+        headerLabel.font = [UIFont fontWithName:helveticaRegular size:12];
+        headerLabel.text = [temp_appointmentSectionTitles objectAtIndex:section];
+        headerLabel.backgroundColor = [UIColor grayColor];
+        return headerLabel;
+    }
+    else if(tableView.tag == 4949)
+    {
+        UILabel *headerLabel = [[UILabel alloc] init];
+        headerLabel=nil;
+        return headerLabel;
+    }
+    else{
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
+        headerLabel.textAlignment = NSTextAlignmentCenter;
+        headerLabel.font = [UIFont fontWithName:helveticaRegular size:12];
+        headerLabel.text = [temp_appointmentSectionTitles objectAtIndex:section];
+        headerLabel.backgroundColor = [UIColor grayColor];
+        return headerLabel;
+    }
+ 
 }
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:section];
-    temp_sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
-    sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+    if(tableView.tag==56700)
+    {
+        NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:section];
+        temp_sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        return [temp_sectionAppointments count];
+    }
+    else if(tableView.tag == 4949)
+    {
+        return  [temp_array_AppointmentName count];
+    }
 
-    NSLog(@"[sectionAppointments count] ==>%@",[sectionAppointments valueForKey:@"appointmentname"]);
-    return [temp_sectionAppointments count];
+    else{
+        NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:section];
+        temp_sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        return [temp_sectionAppointments count];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1839,6 +1936,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   
     static NSString *cellIdentifier = @"Cell";
     SWTableViewCell *cell = (SWTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil)
@@ -1856,168 +1954,532 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
         btnRemove = nil;
     }
 
+    
+    if(tableView.tag==56700)
+    {
+        NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:indexPath.section];
+        temp_sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        
+        NSString *appointmentname   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicalname"];
+        NSString *appointmenttime   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicaltime"];
+        NSString *provider          =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
+        NSString *appointType       =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicaltype"];
+        NSString *AppointmentId=                [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicalid"];
+        
+        
+        UIButton *CellButtonClick;
+        CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+        CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
+        [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        CellButtonClick.layer.masksToBounds = NO;
+        CellButtonClick.exclusiveTouch=YES;
+        CellButtonClick.tag=[AppointmentId integerValue];
+        CellButtonClick.userInteractionEnabled=TRUE;
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+        CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+        CellButtonClick.layer.borderWidth = 0.5f;
+        [CellButtonClick addTarget:self action:@selector(setIdMedicalFromServer:) forControlEvents:UIControlEventTouchUpInside];
+        //setIdMedicalFromServer
+        //setIdFromServer
+        
+        UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+        AppointmentNameTitleShow.textColor = [UIColor blackColor];
+        AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+        AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+        AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+        AppointmentNameTitleShow.text =  appointmentname;
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        [AppointmentNameTitleShow sizeToFit];
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+        TypeNameTitleShow.textColor = [UIColor grayColor];
+        TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+        TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        TypeNameTitleShow.text =  appointType;
+        [TypeNameTitleShow sizeToFit];
+        TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+        TypeNameTitleShow.minimumScaleFactor=0.3;
+        [CellButtonClick addSubview:TypeNameTitleShow];
+        
+        CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                                                              attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                                                                 context:nil];
+        
+        
+        UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+        
+        line.layer.borderColor = [UIColor grayColor].CGColor;
+        line.layer.borderWidth = 1.0f;
+        [CellButtonClick addSubview:line];
+        
+        
+        UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+        
+        ProviderNameTitleShow.textColor = [UIColor grayColor];
+        ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+        ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        ProviderNameTitleShow.text =provider;
+        [ProviderNameTitleShow sizeToFit];
+        ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+        ProviderNameTitleShow.minimumScaleFactor=0.3;
+        [CellButtonClick addSubview:ProviderNameTitleShow];
+        
+        
+        NSArray *dateSplitArray = [appointmenttime componentsSeparatedByString:@"T"];
+        NSString *date=[dateSplitArray objectAtIndex:0];
+        NSString *dateTime=[dateSplitArray objectAtIndex:1];
+        
+        
+        NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+        NSString *date2=[dateSplitArray2 objectAtIndex:1];
+        NSString *date3=[dateSplitArray2 objectAtIndex:2];
+        NSString *date4=[dateSplitArray2 objectAtIndex:0];
+        
+        if([date2 isEqualToString:@"01"]) date2=@"Jan";
+        if([date2 isEqualToString:@"02"]) date2=@"Feb";
+        if([date2 isEqualToString:@"03"]) date2=@"Mar";
+        if([date2 isEqualToString:@"04"]) date2=@"Apr";
+        if([date2 isEqualToString:@"05"]) date2=@"May";
+        if([date2 isEqualToString:@"06"]) date2=@"Jun";
+        if([date2 isEqualToString:@"07"]) date2=@"Jul";
+        if([date2 isEqualToString:@"08"]) date2=@"Aug";
+        if([date2 isEqualToString:@"09"]) date2=@"Sep";
+        if([date2 isEqualToString:@"10"]) date2=@"Oct";
+        if([date2 isEqualToString:@"11"]) date2=@"Nov";
+        if([date2 isEqualToString:@"12"]) date2=@"Dec";
+        
+        UILabel *DateLable = [[UILabel alloc] init];
+        DateLable.textColor = [UIColor grayColor];
+        DateLable.backgroundColor = [UIColor clearColor];
+        DateLable.textAlignment = NSTextAlignmentLeft;
+        DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+        DateLable.numberOfLines=0;
+        DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+        [DateLable sizeToFit];
+        DateLable.frame=CGRectMake(300-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+        [CellButtonClick addSubview:DateLable];
+        
+        NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+        NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+        
+        
+        UILabel *TimeLable = [[UILabel alloc] init];
+        TimeLable.textColor = [UIColor grayColor];
+        TimeLable.backgroundColor = [UIColor clearColor];
+        TimeLable.textAlignment = NSTextAlignmentLeft;
+        TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+        TimeLable.numberOfLines=0;
+        TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+        [TimeLable sizeToFit];
+        TimeLable.frame=CGRectMake(300-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+        [CellButtonClick addSubview:TimeLable];
+        [cell.contentView addSubview:CellButtonClick];
+
+}
+    else if (tableView.tag == 4949)
+        
+    {
+        
+        UIButton *CellButtonClick;
+        
+        CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
+        
+        [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        
+        CellButtonClick.layer.masksToBounds = NO;
+        
+        CellButtonClick.exclusiveTouch=YES;
+        
+        CellButtonClick.userInteractionEnabled=TRUE;
+        
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+        
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+        
+        CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+         [CellButtonClick addTarget:self action:@selector(setIdJaaliViewFromServer:) forControlEvents:UIControlEventTouchUpInside];
+        CellButtonClick.layer.borderWidth = 0.5f;
+        
+        
+        
+        UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+        
+        AppointmentNameTitleShow.textColor = [UIColor blackColor];
+        
+        AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+        
+        AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+        
+        AppointmentNameTitleShow.text =  [temp_array_AppointmentName objectAtIndex:indexPath.row];
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        [AppointmentNameTitleShow sizeToFit];
+        
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        [AppointmentNameTitleShow sizeToFit];
+        
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        
+        
+        
+        UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+        
+        TypeNameTitleShow.textColor = [UIColor grayColor];
+        
+        TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        TypeNameTitleShow.text =  [temp_array_AppointmentType objectAtIndex:indexPath.row];
+        
+        [TypeNameTitleShow sizeToFit];
+        
+        TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+        
+        TypeNameTitleShow.minimumScaleFactor=0.3;
+        
+        [CellButtonClick addSubview:TypeNameTitleShow];
+        
+        
+        
+        
+        
+        CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                             
+                                                              attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                             
+                                                                 context:nil];
+        
+        
+        
+        
+        
+        UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+        
+        
+        
+        line.layer.borderColor = [UIColor grayColor].CGColor;
+        
+        line.layer.borderWidth = 1.0f;
+        
+        [CellButtonClick addSubview:line];
+        
+        
+        
+        
+        
+        UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+        
+        
+        
+        ProviderNameTitleShow.textColor = [UIColor grayColor];
+        
+        ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        ProviderNameTitleShow.text = [temp_array_Provider objectAtIndex:indexPath.row];
+        
+        [ProviderNameTitleShow sizeToFit];
+        
+        ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+        
+        ProviderNameTitleShow.minimumScaleFactor=0.3;
+        
+        [CellButtonClick addSubview:ProviderNameTitleShow];
+        
+        
+        
+        
+        
+        NSArray *dateSplitArray = [[temp_array_TimeStamp objectAtIndex:indexPath.row ] componentsSeparatedByString:@"T"];
+        
+        NSString *date=[dateSplitArray objectAtIndex:0];
+        
+        NSString *dateTime=[dateSplitArray objectAtIndex:1];
+        
+        
+        
+        
+        
+        NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+        
+        NSString *date2=[dateSplitArray2 objectAtIndex:1];
+        
+        NSString *date3=[dateSplitArray2 objectAtIndex:2];
+        
+        NSString *date4=[dateSplitArray2 objectAtIndex:0];
+        
+        NSLog(@"date2=%@",date2);
+        
+        NSLog(@"date3=%@",date3);
+        
+        
+        
+        if([date2 isEqualToString:@"01"]) date2=@"Jan";
+        
+        if([date2 isEqualToString:@"02"]) date2=@"Feb";
+        
+        if([date2 isEqualToString:@"03"]) date2=@"Mar";
+        
+        if([date2 isEqualToString:@"04"]) date2=@"Apr";
+        
+        if([date2 isEqualToString:@"05"]) date2=@"May";
+        
+        if([date2 isEqualToString:@"06"]) date2=@"Jun";
+        
+        if([date2 isEqualToString:@"07"]) date2=@"Jul";
+        
+        if([date2 isEqualToString:@"08"]) date2=@"Aug";
+        
+        if([date2 isEqualToString:@"09"]) date2=@"Sep";
+        
+        if([date2 isEqualToString:@"10"]) date2=@"Oct";
+        
+        if([date2 isEqualToString:@"11"]) date2=@"Nov";
+        
+        if([date2 isEqualToString:@"12"]) date2=@"Dec";
+        
+        
+        
+        
+        
+        
+        
+        UILabel *DateLable = [[UILabel alloc] init];
+        
+        DateLable.textColor = [UIColor grayColor];
+        
+        DateLable.backgroundColor = [UIColor clearColor];
+        
+        DateLable.textAlignment = NSTextAlignmentLeft;
+        
+        DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+        
+        DateLable.numberOfLines=0;
+        
+        DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        [DateLable sizeToFit];
+        
+        DateLable.frame=CGRectMake(300-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+        
+        [CellButtonClick addSubview:DateLable];
+        
+        
+        
+        NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+        
+        NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+        
+        NSLog(@"TimeString1=%@",TimeString1);
+        
+        
+        
+        
+        
+        
+        
+        UILabel *TimeLable = [[UILabel alloc] init];
+        
+        TimeLable.textColor = [UIColor grayColor];
+        
+        TimeLable.backgroundColor = [UIColor clearColor];
+        
+        TimeLable.textAlignment = NSTextAlignmentLeft;
+        
+        TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+        
+        TimeLable.numberOfLines=0;
+        
+        TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        [TimeLable sizeToFit];
+        
+        TimeLable.frame=CGRectMake(300-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+        
+        [CellButtonClick addSubview:TimeLable];
+        
+        
+        
+        [cell.contentView addSubview:CellButtonClick];
+        
+        
+    }
+    
+    
+    else {
+        
+        
         NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:indexPath.section];
         temp_sectionAppointments = [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
-    
-    NSString *appointmentname   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentname"];
-    NSString *appointmenttime   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttime"];
-   // NSString *consultantname    =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"consultantname"];
-   // NSString *hospital          =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"hospital"];
-   // NSString *notes             =         [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"notes"];
-    
-    NSString *provider          =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
-    NSString *appointType       =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
-   
-    
-    
-    UIButton *CellButtonClick;
-    CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
-    CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
-    [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-    CellButtonClick.layer.masksToBounds = NO;
-    CellButtonClick.exclusiveTouch=YES;
-    CellButtonClick.userInteractionEnabled=TRUE;
-    [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
-    [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
-    CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    CellButtonClick.layer.borderWidth = 0.5f;
-    
- 
-    
-    UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
-    AppointmentNameTitleShow.textColor = [UIColor blackColor];
-    AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
-    AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
-    AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
-    AppointmentNameTitleShow.text =  appointmentname;
-    
-    AppointmentNameTitleShow.numberOfLines=0;
-    AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
-    [AppointmentNameTitleShow sizeToFit];
-    [CellButtonClick addSubview:AppointmentNameTitleShow];
-    
-    
-    UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
-    TypeNameTitleShow.textColor = [UIColor grayColor];
-    TypeNameTitleShow.backgroundColor = [UIColor clearColor];
-    TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
-    TypeNameTitleShow.text =  appointType;
-    [TypeNameTitleShow sizeToFit];
-    TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
-    TypeNameTitleShow.minimumScaleFactor=0.3;
-    [CellButtonClick addSubview:TypeNameTitleShow];
-    
-    CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
-                                                          attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
-                                                             context:nil];
-    
-    
-    UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
-    
-    line.layer.borderColor = [UIColor grayColor].CGColor;
-    line.layer.borderWidth = 1.0f;
-    [CellButtonClick addSubview:line];
-    
-    
-    UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
-    
-    ProviderNameTitleShow.textColor = [UIColor grayColor];
-    ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
-    ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
-    ProviderNameTitleShow.text =provider;
-    [ProviderNameTitleShow sizeToFit];
-    ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
-    ProviderNameTitleShow.minimumScaleFactor=0.3;
-    [CellButtonClick addSubview:ProviderNameTitleShow];
-    
-    
-    NSArray *dateSplitArray = [appointmenttime componentsSeparatedByString:@"T"];
-    NSString *date=[dateSplitArray objectAtIndex:0];
-    NSString *dateTime=[dateSplitArray objectAtIndex:1];
-    
-    
-    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
-    NSString *date2=[dateSplitArray2 objectAtIndex:1];
-    NSString *date3=[dateSplitArray2 objectAtIndex:2];
-    NSString *date4=[dateSplitArray2 objectAtIndex:0];
-    NSLog(@"date2=%@",date2);
-    NSLog(@"date3=%@",date3);
-   
-    if([date2 isEqualToString:@"01"]) date2=@"Jan";
-    if([date2 isEqualToString:@"02"]) date2=@"Feb";
-    if([date2 isEqualToString:@"03"]) date2=@"Mar";
-    if([date2 isEqualToString:@"04"]) date2=@"Apr";
-    if([date2 isEqualToString:@"05"]) date2=@"May";
-    if([date2 isEqualToString:@"06"]) date2=@"Jun";
-    if([date2 isEqualToString:@"07"]) date2=@"Jul";
-    if([date2 isEqualToString:@"08"]) date2=@"Aug";
-    if([date2 isEqualToString:@"09"]) date2=@"Sep";
-    if([date2 isEqualToString:@"10"]) date2=@"Oct";
-    if([date2 isEqualToString:@"11"]) date2=@"Nov";
-    if([date2 isEqualToString:@"12"]) date2=@"Dec";
-    
-    
-    
-    UILabel *DateLable = [[UILabel alloc] init];
-    DateLable.textColor = [UIColor grayColor];
-    DateLable.backgroundColor = [UIColor clearColor];
-    DateLable.textAlignment = NSTextAlignmentLeft;
-    DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
-    DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
-    DateLable.numberOfLines=0;
-    DateLable.lineBreakMode =NSLineBreakByCharWrapping;
-    [DateLable sizeToFit];
-    DateLable.frame=CGRectMake(300-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
-    [CellButtonClick addSubview:DateLable];
-    
-    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
-    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
-    NSLog(@"TimeString1=%@",TimeString1);
-    
-    
-    
-    UILabel *TimeLable = [[UILabel alloc] init];
-    TimeLable.textColor = [UIColor grayColor];
-    TimeLable.backgroundColor = [UIColor clearColor];
-    TimeLable.textAlignment = NSTextAlignmentLeft;
-    TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
-    TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
-    TimeLable.numberOfLines=0;
-    TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
-    [TimeLable sizeToFit];
-    TimeLable.frame=CGRectMake(300-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
-    [CellButtonClick addSubview:TimeLable];
-    
-    [cell.contentView addSubview:CellButtonClick];
+        
+        NSString *appointmentname   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentname"];
+        NSString *appointmenttime   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttime"];
+        NSString *provider          =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
+        NSString *appointType       =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmenttype"];
+        NSString *AppointmentId=                [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"appointmentid"];
+        
+        
+        UIButton *CellButtonClick;
+        CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+        CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
+        [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        CellButtonClick.layer.masksToBounds = NO;
+        CellButtonClick.exclusiveTouch=YES;
+        CellButtonClick.tag=[AppointmentId integerValue];
+        CellButtonClick.userInteractionEnabled=TRUE;
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+        CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+        CellButtonClick.layer.borderWidth = 0.5f;
+        [CellButtonClick addTarget:self action:@selector(setIdFromServer:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+        AppointmentNameTitleShow.textColor = [UIColor blackColor];
+        AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+        AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+        AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+        AppointmentNameTitleShow.text =  appointmentname;
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        [AppointmentNameTitleShow sizeToFit];
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+        TypeNameTitleShow.textColor = [UIColor grayColor];
+        TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+        TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        TypeNameTitleShow.text =  appointType;
+        [TypeNameTitleShow sizeToFit];
+        TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+        TypeNameTitleShow.minimumScaleFactor=0.3;
+        [CellButtonClick addSubview:TypeNameTitleShow];
+        
+        CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                                                              attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                                                                 context:nil];
+        
+        
+        UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+        
+        line.layer.borderColor = [UIColor grayColor].CGColor;
+        line.layer.borderWidth = 1.0f;
+        [CellButtonClick addSubview:line];
+        
+        
+        UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+        
+        ProviderNameTitleShow.textColor = [UIColor grayColor];
+        ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+        ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        ProviderNameTitleShow.text =provider;
+        [ProviderNameTitleShow sizeToFit];
+        ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+        ProviderNameTitleShow.minimumScaleFactor=0.3;
+        [CellButtonClick addSubview:ProviderNameTitleShow];
+        
+        
+        NSArray *dateSplitArray = [appointmenttime componentsSeparatedByString:@"T"];
+        NSString *date=[dateSplitArray objectAtIndex:0];
+        NSString *dateTime=[dateSplitArray objectAtIndex:1];
+        
+        
+        NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+        NSString *date2=[dateSplitArray2 objectAtIndex:1];
+        NSString *date3=[dateSplitArray2 objectAtIndex:2];
+        NSString *date4=[dateSplitArray2 objectAtIndex:0];
+        
+        if([date2 isEqualToString:@"01"]) date2=@"Jan";
+        if([date2 isEqualToString:@"02"]) date2=@"Feb";
+        if([date2 isEqualToString:@"03"]) date2=@"Mar";
+        if([date2 isEqualToString:@"04"]) date2=@"Apr";
+        if([date2 isEqualToString:@"05"]) date2=@"May";
+        if([date2 isEqualToString:@"06"]) date2=@"Jun";
+        if([date2 isEqualToString:@"07"]) date2=@"Jul";
+        if([date2 isEqualToString:@"08"]) date2=@"Aug";
+        if([date2 isEqualToString:@"09"]) date2=@"Sep";
+        if([date2 isEqualToString:@"10"]) date2=@"Oct";
+        if([date2 isEqualToString:@"11"]) date2=@"Nov";
+        if([date2 isEqualToString:@"12"]) date2=@"Dec";
+        
+        UILabel *DateLable = [[UILabel alloc] init];
+        DateLable.textColor = [UIColor grayColor];
+        DateLable.backgroundColor = [UIColor clearColor];
+        DateLable.textAlignment = NSTextAlignmentLeft;
+        DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+        DateLable.numberOfLines=0;
+        DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+        [DateLable sizeToFit];
+        DateLable.frame=CGRectMake(300-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+        [CellButtonClick addSubview:DateLable];
+        
+        NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+        NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+        
+        
+        UILabel *TimeLable = [[UILabel alloc] init];
+        TimeLable.textColor = [UIColor grayColor];
+        TimeLable.backgroundColor = [UIColor clearColor];
+        TimeLable.textAlignment = NSTextAlignmentLeft;
+        TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+        TimeLable.numberOfLines=0;
+        TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+        [TimeLable sizeToFit];
+        TimeLable.frame=CGRectMake(300-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+        [CellButtonClick addSubview:TimeLable];
+        [cell.contentView addSubview:CellButtonClick];
+
+    }
    
     return cell;
   
 }
-
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Set background color of cell here if you don't want default white
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"cell selected at index path %ld:%ld", (long)indexPath.section, (long)indexPath.row);
-    NSLog(@"selected cell index path is %@", [tableView indexPathForSelectedRow]);
+-(void)tableView:(UITableView *)tableView didselectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (!tableView.isEditing) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
+   
+    
+   
+    
 }
-
-
 - (NSArray *)rightButtons
 {
     NSMutableArray *rightUtilityButtons = [NSMutableArray new];
     [rightUtilityButtons sw_addUtilityButtonWithColor:
      [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f]
                                                 title:@"Delete"];
-    
     
     return rightUtilityButtons;
 }
@@ -2187,151 +2649,383 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     }
 
 }
-
-#pragma mark Search bar
--(void)AddAppointmentTableViewFunction{
+#pragma mark Search bar AddMedicalAppointmentsTableViewFunction
+-(void)AddMedicalAppointmentsTableViewFunction{
+    
+    [MedicalSearchBar removeFromSuperview];
+    MedicalSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 7, 300, 44)];
+    MedicalSearchBar.delegate = self;
+    MedicalSearchBar.placeholder = @"Search";
+    
+    [MedicalSearchBar setSearchFieldBackgroundImage:
+     [UIImage imageNamed:@"Rounded-Rectangle-9.png"] forState:UIControlStateNormal];
+    
+    MedicalSearchBar.translucent = NO;
+    MedicalSearchBar.opaque = NO;
+    MedicalSearchBar.showsCancelButton=NO;
    
-    [SearchBar removeFromSuperview];
-    SearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 7, 300, 44)];
-    SearchBar.delegate = self;
-    SearchBar.placeholder = @"Search";
+    MedicalSearchBar.backgroundColor=[UIColor clearColor];
+    MedicalSearchBar.searchBarStyle = UISearchBarStyleMinimal;
+    MedicalSearchBar.barTintColor = [UIColor clearColor];
+    [MedicalSubView addSubview:MedicalSearchBar];
+    
+    
+    [AddMedicalRerocdsTableView removeFromSuperview];
+    AddMedicalRerocdsTableView = nil;
+    AddMedicalRerocdsTableView=[[UITableView alloc]init];
+    AddMedicalRerocdsTableView.frame=CGRectMake(0, MedicalSearchBar.frame.size.height+MedicalSearchBar.frame.origin.y+5, self.view.frame.size.width, 390);
+    AddMedicalRerocdsTableView.tag=56700;
+    [AddMedicalRerocdsTableView setDelegate:self];
+    AddMedicalRerocdsTableView.dataSource=self;
+    [AddMedicalRerocdsTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    [AddMedicalRerocdsTableView setSeparatorColor:[UIColor grayColor]];
+    [AddMedicalRerocdsTableView setSeparatorInset:UIEdgeInsetsZero];
+    AddMedicalRerocdsTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    //CastingJobTableView.backgroundColor=[UIColor colorWithRed:0.8515625 green:0.85546875 blue:0.8671875 alpha:1.0];
+    AddMedicalRerocdsTableView.backgroundColor=[UIColor whiteColor];
+    AddMedicalRerocdsTableView.showsVerticalScrollIndicator = NO;
+    AddMedicalRerocdsTableView.alwaysBounceVertical = NO;
+    // [searchTableView setBackgroundColor:[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1.0]];
+    [MedicalSubView addSubview:AddMedicalRerocdsTableView];
+    
+}
+#pragma mark Search bar AddAppointmentTableViewFunction
+//-(void)AddAppointmentTableViewFunction
+//{
 //    
-//    for (UIView *subview in SearchBar.subviews)
-//    {
-//        if ([subview isKindOfClass:NSClassFromString(@"v")])
-//        {
-//            [subview removeFromSuperview];
-//            break;
-//        }
-//    }
+//    [SearchBar removeFromSuperview];
+//    SearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 7, 300, 44)];
+//    SearchBar.delegate = self;
+//    SearchBar.placeholder = @"Search";
+//    
+//    
+//    [SearchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"Rounded-Rectangle-9.png"]
+//                                    forState:UIControlStateNormal];
+//    
+//    SearchBar.translucent = NO;
+//    SearchBar.opaque = NO;
+//    SearchBar.showsCancelButton=YES;
+//    SearchBar.backgroundColor=[UIColor clearColor];
+//    SearchBar.searchBarStyle = UISearchBarStyleMinimal;
+//    SearchBar.barTintColor = [UIColor clearColor];
+//    SearchBar.showsCancelButton = NO;
+//    [AppointmentSubView addSubview:SearchBar];
+//    
+//    
+//    [AddAppointmentTableView removeFromSuperview];
+//    AddAppointmentTableView = nil;
+//    AddAppointmentTableView=[[UITableView alloc]init];
+//    AddAppointmentTableView.frame=CGRectMake(0, SearchBar.frame.size.height+SearchBar.frame.origin.y+5, self.view.frame.size.width, 390);
+//    
+//    [AddAppointmentTableView setDelegate:self];
+//    AddAppointmentTableView.dataSource=self;
+//    [AddAppointmentTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+//    [AddAppointmentTableView setSeparatorColor:[UIColor grayColor]];
+//    [AddAppointmentTableView setSeparatorInset:UIEdgeInsetsZero];
+//    AddAppointmentTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+//    //CastingJobTableView.backgroundColor=[UIColor colorWithRed:0.8515625 green:0.85546875 blue:0.8671875 alpha:1.0];
+//    AddAppointmentTableView.backgroundColor=[UIColor whiteColor];
+//    AddAppointmentTableView.showsVerticalScrollIndicator = NO;
+//    AddAppointmentTableView.alwaysBounceVertical = NO;
+//    // [searchTableView setBackgroundColor:[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1.0]];
+//    [AppointmentSubView addSubview:AddAppointmentTableView];
+//}
+#pragma mark Search bar
+
+-(void)AddAppointmentTableViewFunction{
+    
+    
+    
+    [SearchBar removeFromSuperview];
+    
+    SearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 57, 300, 44)];
+    SearchBar.tag=12345;
+    SearchBar.delegate = self;
+    
+    SearchBar.placeholder = @"Search";
+    
     
     
     [SearchBar setSearchFieldBackgroundImage:
+     
      [UIImage imageNamed:@"Rounded-Rectangle-9.png"]
-                                         forState:UIControlStateNormal];
+     
+                                    forState:UIControlStateNormal];
+    
+    
     
     SearchBar.translucent = NO;
+    
     SearchBar.opaque = NO;
+    
     SearchBar.showsCancelButton=YES;
-   //SearchBar.backgroundImage=[UIImage imageNamed:@"Sliding_bar.png"];
+    
     SearchBar.backgroundColor=[UIColor clearColor];
+    
     SearchBar.searchBarStyle = UISearchBarStyleMinimal;
-   //// SearchBar.backgroundImage = [UIImage imageWithColor:[UIColor redColor] cornerRadius:5.0f];
+    
     SearchBar.barTintColor = [UIColor clearColor];
+    
     SearchBar.showsCancelButton = NO;
-    //SearchBar.barStyle = UIBarStyleDefault;
-    [AppointmentSubView addSubview:SearchBar];
+    
+    [AppointmentGroudView addSubview:SearchBar];
+    
+    
+    
+    tableViewForMainTable = [[UIView alloc]init];
+    
+    tableViewForMainTable.frame = CGRectMake(0, 60, self.view.frame.size.width, 390);
+    
+    [AppointmentSubView addSubview:tableViewForMainTable];
+    
+    
+    
     
     
     [AddAppointmentTableView removeFromSuperview];
+    
     AddAppointmentTableView = nil;
+    
     AddAppointmentTableView=[[UITableView alloc]init];
-    AddAppointmentTableView.frame=CGRectMake(0, SearchBar.frame.size.height+SearchBar.frame.origin.y+5, self.view.frame.size.width, 390);
+    
+    AddAppointmentTableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 385);
+    
+    AddAppointmentTableView.tag = 5050;
+    
+    
     
     [AddAppointmentTableView setDelegate:self];
+    
     AddAppointmentTableView.dataSource=self;
+    
     [AddAppointmentTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    
     [AddAppointmentTableView setSeparatorColor:[UIColor grayColor]];
+    
     [AddAppointmentTableView setSeparatorInset:UIEdgeInsetsZero];
+    
     AddAppointmentTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    
     //CastingJobTableView.backgroundColor=[UIColor colorWithRed:0.8515625 green:0.85546875 blue:0.8671875 alpha:1.0];
+    
     AddAppointmentTableView.backgroundColor=[UIColor whiteColor];
+    
     AddAppointmentTableView.showsVerticalScrollIndicator = NO;
+    
     AddAppointmentTableView.alwaysBounceVertical = NO;
-    // [searchTableView setBackgroundColor:[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1.0]];
-    [AppointmentSubView addSubview:AddAppointmentTableView];
+    
+    [tableViewForMainTable addSubview:AddAppointmentTableView];
+    
+    
+    
+    
+    
+    
+    
+}
+- (void) searchBarTextDidBeginEditing: (UISearchBar*) searchBar
+
+{
+    if(searchBar.tag==12345){
+        [SearchBar setShowsCancelButton:YES animated:YES];
+        
+        
+        tableViewForMainTable.hidden = YES;
+        
+        [self searchViewForTable];
+    }
+    else{
+         [MedicalSearchBar setShowsCancelButton:YES animated:YES];
+    }
+    
+    
+    
+    
+    
 }
 
-- (void) searchBarTextDidBeginEditing: (UISearchBar*) searchBar {
-    //[searchBar setShowsCancelButton: YES animated: YES];
-    [SearchBar setShowsCancelButton:YES animated:YES];
-}
+
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+
 {
-    [SearchBar resignFirstResponder];
-    SearchBar.showsCancelButton = NO;
+    if(searchBar.tag==12345){
+        [SearchBar resignFirstResponder];
+        
+        SearchBar.showsCancelButton = NO;
+        
+        
+        tableViewForMainTable.hidden = NO;
+        
+        ViewForSearching.hidden = YES;
+    }
+    else {
+        [MedicalSearchBar resignFirstResponder];
+        
+        MedicalSearchBar.showsCancelButton = NO;
+    }
+  
+    
+   
     
     
-//    tempArrayForAppointmentID = [ArrayForAppointmentID mutableCopy];
-//    tempArrayForAppointmentName =[ArrayForAppointmentName mutableCopy];
-//    tempArrayForAppointmentTime =[ArrayForAppointmentTime mutableCopy];
-//    tempArrayForConsultantName =[ArrayForConsultantName mutableCopy];
-//    tempArrayForHospital =[ArrayForHospital mutableCopy];
-//    tempArrayForNotes =[ArrayForNotes mutableCopy];
-//    tempArrayForProvider =[ArrayForProvider mutableCopy];
+   
     
     
-     [AddAppointmentTableView reloadData];
+    
+    //[AddAppointmentTableView reloadData];
+    
 }
+
+
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+
 {
+    
     [searchBar resignFirstResponder];
+    
 }
+
+
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
+
 {
-    if(scrollView==AddAppointmentTableView)
-    {
-        [ SearchBar resignFirstResponder];
-    }
+    
+    [ SearchBar resignFirstResponder];
+    
 }
 
+
+
 - (void)searchBarTextDidEndEditing:(UISearchBar *)aSearchBar
+
 {
+    
     [self.view endEditing:YES];
+    
 }
+
 
 
 -(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
+
 {
-    if ([searchText length]==0)
-    {
-        
-        temp_appointmentSectionTitles = [appointmentSectionTitles mutableCopy];
-        temp_appointmentsDictionary = [appointmentsDictionary mutableCopy];
-        temp_sectionAppointments = [sectionAppointments mutableCopy];
-        
-    }
-    else
-    {
-         NSLog(@"sectionAppointments=%@",sectionAppointments);
-        [temp_appointmentSectionTitles removeAllObjects];
-        [temp_appointmentsDictionary removeAllObjects];
-        [temp_sectionAppointments removeAllObjects];
-        
-         NSLog(@"sectionAppointments=%@",[sectionAppointments valueForKey:@"appointmentname"]);
-        
-     
-        
-        
-        
-        int g = 0;
-        NSString *sectionTitle = [appointmentSectionTitles objectAtIndex:g];
-        NSLog(@"Ankit is %@",[[appointmentsDictionary valueForKey:sectionTitle]valueForKey:@"appointmentname"]);
-        NSLog(@"dummyArray is %@",[dummyArray objectAtIndex:0 ]);
-        
-          NSLog(@"dummyArray is %@",dummyArray);
-        
-        for (NSString *string in dummyArray)
-        {
-           // NSLog(@"temp_appointmentSectionTitles=%@",[sectionAppointments valueForKey:@"appointmentname"]);
+    if(searchBar1.tag==12345){
+        if ([searchText length]==0)
             
-            NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            if (r.location != NSNotFound)
-            {
-              //  [temp_appointmentSectionTitles addObject:[appointmentSectionTitles objectAtIndex:g]];
-               // [temp_sectionAppointments addObject:[sectionAppointments objectAtIndex:g]];
-                
-            }
-            g++;
+        {
+            
+            tableViewForMainTable.hidden = NO;
+            
+            ViewForSearching.hidden = YES;
+            
+            
+            
+            temp_array_AppointmentName =[array_AppointmentNam_Main mutableCopy];
+            
+            temp_array_AppointmentID = [array_AppointmentID_Main mutableCopy];
+            
+            temp_array_AppointmentTime = [array_AppointmentTime_Main mutableCopy];
+            
+            temp_array_AppointmentType = [array_AppointmentType_Main mutableCopy];
+            
+            temp_array_ConsultantName = [array_ConsultantName_Main mutableCopy];
+            
+            temp_array_Hospital = [array_Hospital_Main mutableCopy];
+            
+            temp_array_Notes = [array_Notes_Main mutableCopy];
+            
+            temp_array_Provider = [array_Provider_Main mutableCopy];
+            
+            temp_array_TimeStamp = [array_TimeStamp_Main mutableCopy];
+            
         }
         
+        else
+            
+        {
+            
+            tableViewForMainTable.hidden = YES;
+            
+            [self searchViewForTable];
+            
+            
+            
+            [temp_array_AppointmentName removeAllObjects];
+            
+            [temp_array_AppointmentID removeAllObjects];
+            
+            [temp_array_AppointmentTime removeAllObjects];
+            
+            [temp_array_AppointmentType removeAllObjects];
+            
+            [temp_array_ConsultantName removeAllObjects];
+            
+            [temp_array_Hospital removeAllObjects];
+            
+            [temp_array_Notes removeAllObjects];
+            
+            [temp_array_Provider removeAllObjects];
+            
+            [temp_array_TimeStamp removeAllObjects];
+            
+            
+            
+            int g = 0;
+            
+            
+            
+            
+            
+            NSLog(@"array_AppointmentName is %@",array_AppointmentNam_Main);
+            
+            for (NSString *string in array_AppointmentNam_Main)
+                
+            {
+                
+                NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+                
+                if (r.location != NSNotFound)
+                    
+                {
+                    
+                    [temp_array_AppointmentName addObject:[array_AppointmentNam_Main objectAtIndex:g]];
+                    
+                    [temp_array_AppointmentID addObject:[array_AppointmentID_Main objectAtIndex:g]];
+                    
+                    [temp_array_AppointmentTime addObject:[array_AppointmentTime_Main objectAtIndex:g]];
+                    
+                    [temp_array_AppointmentType addObject:[array_AppointmentType_Main objectAtIndex:g]];
+                    
+                    [temp_array_ConsultantName addObject:[array_ConsultantName_Main objectAtIndex:g]];
+                    
+                    [temp_array_Hospital addObject:[array_Hospital_Main objectAtIndex:g]];
+                    
+                    [temp_array_Notes addObject:[array_Notes_Main objectAtIndex:g]];
+                    
+                    [temp_array_Provider addObject:[array_Provider_Main objectAtIndex:g]];
+                    
+                    [temp_array_TimeStamp addObject:[array_TimeStamp_Main objectAtIndex:g]];
+                    
+                    
+                    
+                }
+                
+                g++;
+                
+            }
+            
+        }
+        
+        [SearchTableView reloadData];
     }
+    else{
+        
+    }
+
     
-    
-    [AddAppointmentTableView reloadData];
 }
 
 
@@ -2757,9 +3451,7 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
                  
                  
                  
-                 
-                 
-                 
+            
                  
              }
              
@@ -2804,5 +3496,714 @@ DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imag
     }
     
 }
+-(IBAction)setIdFromServer:(id)sender{
+    
+    
+    NSLog(@"appointmentsDictionary=%@",appointmentsDictionary);
+      [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"AppointmentIdGetValue"];
+    NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]);
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
+    
 
+
+    NSArray *keys= [appointmentsDictionary allKeys];
+    for (NSString *keysV in keys)
+    {
+        NSLog(@"Keys are %@", keysV);
+        
+        NSLog(@"vlaue=%d",[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmentid"] count]);
+        
+        if([[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmentid"] count]<1){
+            
+        }
+        else
+        {
+            for (int k=0; k<[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmentid"] count]; k++) {
+                
+               NSLog(@"vlaue=%@",appointmentsDictionary);
+                if([[[[[appointmentsDictionary valueForKey: keysV] valueForKey:@"appointmentid"] objectAtIndex:k] stringValue] isEqualToString:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]]])
+                {
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmentname"] objectAtIndex:k] forKeyPath:kAppointmentmentNameString];
+                    
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"consultantname"] objectAtIndex:k] forKeyPath:kAppointmentmentNameConsultantString];
+                    
+                   
+                    
+                    NSArray *dateSplitArray = [[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmenttime"] objectAtIndex:k] componentsSeparatedByString:@"T"];
+                    NSString *date=[dateSplitArray objectAtIndex:0];
+                    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+                    
+                    
+                    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+                    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+                    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+                    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+                    
+                    NSLog(@"date2=%@",date2);
+                    NSLog(@"date3=%@",date3);
+                    NSLog(@"date4=%@",date4);
+                    
+                    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+                    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+                    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+                    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+                    if([date2 isEqualToString:@"05"]) date2=@"May";
+                    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+                    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+                    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+                    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+                    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+                    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+                    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+                    
+                    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+                    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+                    
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"hospital"] objectAtIndex:k] forKeyPath:kAppointmentmentNameHospital];
+                    
+                     [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"appointmenttype"] objectAtIndex:k] forKeyPath:kAppointmentmentNameTypeName];
+                    
+                     [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kAppointmentmentNameProviderName];
+                    
+                    CreateNewAppointmentViewController *createnewAppointment=[[CreateNewAppointmentViewController alloc]init];
+                    [self.navigationController pushViewController:createnewAppointment animated:YES];
+                    //
+                    //
+                    
+                }
+            }
+            
+        }
+
+    }
+
+   
+}
+
+-(IBAction)setIdMedicalFromServer:(id)sender{
+    
+    
+    NSLog(@"medicalrecordsDictionary=%@",medicalrecordsDictionary);
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"MedicalIdGetValue"];
+    NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"MedicalIdGetValue"]);
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditMedicalPressed"];
+    
+    
+    
+    NSArray *keys= [medicalrecordsDictionary allKeys];
+    for (NSString *keysV in keys)
+    {
+        NSLog(@"Keys are %@", keysV);
+        
+        NSLog(@"vlaue=%d",[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicalid"] count]);
+        
+        if([[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicalid"] count]<1){
+            
+        }
+        else
+        {
+            for (int k=0; k<[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicalid"] count]; k++) {
+                
+                NSLog(@"vlaue=%@",medicalrecordsDictionary);
+                if([[[[[medicalrecordsDictionary valueForKey: keysV] valueForKey:@"medicalid"] objectAtIndex:k] stringValue] isEqualToString:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"MedicalIdGetValue"]]])
+                {
+                    
+                    
+                      [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicalname"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameString];
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"consultantname"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameConsultantString];
+                    
+                    
+                    
+                    NSArray *dateSplitArray = [[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicaltime"] objectAtIndex:k] componentsSeparatedByString:@"T"];
+                    NSString *date=[dateSplitArray objectAtIndex:0];
+                    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+                    
+                    
+                    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+                    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+                    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+                    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+                    
+                    NSLog(@"date2=%@",date2);
+                    NSLog(@"date3=%@",date3);
+                    NSLog(@"date4=%@",date4);
+                    
+                    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+                    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+                    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+                    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+                    if([date2 isEqualToString:@"05"]) date2=@"May";
+                    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+                    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+                    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+                    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+                    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+                    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+                    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+                    
+                    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+                    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+                    
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kMedicalRecordeNameDate];
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"hospital"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameHospital];
+                    
+                  
+                     [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicaltype"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameTypeName];
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameProviderName];
+                    
+                    MedicalRecordsHomeViewController *createnewAppointment=[[MedicalRecordsHomeViewController alloc]init];
+                    [self.navigationController pushViewController:createnewAppointment animated:YES];
+                    //
+                    //
+                    
+                }
+            }
+            
+        }
+        
+    }
+
+    
+}
+
+- (NSArray *)allKeysForObject:(id)anObject
+{
+return anObject;
+}
+#pragma mark APICallForUserMedicalAppointment API
+-(void)APICallForUserMedicalAppointment
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 };
+        
+        NSLog(@"APICallForUserMedicalAppointment >>>>Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/get_all_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%@",json);
+            if([json objectForKey:@"error"])
+            {
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
+            }
+            else
+                
+                if ([[json objectForKey:@"log"]isEqualToString:@"No medical yet!"])
+                {
+                    NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
+                    
+                    DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imageNamed:@"medecal_records_tuts.png"].size.width, [UIImage imageNamed:@"medecal_records_tuts.png"].size.height)];
+                    DemoImageView.image=[UIImage imageNamed:@"medecal_records_tuts.png"];
+                    [MedicalSubView addSubview:DemoImageView];
+                    
+                 [AddMedicalRerocdsTableView removeFromSuperview];
+                    AddMedicalRerocdsTableView=nil;
+                    MedicalSearchBar=nil;
+                }
+                else
+                {
+                    
+                    medicalrecordsDictionary = nil;
+                    MedicalRecordstemp_appointmentsDictionary = nil;
+                    
+                    medicalrecordsDictionary = [[NSMutableDictionary alloc]init];
+                    MedicalRecordstemp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
+                    medicalrecordsDictionary = json;
+                    MedicalRecordstemp_appointmentsDictionary = [json mutableCopy];
+                    
+                    
+    
+                  //  [totalData removeAllObjects];
+                   // [dummyArray removeAllObjects];
+                    NSLog(@"All Keys of APpointments is %@",[medicalrecordsDictionary allKeys]);
+                    
+                    
+                    for (int i = 0; i<12; i++)
+                    {
+                        [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicalname"]];
+                        
+                    }
+                    NSLog(@"total Data is %@",totalData);
+                    
+                    
+                    
+                    for (int i = 0; i<12; i++)
+                    {
+                        for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
+                        {
+                            [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
+                        }
+                    }
+                    
+                    NSLog(@"dummy array is %@",dummyArray);
+                    
+                    [self AddMedicalAppointmentsTableViewFunction];
+                }
+            
+            [self HideActivityIndicator];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
+}
+#pragma mark UserAppointment API
+-(void)APICallForUserAppointment
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 };
+        
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/get_all_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            NSLog(@"JSON--->%@",json);
+            if([json objectForKey:@"error"])
+            {
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
+            }
+            else
+                
+                if ([[json objectForKey:@"log"]isEqualToString:@"No apointment yet!"])
+                {
+                    NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
+                    
+                    AppointmentDemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(50, 80, [UIImage imageNamed:@"Staticapponments_page.png"].size.width,[UIImage imageNamed:@"Staticapponments_page.png"].size.height)];
+                    AppointmentDemoImageView.image=[UIImage imageNamed:@"Staticapponments_page.png"];
+                    [AppointmentSubView addSubview:AppointmentDemoImageView];
+                    [SearchBar removeFromSuperview];
+                    [AddAppointmentTableView removeFromSuperview];
+                    AddAppointmentTableView=nil;
+                    SearchBar=nil;
+                }
+                else
+                {
+                    
+                    appointmentsDictionary = nil;
+                    temp_appointmentsDictionary = nil;
+                    
+                    appointmentsDictionary = [[NSMutableDictionary alloc]init];
+                    temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
+                    appointmentsDictionary = json;
+                    temp_appointmentsDictionary = [json mutableCopy];
+                    
+                    
+                    
+                    
+                    [array_AppointmentName removeAllObjects];
+                    
+                    [array_AppointmentID removeAllObjects];
+                    
+                    [array_AppointmentTime removeAllObjects];
+                    
+                    [array_AppointmentType removeAllObjects];
+                    
+                    [array_ConsultantName removeAllObjects];
+                    
+                    [array_Hospital removeAllObjects];
+                    
+                    [array_Notes removeAllObjects];
+                    
+                    [array_Provider removeAllObjects];
+                    
+                    [array_TimeStamp removeAllObjects];
+                    
+                    
+                    
+                    [temp_array_AppointmentName removeAllObjects];
+                    
+                    [temp_array_AppointmentID removeAllObjects];
+                    
+                    [temp_array_AppointmentTime removeAllObjects];
+                    
+                    [temp_array_AppointmentType removeAllObjects];
+                    
+                    [temp_array_ConsultantName removeAllObjects];
+                    
+                    [temp_array_Hospital removeAllObjects];
+                    
+                    [temp_array_Notes removeAllObjects];
+                    
+                    [temp_array_Provider removeAllObjects];
+                    
+                    [temp_array_TimeStamp removeAllObjects];
+                    
+                    
+                    
+                    
+                    
+                    [array_AppointmentNam_Main removeAllObjects];
+                    
+                    [array_AppointmentID_Main removeAllObjects];
+                    
+                    [array_AppointmentTime_Main removeAllObjects];
+                    
+                    [array_AppointmentType_Main removeAllObjects];
+                    
+                    [array_ConsultantName_Main removeAllObjects];
+                    
+                    [array_Hospital_Main removeAllObjects];
+                    
+                    [array_Notes_Main removeAllObjects];
+                    
+                    [array_Provider_Main removeAllObjects];
+                    
+                    [array_TimeStamp_Main removeAllObjects];
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    for (int i = 0; i<12; i++)
+                        
+                    {
+                        
+                        [array_AppointmentName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
+                        
+                        [array_AppointmentID addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
+                        
+                        [array_AppointmentTime addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmenttime"]];
+                        
+                        [array_AppointmentType addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmenttype"]];
+                        
+                        [array_ConsultantName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"consultantname"]];
+                        
+                        [array_Hospital  addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"hospital"]];
+                        
+                        [array_Notes   addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"notes"]];
+                        
+                        [array_Provider  addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"provider"]];
+                        
+                        [array_TimeStamp  addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"timestamp"]];
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    for (int i = 0; i<12; i++)
+                        
+                    {
+                        
+                        for (int j=0; j<[[array_AppointmentName objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_AppointmentName addObject:[[array_AppointmentName objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_AppointmentNam_Main addObject:[[array_AppointmentName objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_AppointmentID objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_AppointmentID addObject:[[array_AppointmentID objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_AppointmentID_Main addObject:[[array_AppointmentID objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_AppointmentTime objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_AppointmentTime addObject:[[array_AppointmentTime objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_AppointmentTime_Main addObject:[[array_AppointmentTime objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_AppointmentType objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_AppointmentType addObject:[[array_AppointmentType objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_AppointmentType_Main addObject:[[array_AppointmentType objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_ConsultantName objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_ConsultantName addObject:[[array_ConsultantName objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_ConsultantName_Main addObject:[[array_ConsultantName objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Hospital objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Hospital addObject:[[array_Hospital objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Hospital_Main addObject:[[array_Hospital objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Notes objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Notes addObject:[[array_Notes objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Notes_Main addObject:[[array_Notes objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Provider objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Provider addObject:[[array_Provider objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Provider_Main addObject:[[array_Provider objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_TimeStamp objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_TimeStamp addObject:[[array_TimeStamp objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_TimeStamp_Main addObject:[[array_TimeStamp objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                    NSLog(@"temp_array_AppointmentName is %@",array_AppointmentNam_Main);
+                    
+                    NSLog(@"temp_array_AppointmentID %@",array_AppointmentID_Main);
+                    
+                    NSLog(@"temp_array_AppointmentTime is %@",array_AppointmentTime_Main);
+                    
+                    NSLog(@"temp_array_AppointmentType is %@",array_AppointmentType_Main);
+                    
+                    NSLog(@"temp_array_ConsultantName is %@",array_ConsultantName_Main);
+                    
+                    NSLog(@"temp_array_Hospital is %@",array_Hospital_Main);
+                    
+                    NSLog(@"temp_array_Notes is %@",array_Notes_Main);
+                    
+                    NSLog(@"temp_array_Provider is %@",array_Provider_Main);
+                    
+                    NSLog(@"temp_array_TimeStamp is %@",array_TimeStamp_Main);
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    // VIEW FOR SEARCH TABLE
+                    
+                    
+                    
+                    [ViewForSearching removeFromSuperview];
+                    
+                    ViewForSearching = nil;
+                    
+                    ViewForSearching = [[UIView alloc]init];
+                    
+                    ViewForSearching.frame = CGRectMake(0, 60, self.view.frame.size.width, 390);
+                    
+                    ViewForSearching.backgroundColor=[UIColor yellowColor];
+                    
+                    ViewForSearching.hidden = YES;
+                    
+                    [AppointmentSubView addSubview:ViewForSearching];
+                    
+                    
+                    
+                    
+                    
+                    SearchTableView = [[UITableView alloc]init];
+                    
+                    SearchTableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 385);
+                    
+                    [SearchTableView setDelegate:self];
+                    
+                    SearchTableView.dataSource=self;
+                    
+                    [SearchTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+                    
+                    [SearchTableView setSeparatorColor:[UIColor redColor]];
+                    
+                    [SearchTableView setSeparatorInset:UIEdgeInsetsZero];
+                    
+                    SearchTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+                    
+                    SearchTableView.backgroundColor=[UIColor whiteColor];
+                    
+                    SearchTableView.showsVerticalScrollIndicator = NO;
+                    
+                    SearchTableView.hidden = NO;
+                    
+                    SearchTableView.alwaysBounceVertical = NO;
+                    
+                    SearchTableView.tag = 4949;
+                    
+                    [ViewForSearching addSubview:SearchTableView];
+                    [self AddAppointmentTableViewFunction];                     // CREATING TABLE
+                }
+            
+            [self HideActivityIndicator];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
+}
+#pragma mark SEARCH TABLE
+
+-(void) searchViewForTable
+
+{
+    
+    ViewForSearching.hidden=NO;
+    
+    
+    
+}
+-(IBAction)setIdJaaliViewFromServer:(id)sender{
+    
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"AppointmentIdGetValue"];
+    NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]);
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_AppointmentName objectAtIndex:[sender tag]] forKey:kAppointmentmentNameString];
+    
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_ConsultantName objectAtIndex:[sender tag]] forKey:kAppointmentmentNameConsultantString];
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Hospital objectAtIndex:[sender tag]] forKey:kAppointmentmentNameHospital];
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_AppointmentType objectAtIndex:[sender tag]] forKey:kAppointmentmentNameTypeName];
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Provider objectAtIndex:[sender tag]] forKey:kAppointmentmentNameProviderName];
+    
+    
+    
+    NSArray *dateSplitArray = [[temp_array_AppointmentTime objectAtIndex:[sender tag]] componentsSeparatedByString:@"T"];
+    NSString *date=[dateSplitArray objectAtIndex:0];
+    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+    
+    
+    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+    
+    NSLog(@"date2=%@",date2);
+    NSLog(@"date3=%@",date3);
+    NSLog(@"date4=%@",date4);
+    
+    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+    if([date2 isEqualToString:@"05"]) date2=@"May";
+    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+    
+    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+    
+    
+    CreateNewAppointmentViewController *createnewAppointment=[[CreateNewAppointmentViewController alloc]init];
+    [self.navigationController pushViewController:createnewAppointment animated:YES];
+    
+    
+  //  [[NSUserDefaults standardUserDefaults] setValue:[temp_array_ConsultantName objectAtIndex:[sender tag]] forKey:kAppointmentmentNameConsultantString];
+    
+    
+       // NSString *value
+        NSLog(@"kAppointmentmentNameHospital=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital]);
+}
 @end

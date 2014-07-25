@@ -486,6 +486,7 @@
         dateTimePicker=[[UIDatePicker alloc]init];
         [dateTimePicker setFrame:CGRectMake(0, 518, 320, 100)];
         dateTimePicker.datePickerMode = UIDatePickerModeDate;
+        [dateTimePicker setMaximumDate:[NSDate  date]];
         [dateTimePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
         
         AgeTextField = [[UITextField alloc] initWithFrame:CGRectMake(GenderTextField.frame.size.width+GenderTextField.frame.origin.x+3, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 160, 40)];
@@ -771,6 +772,7 @@
         dateTimePicker=[[UIDatePicker alloc]init];
         [dateTimePicker setFrame:CGRectMake(0, 518, 320, 100)];
         dateTimePicker.datePickerMode = UIDatePickerModeDate;
+         [dateTimePicker setMaximumDate:[NSDate  date]];
         [dateTimePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
         
         AgeTextField = [[UITextField alloc] initWithFrame:CGRectMake(GenderTextField.frame.size.width+GenderTextField.frame.origin.x+3, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 160, 40)];

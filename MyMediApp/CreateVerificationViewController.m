@@ -64,8 +64,64 @@
     // Do any additional setup after loading the view.
 }
 -(void)LogInButtonAction{
-    UserHomeScreenViewController *listAppointment=[[UserHomeScreenViewController alloc]init];
-    [self.navigationController pushViewController:listAppointment animated:YES];
+    
+    [self ShowActivityIndicatorWithTitle:@"Loading..."];
+    [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];
+    
+}
+-(void)loginVerifyEmailOrNOT
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 };
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/get_is_verified_user_status",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+         
+         {
+             NSLog(@"JSON--->%@",json);
+             if([json objectForKey:@"error"])
+             {
+                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [myAlertView show];
+             }
+             else
+             {
+                 
+                 UserHomeScreenViewController *listAppointment=[[UserHomeScreenViewController alloc]init];
+                 [self.navigationController pushViewController:listAppointment animated:YES];
+             }
+             
+             [self HideActivityIndicator];
+             NSLog(@"JSON: %@", json);
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
+}
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title
+{
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+}
+-(void)HideActivityIndicator
+{
+    [SVProgressHUD dismiss];
 }
 -(void)ResendButtonAction{
     

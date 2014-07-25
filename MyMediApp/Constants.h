@@ -18,12 +18,35 @@
 #define kDeviceToken @"Device Token"
 
 #define kDevice @"DEVICE"
-#define kLongitudeString @"LongitudeString"
-#define kLatitudeString @"LatitudeString"
-#define kCountryNameString @"CountryNameString"
 #define kLoginData @"LoginData"
 #define kEmergencyDetails @"EmergencyDetails"
-#define kAppointmentData @"AppointmentData"
+
 #define kIDForLogout @"IDForLogout"
 #define kUpcomingAppointmentData @"UpcomingAppointmentData"
 #define kRecentAppointmentData @"RecentAppointmentData"
+
+
+
+#define kAppointmentData @"AppointmentData"
+#define kMedicalRerocdsData @"MedicalRerocdsData"
+
+#define kAppointmentmentNameString @"AppointmentmentNameString"
+#define kAppointmentmentNameConsultantString @"AppointmentmentNameConsultantString"
+#define kAppointmentmentNameDate @"AppointmentmentNameDate"
+#define kAppointmentmentNameHospital @"AppointmentmentNameHospital"
+
+#define kAppointmentmentNameTypeName @"AppointmentmentNameTypeName"
+#define kAppointmentmentNameProviderName @"AppointmentmentNameProviderName"
+
+
+
+#define kMedicalRecordeNameString @"kMedicalRecordeNameString"
+#define kMedicalRecordeNameConsultantString @"kMedicalRecordeNameConsultantString"
+#define kMedicalRecordeNameDate @"kMedicalRecordeNameDate"
+#define kMedicalRecordeNameHospital @"kMedicalRecordeNameHospital"
+
+#define kMedicalRecordeNameTypeName @"kMedicalRecordeNameTypeName"
+#define kMedicalRecordeNameProviderName @"kMedicalRecordeNameProviderName"
+
+
+

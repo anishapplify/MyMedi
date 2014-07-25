@@ -53,6 +53,7 @@
 #import <sqlite3.h>
 #import "SWTableViewCell.h"
 #import "NSMutableArray+SWUtilityButtons.h"
+#import "EditAppointmentViewController.h"
 
 #endif
 //#define NSLog(s,...)

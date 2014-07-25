@@ -139,7 +139,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     CGFloat animatedDistance;
     
     
-    
+  int  intTypeServerCall;
     
     
 }
@@ -240,11 +240,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [self.view addSubview:TopBarView];
     
-    
+   
     
     NewAppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 25, 130, 30)];
-    
-    NewAppointmentLable.text=@"New Appointment";
     
     NewAppointmentLable.textColor= [UIColor blackColor];
     
@@ -254,10 +252,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [self.view addSubview:NewAppointmentLable];
     
-    
-    
-    
-    
+   
     InformationImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -463,10 +458,94 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NotesTextView=[[AYTextViewWithUnderline alloc]init];
     
     
+    [self InformationAction];
     
     [self informationScrollAction];
     
     informationScrollView.hidden=true;
+    [TypeTitleLable removeFromSuperview];
+    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    TypeTitleLable.backgroundColor=[UIColor clearColor];
+    TypeTitleLable.textColor=[UIColor blackColor];
+    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
+    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [TypeButton addSubview:TypeTitleLable];
+    
+    
+    [ProviderTitleLable removeFromSuperview];
+    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    ProviderTitleLable.backgroundColor=[UIColor clearColor];
+    ProviderTitleLable.textColor=[UIColor blackColor];
+    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
+    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [ProviderButton addSubview:ProviderTitleLable];
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditAppointmentPressed"]==true)
+    {
+       
+        
+         NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]);
+        
+        NewAppointmentLable.text=@"Edit Appointment";
+         appointmentTextField.text =[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameString];
+       consultantTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameConsultantString];
+        dateTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameDate];
+        hospitalTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital];
+     
+        ////appointment//appointment_type
+        
+        NSString *TypeSting;
+        for (int k=0; k<[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]; k++) {
+        
+            
+            NSLog(@"print=%@",[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"id"] );
+            
+            if ([[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"appointmenttype"] objectAtIndex:k] isEqualToString:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]])
+            {
+                
+                TypeSting=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"id"] objectAtIndex:k];
+                NSLog(@"iDget=%@",TypeSting);
+            }
+            
+        }
+        NSString *ProviderString;
+        for (int k=0; k<[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]; k++) {
+            
+            
+            NSLog(@"print=%@",[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"id"] );
+            
+            if ([[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"provider"] objectAtIndex:k] isEqualToString:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameProviderName]])
+            {
+                
+                ProviderString=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"id"] objectAtIndex:k];
+                NSLog(@"iDget=%@",ProviderString);
+            }
+            
+        }
+        
+        TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]];
+        ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameProviderName]];
+        ;
+       
+        
+        
+        intTypeServerCall=1;
+        
+        TypeTagValue=[[NSString stringWithFormat:@"%@",TypeSting] integerValue];
+        ProiverTagValue=[[NSString stringWithFormat:@"%@",ProviderString] integerValue];
+        
+         NSLog(@"TypeTagValue=%d",TypeTagValue);
+            NSLog(@"ProiverTagValue=%d",ProiverTagValue);
+        
+    }
+    else{
+        NewAppointmentLable.text=@"New Appointment";
+        appointmentTextField.placeholder = @"Appointment Name";
+        consultantTextField.placeholder = @"Consultant Name";
+        dateTextField.placeholder = @"Date";
+        hospitalTextField.placeholder = @"Hospital Name";
+        intTypeServerCall=0;
+    }
     
     
     
@@ -639,23 +718,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     TypeTagValue=[sender tag];
     NSLog(@"TypeTagValue=%d",TypeTagValue);
     
-    [TypeTitleLable removeFromSuperview];
-    
-    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    TypeTitleLable.backgroundColor=[UIColor clearColor];
-    
-    TypeTitleLable.textColor=[UIColor blackColor];
-    
-    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    
     TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:[sender tag]-1]];
-    
-    [TypeButton addSubview:TypeTitleLable];
-    
-    
     
     typeStatus=1;
     
@@ -671,23 +734,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     ProiverTagValue=[sender tag];
     
-    [ProviderTitleLable removeFromSuperview];
-    
-    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    ProviderTitleLable.backgroundColor=[UIColor clearColor];
-    
-    ProviderTitleLable.textColor=[UIColor blackColor];
-    
-    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+   
     
     ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:[sender tag]-1]];
     
-    [ProviderButton addSubview:ProviderTitleLable];
-    
-    
+   
     
     purposeStatus=1;
     
@@ -1387,8 +1438,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 
 
--(void)informationScrollAction{
-    
+-(void)informationScrollAction
+{
     
     
     //NSLog(@"InformationButton=%f",InformationButton.frame.size.height+InformationButton.frame.origin.y);
@@ -1423,7 +1474,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     appointmentTextField.delegate = self;
     
-    appointmentTextField.placeholder = @"Appointment Name";
+    
     
     appointmentTextField.textColor=[UIColor blackColor];
     
@@ -1475,7 +1526,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     consultantTextField.delegate = self;
     
-    consultantTextField.placeholder = @"Consultant Name";
+    
     
     //[consultantTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1571,7 +1622,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     dateTextField.delegate = self;
     
-    dateTextField.placeholder = @"Date";
+    
     
     // [dateTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1651,7 +1702,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     hospitalTextField.delegate = self;
     
-    hospitalTextField.placeholder = @"Hospital Name";
     
     //[hospitalTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1677,7 +1727,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     hospitalTextField.autocapitalizationType = NO;
     
-    hospitalTextField.returnKeyType=UIReturnKeyNext;
+  //  hospitalTextField.returnKeyType=UIReturnKeyNext;
     
     [hospitalTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -1714,16 +1764,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 
 -(void)updateDateField
-
 {
     
     dateTextField.text = [self formatDate:AppointmentDatePicker.date];
     NSLog(@"dateTextField=%@",dateTextField.text);
-    
 }
-
 - (NSString *)formatDate:(NSDate *)date
-
 {
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -1735,13 +1781,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NSString *formattedDate = [dateFormatter stringFromDate:date];
     
     return formattedDate;
-    
 }
 
-
-
 -(void)NotesFunction
-
 {
     
     NotesTextView.hidden=NO;
@@ -1902,7 +1944,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(void)BackButtonAction{
     
-   
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     [self scrollViewDidTapped];
     [self endAnimation];
     [self.navigationController popViewControllerAnimated:YES];
@@ -2178,13 +2220,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
 }
 #pragma mark server CallFor AddApointment
-
 -(void)serverCallForAddApointment
-
 {
-    
+    [self scrollViewDidTapped];
     Reachability *reach = [Reachability reachabilityForInternetConnection];
-    
     NetworkStatus netStatus = [reach currentReachabilityStatus];
     
     if (netStatus == NotReachable)
@@ -2204,6 +2243,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else
         
     {
+        
+        NSLog(@"intTypeServerCall=%d",intTypeServerCall);
+        NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]);
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         
@@ -2225,8 +2267,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  
                                  @"notes":appointmentTextField.text,
                                  
-                                 @"type":@"0",
+                                 @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
                                  
+                                 @"appointmentid":[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"],
                                  
                                  };
         
@@ -2258,7 +2301,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                 [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
                 
                 UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your appointment '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                
+                  //[[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
                 complete.tag = 111;
                 
                 [complete show];

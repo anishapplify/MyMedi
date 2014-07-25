@@ -124,7 +124,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     CGFloat animatedDistance;
     
     
-
+ int  intTypeServerCall;
 }
 
 @end
@@ -210,7 +210,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     MedicalRecordAppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(60, 25, 190, 30)];
     
-    MedicalRecordAppointmentLable.text=@"NEW MEDICAL RECORDS";
     
     MedicalRecordAppointmentLable.textColor= [UIColor blackColor];
     
@@ -428,9 +427,99 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     NotesTextView=[[AYTextViewWithUnderline alloc]init];
     
+    informationScrollView.hidden=true;
+    [TypeTitleLable removeFromSuperview];
+    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    TypeTitleLable.backgroundColor=[UIColor clearColor];
+    TypeTitleLable.textColor=[UIColor blackColor];
+    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
+    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [TypeButton addSubview:TypeTitleLable];
     
     
+    [ProviderTitleLable removeFromSuperview];
+    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    ProviderTitleLable.backgroundColor=[UIColor clearColor];
+    ProviderTitleLable.textColor=[UIColor blackColor];
+    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
+    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [ProviderButton addSubview:ProviderTitleLable];
+    
+    [self InformationAction];
+
     [self informationScrollAction];
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditMedicalPressed"]==true)
+    {
+        
+        
+        NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString]);
+        
+        MedicalRecordAppointmentLable.text=@"Edit Medical Record";
+        appointmentTextField.text =[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString];
+        consultantTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameConsultantString];
+        dateTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameDate];
+        hospitalTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital];
+        
+        ////appointment//appointment_type
+        
+        NSString *TypeSting;
+        for (int k=0; k<[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]; k++) {
+            
+            
+            NSLog(@"print=%@",[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"id"] );
+            
+            if ([[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"appointmenttype"] objectAtIndex:k] isEqualToString:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]])
+            {
+                
+                TypeSting=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] valueForKey:@"id"] objectAtIndex:k];
+                NSLog(@"iDget=%@",TypeSting);
+            }
+            
+        }
+        NSString *ProviderString;
+        for (int k=0; k<[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]; k++) {
+            
+            
+            NSLog(@"print=%@",[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"id"] );
+            
+            if ([[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"provider"] objectAtIndex:k] isEqualToString:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameProviderName]])
+            {
+                
+                ProviderString=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] valueForKey:@"id"] objectAtIndex:k];
+                NSLog(@"iDget=%@",ProviderString);
+            }
+            
+        }
+        
+        
+        
+        
+        
+        intTypeServerCall=1;
+        
+        
+        
+        TypeTagValue=[[NSString stringWithFormat:@"%@",TypeSting] integerValue];
+        ProiverTagValue=[[NSString stringWithFormat:@"%@",ProviderString] integerValue];
+        
+        TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameTypeName]];
+        ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameProviderName]];
+        ;
+        
+        NSLog(@"TypeTagValue=%d",TypeTagValue);
+        NSLog(@"ProiverTagValue=%d",ProiverTagValue);
+        
+    }
+    else{
+        MedicalRecordAppointmentLable.text=@"New Medical Record";
+        appointmentTextField.placeholder = @"Appointment Name";
+        consultantTextField.placeholder = @"Consultant Name";
+        dateTextField.placeholder = @"Date";
+        hospitalTextField.placeholder = @"Hospital Name";
+        intTypeServerCall=0;
+    }
+
     
     informationScrollView.hidden=true;
     
@@ -1498,6 +1587,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     AppointmentDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
     
+    [AppointmentDatePicker setMaximumDate:[NSDate  date]];
     [AppointmentDatePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
     
     
@@ -1640,7 +1730,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     hospitalTextField.autocapitalizationType = NO;
     
-    hospitalTextField.returnKeyType=UIReturnKeyNext;
+  //  hospitalTextField.returnKeyType=UIReturnKeyNext;
     
     [hospitalTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -1865,7 +1955,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(void)BackButtonAction{
     
-    [self scrollViewDidTapped];
+     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
     
     informationStatus=1;
     [self InformationAction];
@@ -1926,7 +2016,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         {
             [self ShowActivityIndicatorWithTitle:@"Loading..."];
             
-            [self performSelector:@selector(serverCallForAddApointment) withObject:nil afterDelay:0.1];
+            [self performSelector:@selector(serverCallForAddMedicalReport) withObject:nil afterDelay:0.1];
         }
     
     
@@ -2141,32 +2231,24 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
 }
-#pragma mark server CallFor AddApointment
+#pragma mark server serverCallForAddMedicalReport
 
--(void)serverCallForAddApointment
+-(void)serverCallForAddMedicalReport
 
 {
     
+    [self scrollViewDidTapped];
     Reachability *reach = [Reachability reachabilityForInternetConnection];
-    
     NetworkStatus netStatus = [reach currentReachabilityStatus];
-    
     if (netStatus == NotReachable)
         
     {
-        
         [self HideActivityIndicator];
         
-        
-        
         UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        
         [unable show];
-        
     }
-    
     else
-        
     {
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -2175,7 +2257,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  
                                  @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
                                  
-                                 @"appointmentname":appointmentTextField.text,
+                                 @"medicalname":appointmentTextField.text,
                                  
                                  @"consultantname":consultantTextField.text,
                                  
@@ -2183,20 +2265,22 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  
                                  @"hospital":hospitalTextField.text,
                                  
-                                 @"appointmenttype":[NSString stringWithFormat:@"%d",TypeTagValue],
+                                 @"medicaltype":[NSString stringWithFormat:@"%d",TypeTagValue],
                                  
                                  @"provider":[NSString stringWithFormat:@"%d",ProiverTagValue],
                                  
                                  @"notes":appointmentTextField.text,
                                  
-                                 @"type":@"0",
+                                 @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
+                                 
+                                 @"medicalid":[[NSUserDefaults standardUserDefaults] valueForKey:@"MedicalIdGetValue"],
                                  
                                  
                                  };
         
         NSLog(@"Parameter=>%@",params);
         
-        [manager POST:[NSString stringWithFormat:@"%@/create_or_edit_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+        [manager POST:[NSString stringWithFormat:@"%@/create_or_edit_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
             
             NSLog(@"Add Apointments Json--->%@",json);
             
@@ -2209,19 +2293,19 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                 [myAlertView show];
                 
             }
-            
             else
                 
             {
-                //[NSString stringWithFormat:@"like to play game with %@ continue?",fbusername]
                 
-                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kAppointmentData];
-                NSLog(@"kAppointmentData=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kAppointmentData]);
+                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kMedicalRerocdsData];
+                NSLog(@"kAppointmentData=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kMedicalRerocdsData]);
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 
-                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
+                 [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewMedicalCreatedByUser"];
+                [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
                 
-                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your appointment '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                
+                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your medical records '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
                 
                 complete.tag = 111;
                 
