@@ -40,7 +40,7 @@
         [self.view addSubview:SplashImageView];
         
       // EditAppointmentViewController *veri=[[EditAppointmentViewController  alloc]init];
-   // [self.navigationController pushViewController:veri animated:YES];
+      // [self.navigationController pushViewController:veri animated:YES];
         
         
          [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];

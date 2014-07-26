@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EditAppointmentViewController : UIViewController<UIScrollViewDelegate,UITextFieldDelegate>
+@interface EditAppointmentViewController : UIViewController<UIScrollViewDelegate,UITextFieldDelegate,UITextViewDelegate>
 
 @end

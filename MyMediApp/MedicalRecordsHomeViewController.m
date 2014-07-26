@@ -2251,6 +2251,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else
     {
         
+        NSLog(@"MedicalIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"MedicalIdGetValue"]);
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         
         NSDictionary *params = @{
@@ -2269,7 +2271,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  
                                  @"provider":[NSString stringWithFormat:@"%d",ProiverTagValue],
                                  
-                                 @"notes":appointmentTextField.text,
+                                 @"notes":NotesTextView.text,
                                  
                                  @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
                                  
@@ -2345,8 +2347,23 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     if (alertView.tag == 111)
         
     {
+        NSArray *viewContrlls=[[self navigationController] viewControllers];
+        for( int i=0;i<[ viewContrlls count];i++)
+        {
+            id obj=[viewContrlls objectAtIndex:i];
+            if([obj isKindOfClass:[UserHomeScreenViewController class]])
+            {
+                
+                [[self navigationController] popToViewController:obj animated:YES];
+                return;
+            }
+            
+            
+        }
+        
         
         [self.navigationController popViewControllerAnimated:YES];
+        
         
     }
     

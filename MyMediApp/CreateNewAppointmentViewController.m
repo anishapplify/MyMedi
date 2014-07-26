@@ -534,6 +534,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         TypeTagValue=[[NSString stringWithFormat:@"%@",TypeSting] integerValue];
         ProiverTagValue=[[NSString stringWithFormat:@"%@",ProviderString] integerValue];
         
+        
+    NotesTextView.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNotes];
          NSLog(@"TypeTagValue=%d",TypeTagValue);
             NSLog(@"ProiverTagValue=%d",ProiverTagValue);
         
@@ -2231,19 +2233,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         
         [self HideActivityIndicator];
-        
-        
-        
         UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        
         [unable show];
         
     }
-    
     else
-        
     {
-        
         NSLog(@"intTypeServerCall=%d",intTypeServerCall);
         NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]);
         
@@ -2265,7 +2260,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  
                                  @"provider":[NSString stringWithFormat:@"%d",ProiverTagValue],
                                  
-                                 @"notes":appointmentTextField.text,
+                                 @"notes":NotesTextView.text,
                                  
                                  @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
                                  
@@ -2340,6 +2335,21 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     if (alertView.tag == 111)
         
     {
+        
+        NSArray *viewContrlls=[[self navigationController] viewControllers];
+        for( int i=0;i<[ viewContrlls count];i++)
+        {
+            id obj=[viewContrlls objectAtIndex:i];
+            if([obj isKindOfClass:[UserHomeScreenViewController class]])
+            {
+                
+                [[self navigationController] popToViewController:obj animated:YES];
+                return;
+            }
+            
+            
+        }
+        
         
         [self.navigationController popViewControllerAnimated:YES];
         

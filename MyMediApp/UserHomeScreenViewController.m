@@ -281,6 +281,7 @@
      [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"AppointmentIdGetValue"];
+     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"MedicalIdGetValue"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     
     appointmentSectionTitles = [[NSMutableArray alloc]init];
@@ -3504,7 +3505,7 @@ else
     NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]);
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
     
-
+[[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
 
     NSArray *keys= [appointmentsDictionary allKeys];
     for (NSString *keysV in keys)
@@ -3569,7 +3570,11 @@ else
                     
                      [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kAppointmentmentNameProviderName];
                     
-                    CreateNewAppointmentViewController *createnewAppointment=[[CreateNewAppointmentViewController alloc]init];
+                     [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kAppointmentmentNotes];
+                    
+                    
+                    
+                    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
                     [self.navigationController pushViewController:createnewAppointment animated:YES];
                     //
                     //
@@ -3592,7 +3597,7 @@ else
     NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"MedicalIdGetValue"]);
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditMedicalPressed"];
     
-    
+   [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"TapFlagVriable"];
     
     NSArray *keys= [medicalrecordsDictionary allKeys];
     for (NSString *keysV in keys)
@@ -3659,7 +3664,12 @@ else
                     
                     [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameProviderName];
                     
-                    MedicalRecordsHomeViewController *createnewAppointment=[[MedicalRecordsHomeViewController alloc]init];
+                     [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kMedicalRecordsNotes];
+                    
+                    
+                    
+                    
+                    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
                     [self.navigationController pushViewController:createnewAppointment animated:YES];
                     //
                     //
@@ -4145,7 +4155,8 @@ return anObject;
 }
 -(IBAction)setIdJaaliViewFromServer:(id)sender{
     
-    
+
+    [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
     [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"AppointmentIdGetValue"];
     NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]);
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
@@ -4196,7 +4207,7 @@ return anObject;
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
     
     
-    CreateNewAppointmentViewController *createnewAppointment=[[CreateNewAppointmentViewController alloc]init];
+    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
     [self.navigationController pushViewController:createnewAppointment animated:YES];
     
     

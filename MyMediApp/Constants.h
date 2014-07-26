@@ -37,6 +37,7 @@
 
 #define kAppointmentmentNameTypeName @"AppointmentmentNameTypeName"
 #define kAppointmentmentNameProviderName @"AppointmentmentNameProviderName"
+#define kAppointmentmentNotes @"AppointmentmentNotes"
 
 
 
@@ -47,6 +48,8 @@
 
 #define kMedicalRecordeNameTypeName @"kMedicalRecordeNameTypeName"
 #define kMedicalRecordeNameProviderName @"kMedicalRecordeNameProviderName"
+
+#define kMedicalRecordsNotes @"AppointmentmentNotes"
 
 
 
