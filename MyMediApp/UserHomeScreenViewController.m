@@ -37,7 +37,7 @@
     UIView *MedicalTopBarView;
     UIView *CenterView;
     UIView *BottomView;
-    
+    UIAlertView * alertviewLogout;
     UIView *SliderViewBar;
     NSString *savedImagePath;
     NSData *imageData;
@@ -155,6 +155,7 @@
     NSMutableDictionary *temp_appointmentsDictionary;
     NSMutableDictionary *MedicalRecordstemp_appointmentsDictionary;
     NSMutableArray *temp_sectionAppointments;
+    NSMutableArray *temp_sectionAppointmentsMedicalRecords;
     
     
     UIView *ViewForSearching;
@@ -375,7 +376,7 @@
     
     sectionAppointments = [[NSMutableArray alloc]init];
     temp_sectionAppointments = [[NSMutableArray alloc]init];
-  
+    temp_sectionAppointmentsMedicalRecords=[[NSMutableArray alloc]init];
   
     
     self.view.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
@@ -387,7 +388,7 @@
     ScrollerView.bounces=NO;
     ScrollerView.scrollEnabled=FALSE;
     ScrollerView.showsHorizontalScrollIndicator=NO;
-    [ScrollerView setContentSize:CGSizeMake(320*4,568-50)];
+    [ScrollerView setContentSize:CGSizeMake(320*5,568-50)];
    
 
 #pragma mark UserHomeGroundView
@@ -749,11 +750,162 @@ else
     [MapSubView.layer addSublayer:rightBorder2];
     
     [MapGroundView addSubview:MapSubView];
-    
-    
     [ScrollerView addSubview:MapGroundView];
-    [self.view addSubview:ScrollerView];
+    
 
+#pragma mark SliderViewBar
+    
+    SliderViewBar=[[UIView alloc]initWithFrame:CGRectMake(MapGroundView.frame.size.width+MapGroundView.frame.origin.x, 0, self.view.frame.size.width,490)];
+    SliderViewBar.backgroundColor=[UIColor colorWithRed:245/255.0 green:242/255.0 blue:237/255.0 alpha:1.0];
+    // SliderViewBar.backgroundColor=[UIColor yellowColor];
+    SliderViewBar.tag=200;
+    SliderViewBar.userInteractionEnabled=TRUE;
+    
+    EmergencySliderButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, SliderViewBar.frame.size.width, 45)];
+    [EmergencySliderButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    EmergencySliderButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [EmergencySliderButton setTitle:@"EMERGENCY" forState:(UIControlState)UIControlStateNormal];
+    EmergencySliderButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 25];
+    EmergencySliderButton.titleEdgeInsets = UIEdgeInsetsMake(5, 80, 0, 0);
+    EmergencySliderButton.backgroundColor=[UIColor colorWithRed:190/255.0 green:190/255.0 blue:190/255.0 alpha:1.0];
+    [EmergencySliderButton addTarget:self action:@selector(EmergencyButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [SliderViewBar addSubview:EmergencySliderButton];
+    
+    UILabel *SizeBackGroundLable=[[UILabel alloc]initWithFrame:CGRectMake(0, EmergencySliderButton.frame.size.height+EmergencySliderButton.frame.origin.y, 320, 60)];
+    SizeBackGroundLable.backgroundColor=[UIColor whiteColor];
+    SizeBackGroundLable.textAlignment=NSTextAlignmentLeft;
+    SizeBackGroundLable.textColor=[UIColor blackColor];
+    SizeBackGroundLable.font=[UIFont fontWithName:helveticaThin size:12];
+    
+    
+    UILabel *SizeLable=[[UILabel alloc]initWithFrame:CGRectMake(25, 10, 270, 20)];
+    SizeLable.backgroundColor=[UIColor clearColor];
+    SizeLable.textAlignment=NSTextAlignmentLeft;
+    SizeLable.textColor=[UIColor blackColor];
+    SizeLable.text=@"Current monthly usage : 20 MB of 60 MB";
+    SizeLable.font=[UIFont fontWithName:helveticaThin size:14];
+    [SizeBackGroundLable addSubview:SizeLable];
+    
+    UIView *lineView1=[[UIView alloc]initWithFrame:CGRectMake(25,SizeLable.frame.size.height+SizeLable.frame.origin.y,250,1)];
+    lineView1.layer.borderColor = [UIColor blackColor].CGColor;
+    lineView1.backgroundColor=[UIColor darkGrayColor];
+    lineView1.layer.borderWidth = 1.0f;
+    [SizeBackGroundLable addSubview:lineView1];
+    
+    UILabel *SyncLable=[[UILabel alloc]initWithFrame:CGRectMake(110, lineView1.frame.size.height+lineView1.frame.origin.y+5, 100, 15)];
+    SyncLable.backgroundColor=[UIColor clearColor];
+    SyncLable.textAlignment=NSTextAlignmentLeft;
+    SyncLable.textColor=[UIColor blackColor];
+    SyncLable.text=@"Last sync 10/8";
+    SyncLable.font=[UIFont fontWithName:helveticaThin size:12];
+    [SizeBackGroundLable addSubview:SyncLable];
+
+    [SliderViewBar addSubview:SizeBackGroundLable];
+    
+
+    
+    SyncButton=[[UIButton alloc]initWithFrame:CGRectMake(0, SizeBackGroundLable.frame.size.height+SizeBackGroundLable.frame.origin.y,320 ,40)];
+    [SyncButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    SyncButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    SyncButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [SyncButton setTitle:@"Sync Now" forState:(UIControlState)UIControlStateNormal];
+    SyncButton.titleEdgeInsets = UIEdgeInsetsMake(5, 120, 0, 0);
+    SyncButton.backgroundColor=[UIColor colorWithRed:31/255.0 green:185/255.0 blue:242/255.0 alpha:1.0];
+    SyncButton.clipsToBounds = YES;
+    //SyncButton.layer.cornerRadius=5;
+    SyncButton.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
+    SyncButton.layer.borderWidth = 0.5f;
+    [SliderViewBar addSubview:SyncButton];
+    
+    loginImageView=[[UIImageView alloc]init];
+    [loginImageView setFrame:CGRectMake(0, SyncButton.frame.size.height+SyncButton.frame.origin.y+20, 320,280)];
+    [loginImageView setBackgroundColor:[UIColor grayColor]];
+    loginImageView.userInteractionEnabled  =TRUE;
+    [loginImageView setUserInteractionEnabled:YES];
+    [SliderViewBar addSubview:loginImageView];
+    
+    for(int i=0;i<6;i++)
+    {
+        divImageView=[[UIImageView alloc]init];
+        [divImageView setFrame:CGRectMake(0, 51*i, 320, 1)];
+        [divImageView setBackgroundColor:[UIColor blackColor]];
+        [divImageView setUserInteractionEnabled:YES];
+        [loginImageView addSubview:divImageView];
+    }
+    
+    AccountButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0,320 ,50)];
+    [AccountButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [AccountButton setTitle:@"Account" forState:(UIControlState)UIControlStateNormal];
+    AccountButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    AccountButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    AccountButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    [AccountButton addTarget:self action:@selector(AccountScreen) forControlEvents:UIControlEventTouchUpInside];
+    AccountButton.backgroundColor=[UIColor whiteColor];
+    [loginImageView addSubview:AccountButton];
+    
+    SettingButton=[[UIButton alloc]initWithFrame:CGRectMake(0, AccountButton.frame.size.height+AccountButton.frame.origin.y+1,320 ,45)];
+    [SettingButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [SettingButton setTitle:@"Settings" forState:(UIControlState)UIControlStateNormal];
+    SettingButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    SettingButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    SettingButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    [SettingButton addTarget:self action:@selector(settingsScreen) forControlEvents:UIControlEventTouchUpInside];
+    SettingButton.backgroundColor=[UIColor whiteColor];
+    [loginImageView addSubview:SettingButton];
+    
+    HelpButton=[[UIButton alloc]initWithFrame:CGRectMake(0, SettingButton.frame.size.height+SettingButton.frame.origin.y+1,320 ,45)];
+    [HelpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [HelpButton setTitle:@"Help" forState:(UIControlState)UIControlStateNormal];
+    HelpButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    HelpButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    HelpButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    HelpButton.backgroundColor=[UIColor whiteColor];
+    [HelpButton addTarget:self action:@selector(HelpScreen) forControlEvents:UIControlEventTouchUpInside];
+    [loginImageView addSubview:HelpButton];
+    
+    ReportButton=[[UIButton alloc]initWithFrame:CGRectMake(0, HelpButton.frame.size.height+HelpButton.frame.origin.y+1,320 ,45)];
+    [ReportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [ReportButton setTitle:@"Legal & Privacy" forState:(UIControlState)UIControlStateNormal];
+    ReportButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    ReportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    ReportButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    ReportButton.backgroundColor=[UIColor whiteColor];
+    [ReportButton addTarget:self action:@selector(ReportScreen) forControlEvents:UIControlEventTouchUpInside];
+    [loginImageView addSubview:ReportButton];
+    
+    LegalButton=[[UIButton alloc]initWithFrame:CGRectMake(0, ReportButton.frame.size.height+ReportButton.frame.origin.y+1,320 ,45)];
+    [LegalButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [LegalButton setTitle:@"Send Feedback" forState:(UIControlState)UIControlStateNormal];
+    LegalButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    LegalButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    LegalButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    [LegalButton addTarget:self action:@selector(LegalScreen) forControlEvents:UIControlEventTouchUpInside];
+    LegalButton.backgroundColor=[UIColor whiteColor];
+    [loginImageView addSubview:LegalButton];
+    
+  UIButton *LogOutButton=[[UIButton alloc]initWithFrame:CGRectMake(0, LegalButton.frame.size.height+LegalButton.frame.origin.y+1,320 ,45)];
+    [LogOutButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [LogOutButton setTitle:@"Logout" forState:(UIControlState)UIControlStateNormal];
+    LogOutButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    LogOutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    LogOutButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    [LogOutButton addTarget:self action:@selector(LogOutAction) forControlEvents:UIControlEventTouchUpInside];
+    LogOutButton.backgroundColor=[UIColor whiteColor];
+    [loginImageView addSubview:LogOutButton];
+    
+    
+    copyRightLable=[[UILabel  alloc]initWithFrame:CGRectMake(230, loginImageView.frame.size.height+loginImageView.frame.origin.y, 80, 20)];
+    copyRightLable.backgroundColor=[UIColor clearColor];
+    copyRightLable.text=@"Copyright 2014";
+    copyRightLable.font=[UIFont fontWithName:helveticaRegular size:10];
+    copyRightLable.textColor=[UIColor blackColor];
+    copyRightLable.textAlignment=NSTextAlignmentRight;
+    [SliderViewBar addSubview:copyRightLable];
+    [ScrollerView addSubview:SliderViewBar];
+    
+    [self.view addSubview:ScrollerView];
+    
+ 
 #pragma mark BottomView
 
     BottomView=[[UIView alloc]initWithFrame:CGRectMake(0, UserHomeGroundView.frame.size.height+UserHomeGroundView.frame.origin.y, 320, 50)];
@@ -838,135 +990,8 @@ else
     [self.view addSubview:BackGroundBlackView];
     BackGroundBlackView.hidden=YES;
     
-    SliderViewBar=[[UIView alloc]initWithFrame:CGRectMake(400, 20, 300,self.view.frame.size.height)];
-    SliderViewBar.backgroundColor=[UIColor colorWithRed:245/255.0 green:242/255.0 blue:237/255.0 alpha:1.0];
-    SliderViewBar.tag=200;
-    SliderViewBar.userInteractionEnabled=TRUE;
+   
     
-   EmergencySliderButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, SliderViewBar.frame.size.width, 50)];
-    [EmergencySliderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-   // [EmergencySliderButton addTarget:self action:@selector(SubmitButtonAction)forControlEvents:UIControlEventTouchUpInside];
-    EmergencySliderButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [EmergencySliderButton setTitle:@"EMERGENCY" forState:(UIControlState)UIControlStateNormal];
-    EmergencySliderButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 25];
-    EmergencySliderButton.titleEdgeInsets = UIEdgeInsetsMake(5, 50, 0, 0);
-    EmergencySliderButton.backgroundColor=[UIColor blackColor];
-    [EmergencySliderButton addTarget:self action:@selector(EmergencyButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    [SliderViewBar addSubview:EmergencySliderButton];
-    
-    
-    UILabel *SizeLable=[[UILabel alloc]initWithFrame:CGRectMake(25, EmergencySliderButton.frame.size.height+EmergencySliderButton.frame.origin.y+40, 270, 15)];
-    SizeLable.backgroundColor=[UIColor clearColor];
-    SizeLable.textAlignment=NSTextAlignmentLeft;
-    SizeLable.textColor=[UIColor blackColor];
-    SizeLable.text=@"Current monthly usage : 20 MB of 60 MB";
-    SizeLable.font=[UIFont fontWithName:helveticaThin size:12];
-    [SliderViewBar addSubview:SizeLable];
-    
-    UIView *lineView1=[[UIView alloc]initWithFrame:CGRectMake(25,EmergencySliderButton.frame.size.height+EmergencySliderButton.frame.origin.y+60,215,1)];
-    lineView1.layer.borderColor = [UIColor blackColor].CGColor;
-    lineView1.backgroundColor=[UIColor darkGrayColor];
-    lineView1.layer.borderWidth = 1.0f;
-    [SliderViewBar addSubview:lineView1];
-    
-    UILabel *SyncLable=[[UILabel alloc]initWithFrame:CGRectMake(90, lineView1.frame.size.height+lineView1.frame.origin.y+10, 100, 15)];
-    SyncLable.backgroundColor=[UIColor clearColor];
-    SyncLable.textAlignment=NSTextAlignmentLeft;
-    SyncLable.textColor=[UIColor blackColor];
-    SyncLable.text=@"Last sync 10/8";
-    SyncLable.font=[UIFont fontWithName:helveticaThin size:12];
-    [SliderViewBar addSubview:SyncLable];
-
-    
-    
-    SyncButton=[[UIButton alloc]initWithFrame:CGRectMake(10, EmergencySliderButton.frame.size.height+EmergencySliderButton.frame.origin.y+140,250 ,40)];
-    [SyncButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    //[SyncButton addTarget:self action:@selector(SyncButtonAction)forControlEvents:UIControlEventTouchUpInside];
-    SyncButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    SyncButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [SyncButton setTitle:@"Sync Now" forState:(UIControlState)UIControlStateNormal];
-    SyncButton.titleEdgeInsets = UIEdgeInsetsMake(5, 90, 0, 0);
-    SyncButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    SyncButton.clipsToBounds = YES;
-    SyncButton.layer.cornerRadius=5;
-    [SliderViewBar addSubview:SyncButton];
-
-    loginImageView=[[UIImageView alloc]init];
-    [loginImageView setFrame:CGRectMake(0, SyncButton.frame.size.height+SyncButton.frame.origin.y+40, 270, 250)];
-    [loginImageView setBackgroundColor:[UIColor grayColor]];
-    loginImageView.userInteractionEnabled  =TRUE;
-    [loginImageView setUserInteractionEnabled:YES];
-    [SliderViewBar addSubview:loginImageView];
-
-    for(int i=0;i<6;i++)
-    {
-        divImageView=[[UIImageView alloc]init];
-        [divImageView setFrame:CGRectMake(0, 51*i, 270, 1)];
-        [divImageView setBackgroundColor:[UIColor blackColor]];
-        [divImageView setUserInteractionEnabled:YES];
-        [loginImageView addSubview:divImageView];
-    }
-    
-    AccountButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0,270 ,50)];
-    [AccountButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [AccountButton setTitle:@"Account" forState:(UIControlState)UIControlStateNormal];
-    AccountButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    AccountButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    AccountButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
-    [AccountButton addTarget:self action:@selector(AccountScreen) forControlEvents:UIControlEventTouchUpInside];
-    AccountButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    [loginImageView addSubview:AccountButton];
-
-    SettingButton=[[UIButton alloc]initWithFrame:CGRectMake(0, AccountButton.frame.size.height+AccountButton.frame.origin.y+1,270 ,50)];
-    [SettingButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [SettingButton setTitle:@"Settings" forState:(UIControlState)UIControlStateNormal];
-    SettingButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    SettingButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    SettingButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
-    [SettingButton addTarget:self action:@selector(settingsScreen) forControlEvents:UIControlEventTouchUpInside];
-    SettingButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    [loginImageView addSubview:SettingButton];
-
-    HelpButton=[[UIButton alloc]initWithFrame:CGRectMake(0, SettingButton.frame.size.height+SettingButton.frame.origin.y+1,270 ,50)];
-    [HelpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [HelpButton setTitle:@"Help" forState:(UIControlState)UIControlStateNormal];
-    HelpButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    HelpButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    HelpButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
-    HelpButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    [HelpButton addTarget:self action:@selector(HelpScreen) forControlEvents:UIControlEventTouchUpInside];
-    [loginImageView addSubview:HelpButton];
-
-    ReportButton=[[UIButton alloc]initWithFrame:CGRectMake(0, HelpButton.frame.size.height+HelpButton.frame.origin.y+1,270 ,50)];
-    [ReportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [ReportButton setTitle:@"Report" forState:(UIControlState)UIControlStateNormal];
-    ReportButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    ReportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    ReportButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
-    ReportButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    [ReportButton addTarget:self action:@selector(ReportScreen) forControlEvents:UIControlEventTouchUpInside];
-    [loginImageView addSubview:ReportButton];
-
-    LegalButton=[[UIButton alloc]initWithFrame:CGRectMake(0, ReportButton.frame.size.height+ReportButton.frame.origin.y+1,270 ,51)];
-    [LegalButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-     [LegalButton setTitle:@"Legal" forState:(UIControlState)UIControlStateNormal];
-    LegalButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    LegalButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    LegalButton.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
-    [LegalButton addTarget:self action:@selector(LegalScreen) forControlEvents:UIControlEventTouchUpInside];
-    LegalButton.backgroundColor=[UIColor colorWithRed:168/255.0 green:227/255.0 blue:249/255.0 alpha:1.0];
-    [loginImageView addSubview:LegalButton];
-    
-    copyRightLable=[[UILabel  alloc]initWithFrame:CGRectMake(180, loginImageView.frame.size.height+loginImageView.frame.origin.y+8, 80, 20)];
-    copyRightLable.backgroundColor=[UIColor clearColor];
-    copyRightLable.text=@"Copyright 2014";
-    copyRightLable.font=[UIFont fontWithName:helveticaRegular size:10];
-    copyRightLable.textColor=[UIColor blackColor];
-    copyRightLable.textAlignment=NSTextAlignmentCenter;
-    [SliderViewBar addSubview:copyRightLable];
-    [self.view addSubview:SliderViewBar];
-    
-    SliderViewBar.hidden=YES;
     SliderBarViewSatus=5;
     BottomNavigationButtonFlag=1;
     
@@ -979,7 +1004,12 @@ else
     }
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AddAppointmentClick"];
 }
-
+-(void)LogOutAction{
+    alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Log Out" message:@"Are you sure you want to log out?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
+    alertviewLogout.tag=14215;
+    
+    [alertviewLogout show];
+}
 -(void) NewUpdateView :(int)indexRow
 {
 
@@ -991,6 +1021,7 @@ else
     [FirstRowCellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     FirstRowCellButtonClick.layer.masksToBounds = NO;
     FirstRowCellButtonClick.exclusiveTouch=YES;
+    [FirstRowCellButtonClick addTarget:self action:@selector(firstRowData) forControlEvents:UIControlEventTouchUpInside];
     [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
     [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
     
@@ -1113,20 +1144,84 @@ else
 
 
 }
-
+-(void)firstRowData{
+    
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmentname"] objectAtIndex:0] forKeyPath:kAppointmentmentNameString];
+    
+    NSLog(@"appointments name=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameString]);
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"consultantname"] objectAtIndex:0] forKeyPath:kAppointmentmentNameConsultantString];
+    
+    
+    NSLog(@"consultantname=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kLoginData]);
+    
+    NSArray *dateSplitArray = [[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmenttime"] objectAtIndex:0] componentsSeparatedByString:@"T"];
+    NSString *date=[dateSplitArray objectAtIndex:0];
+    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+    
+    
+    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+    
+    NSLog(@"date2=%@",date2);
+    NSLog(@"date3=%@",date3);
+    NSLog(@"date4=%@",date4);
+    
+    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+    if([date2 isEqualToString:@"05"]) date2=@"May";
+    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+    
+    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+    
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"hospital"] objectAtIndex:0] forKeyPath:kAppointmentmentNameHospital];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmenttype"] objectAtIndex:0] forKeyPath:kAppointmentmentNameTypeName];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"provider"] objectAtIndex:0] forKeyPath:kAppointmentmentNameProviderName];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"notes"] objectAtIndex:0] forKeyPath:kAppointmentmentNotes];
+    
+    
+    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
+    [self.navigationController pushViewController:createnewAppointment animated:YES];
+}
 
 -(void)SecondUpdateFunciton:(int)indexRow
 {
     
-        
+    
         SecondRowCellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
-        
+    
         SecondRowCellButtonClick.frame = CGRectMake(0, FirstRowCellButtonClick.frame.size.height+FirstRowCellButtonClick.frame.origin.y, 300.5, 50);
-        
+    
         SecondRowCellButtonClick.backgroundColor=[UIColor clearColor];
         [SecondRowCellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         SecondRowCellButtonClick.layer.masksToBounds = NO;
         SecondRowCellButtonClick.exclusiveTouch=YES;
+        [SecondRowCellButtonClick addTarget:self action:@selector(SecondRowData) forControlEvents:UIControlEventTouchUpInside];
         [SecondRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
         [SecondRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
         
@@ -1249,7 +1344,71 @@ else
     
 
 }
-
+-(void)SecondRowData{
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmentname"] objectAtIndex:1] forKeyPath:kAppointmentmentNameString];
+    
+    NSLog(@"appointments name=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kLoginData]);
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"consultantname"] objectAtIndex:1] forKeyPath:kAppointmentmentNameConsultantString];
+    
+    
+    NSLog(@"consultantname=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameConsultantString]);
+    
+    NSArray *dateSplitArray = [[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmenttime"] objectAtIndex:1] componentsSeparatedByString:@"T"];
+    
+    
+    NSString *date=[dateSplitArray objectAtIndex:0];
+    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+    
+    
+    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+    
+    NSLog(@"date2=%@",date2);
+    NSLog(@"date3=%@",date3);
+    NSLog(@"date4=%@",date4);
+    
+    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+    if([date2 isEqualToString:@"05"]) date2=@"May";
+    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+    
+    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+    
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"hospital"] objectAtIndex:1] forKeyPath:kAppointmentmentNameHospital];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmenttype"] objectAtIndex:1] forKeyPath:kAppointmentmentNameTypeName];
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"provider"] objectAtIndex:1] forKeyPath:kAppointmentmentNameProviderName];
+    
+    
+    [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"notes"] objectAtIndex:1] forKeyPath:kAppointmentmentNotes];
+    
+    
+    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
+    [self.navigationController pushViewController:createnewAppointment animated:YES];
+}
 -(void)SyncButtonAction{
 
 }
@@ -1268,6 +1427,7 @@ else
     MedicalRecordButton.userInteractionEnabled=TRUE;
     AppointmentButton.userInteractionEnabled=TRUE;
     MapButton.userInteractionEnabled=TRUE;
+       SlidMenuButton.userInteractionEnabled=TRUE;
    
 
     [UIView animateWithDuration:.3f animations:^{
@@ -1278,12 +1438,12 @@ else
 }
 -(void)MedicalButtonActionDown{
     
-    [[soundManager shared] buttonSound];
     BottomNavigationButtonFlag=2;
     HomeButton.userInteractionEnabled=TRUE;
      AppointmentButton.userInteractionEnabled=TRUE;
      MapButton.userInteractionEnabled=TRUE;
      MedicalRecordButton.userInteractionEnabled=FALSE;
+       SlidMenuButton.userInteractionEnabled=TRUE;
     
     [HomeButton setImage:HomeAfterClick forState:UIControlStateNormal];
      [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateNormal];
@@ -1308,6 +1468,7 @@ else
     MedicalRecordButton.userInteractionEnabled=TRUE;
     MapButton.userInteractionEnabled=TRUE;
     AppointmentButton.userInteractionEnabled=FALSE;
+       SlidMenuButton.userInteractionEnabled=TRUE;
 
     BottomNavigationButtonFlag=3;
     [HomeButton setImage:HomeAfterClick forState:UIControlStateNormal];
@@ -1325,18 +1486,21 @@ else
 }
 -(void)MapButtonAction
 {
-    [[soundManager shared] buttonSound];
     BottomNavigationButtonFlag=4;
      MapButton.userInteractionEnabled=FALSE;
     HomeButton.userInteractionEnabled=TRUE;
      MedicalRecordButton.userInteractionEnabled=TRUE;
      AppointmentButton.userInteractionEnabled=TRUE;
-
+    SlidMenuButton.userInteractionEnabled=TRUE;
+    
+    
     [HomeButton setImage:HomeAfterClick forState:UIControlStateNormal];
     [MedicalRecordButton setImage:MedicalRecordsImageDefault forState:UIControlStateNormal];
     [AppointmentButton setImage:AppointmentsImageDefault forState:UIControlStateNormal];
     [MapButton setImage:MapImageAfterClick forState:UIControlStateNormal];
     [SlidMenuButton setImage:SliderBarDefault forState:UIControlStateNormal];
+    
+    
     [UIView animateWithDuration:.3f animations:^{
         SelectBarImageView.frame=CGRectMake(AppointmentButton.frame.origin.x+AppointmentButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
     }];
@@ -1398,56 +1562,39 @@ else
 
 -(void)SliderButtonDownDown
 {
-    BackGroundBlackView.hidden=NO;
-    [[soundManager shared] buttonSound];
-    ScrollerView.userInteractionEnabled=FALSE;
+    
+    MapButton.userInteractionEnabled=TRUE;
+    HomeButton.userInteractionEnabled=TRUE;
+    MedicalRecordButton.userInteractionEnabled=TRUE;
+    AppointmentButton.userInteractionEnabled=TRUE;
+    SlidMenuButton.userInteractionEnabled=FALSE;
+  
     [HomeButton setImage:HomeAfterClick forState:UIControlStateNormal];
     [MedicalRecordButton setImage:MedicalRecordsImageDefault forState:UIControlStateNormal];
     [AppointmentButton setImage:AppointmentsImageDefault forState:UIControlStateNormal];
     [MapButton setImage:MapImageDefault forState:UIControlStateNormal];
+    
+    
+    
+    
     if(SliderBarViewSatus==5)
     {
         SliderBarViewSatus=1;
         HomeButton.userInteractionEnabled=TRUE;
     [UIView animateWithDuration:.3f animations:^{
         SelectBarImageView.frame=CGRectMake(MapButton.frame.origin.x+MapButton.frame.size.width+15, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-        SliderViewBar.frame=CGRectMake(50, 20, 300, self.view.frame.size.height);
-        BottomView.frame = CGRectMake(-270, UserHomeGroundView.frame.size.height+UserHomeGroundView.frame.origin.y, self.view.frame.size.width, 50);
-        SliderViewBar.hidden=NO;
     }];
     }
     else {
         SliderBarViewSatus=5;
-        ScrollerView.userInteractionEnabled=TRUE;
         [UIView animateWithDuration:.3f animations:^{
-            if(BottomNavigationButtonFlag==1){
-                SelectBarImageView.frame=CGRectMake(10, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-            [HomeButton setImage:HomeImage forState:UIControlStateNormal];
-                 HomeButton.userInteractionEnabled=FALSE;}
-            if(BottomNavigationButtonFlag==2){
-                SelectBarImageView.frame=CGRectMake(HomeButton.frame.origin.x+HomeButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-            [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateNormal];
-            MedicalRecordButton.userInteractionEnabled=FALSE;
-            }
-            if(BottomNavigationButtonFlag==3){
-                SelectBarImageView.frame=CGRectMake(MedicalRecordButton.frame.origin.x+MedicalRecordButton.frame.size.width+25, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-            [AppointmentButton setImage:AppointmentsImageAfterClick forState:UIControlStateNormal];
-             AppointmentButton.userInteractionEnabled=FALSE;}
-            if(BottomNavigationButtonFlag==4){
-                SelectBarImageView.frame=CGRectMake(AppointmentButton.frame.origin.x+AppointmentButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-             [MapButton setImage:MapImageAfterClick forState:UIControlStateNormal];
-             MapButton.userInteractionEnabled=FALSE;
-            }
-            BackGroundBlackView.hidden=YES;
-            BottomView.frame = CGRectMake(0, UserHomeGroundView.frame.size.height+UserHomeGroundView.frame.origin.y, self.view.frame.size.width, 50);
-            SliderViewBar.frame=CGRectMake(400, 20, 200, self.view.frame.size.height);
-            UserHomeGroundView.frame=CGRectMake(0, 0, self.view.frame.size.width, 518);
+              SelectBarImageView.frame=CGRectMake(MapButton.frame.origin.x+MapButton.frame.size.width+15, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
+    
         } completion:^(BOOL finished) {
-            SliderViewBar.hidden=YES;
         }];
 
     }
-    
+     [ScrollerView scrollRectToVisible:CGRectMake(640+320+320, 0, 320, 518) animated:YES];
 }
 -(void)HomeButtonAction
 {
@@ -1560,41 +1707,42 @@ else
     CreateNewAppointmentViewController *CreateNewAppointment=[[CreateNewAppointmentViewController alloc]init];
     [self.navigationController pushViewController:CreateNewAppointment animated:YES];
 }
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch =[touches anyObject];
-    if([touch view] == (UIView *)[self.view viewWithTag:200])
-    {
-    }
-    else{
-        if(SliderBarViewSatus==1)
-        {
-            SliderBarViewSatus=5;
-            BackGroundBlackView.hidden=YES;
-            ScrollerView.userInteractionEnabled=TRUE;
-            [UIView animateWithDuration:.3f animations:^{
-                if(BottomNavigationButtonFlag==1){ SelectBarImageView.frame=CGRectMake(10, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-                    [HomeButton setImage:HomeImage forState:UIControlStateNormal];}
-                if(BottomNavigationButtonFlag==2){ SelectBarImageView.frame=CGRectMake(HomeButton.frame.origin.x+HomeButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-                    [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateNormal];}
-                if(BottomNavigationButtonFlag==3){ SelectBarImageView.frame=CGRectMake(MedicalRecordButton.frame.origin.x+MedicalRecordButton.frame.size.width+25, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-                    [AppointmentButton setImage:AppointmentsImageAfterClick forState:UIControlStateNormal];}
-                if(BottomNavigationButtonFlag==4){ SelectBarImageView.frame=CGRectMake(AppointmentButton.frame.origin.x+AppointmentButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
-                    [MapButton setImage:MapImageAfterClick forState:UIControlStateNormal];}
-                
-                BottomView.frame = CGRectMake(0, UserHomeGroundView.frame.size.height+UserHomeGroundView.frame.origin.y, self.view.frame.size.width, 50);
-                SliderViewBar.frame=CGRectMake(400, 20, 200, self.view.frame.size.height);
-                UserHomeGroundView.frame=CGRectMake(0, 0, self.view.frame.size.width, 518);
-            } completion:^(BOOL finished) {
-                SliderViewBar.hidden=YES;
-            }];
-        }
-    }
-    
-    
-    
-   
-}
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    UITouch* touch =[touches anyObject];
+//    if([touch view] == (UIView *)[self.view viewWithTag:200])
+//    {
+//    }
+//    else{
+//        if(SliderBarViewSatus==1)
+//        {
+//            SliderBarViewSatus=5;
+//            BackGroundBlackView.hidden=YES;
+//            ScrollerView.userInteractionEnabled=TRUE;
+//            [UIView animateWithDuration:.3f animations:^{
+//                if(BottomNavigationButtonFlag==1){ SelectBarImageView.frame=CGRectMake(10, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
+//                    [HomeButton setImage:HomeImage forState:UIControlStateNormal];}
+//                if(BottomNavigationButtonFlag==2){ SelectBarImageView.frame=CGRectMake(HomeButton.frame.origin.x+HomeButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
+//                    [MedicalRecordButton setImage:MedicalRecordsImageAferClick forState:UIControlStateNormal];}
+//                if(BottomNavigationButtonFlag==3){ SelectBarImageView.frame=CGRectMake(MedicalRecordButton.frame.origin.x+MedicalRecordButton.frame.size.width+25, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
+//                    [AppointmentButton setImage:AppointmentsImageAfterClick forState:UIControlStateNormal];}
+//                if(BottomNavigationButtonFlag==4){ SelectBarImageView.frame=CGRectMake(AppointmentButton.frame.origin.x+AppointmentButton.frame.size.width+13, 0, [UIImage imageNamed:@"selected_bar.png"].size.width,[UIImage imageNamed:@"selected_bar.png"].size.height);
+//                    [MapButton setImage:MapImageAfterClick forState:UIControlStateNormal];}
+//                
+//                BottomView.frame = CGRectMake(0, UserHomeGroundView.frame.size.height+UserHomeGroundView.frame.origin.y, self.view.frame.size.width, 50);
+//                SliderViewBar.frame=CGRectMake(400, 20, 200, self.view.frame.size.height);
+//                UserHomeGroundView.frame=CGRectMake(0, 0, self.view.frame.size.width, 518);
+//            } completion:^(BOOL finished) {
+//                
+//                
+//            }];
+//        }
+//    }
+//    
+//    
+//    
+//   
+//}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -1913,9 +2061,9 @@ else
     if(tableView.tag==56700)
     {
         NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:section];
-        temp_sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        temp_sectionAppointmentsMedicalRecords = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
         sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
-        return [temp_sectionAppointments count];
+        return [temp_sectionAppointmentsMedicalRecords count];
     }
     else if(tableView.tag == 4949)
     {
@@ -1959,13 +2107,13 @@ else
     if(tableView.tag==56700)
     {
         NSString *sectionTitle = [temp_appointmentSectionTitles objectAtIndex:indexPath.section];
-        temp_sectionAppointments = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+        temp_sectionAppointmentsMedicalRecords = [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
         
-        NSString *appointmentname   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicalname"];
-        NSString *appointmenttime   =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicaltime"];
-        NSString *provider          =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"provider"];
-        NSString *appointType       =           [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicaltype"];
-        NSString *AppointmentId=                [[temp_sectionAppointments objectAtIndex:indexPath.row] valueForKey:@"medicalid"];
+        NSString *appointmentname   =           [[temp_sectionAppointmentsMedicalRecords objectAtIndex:indexPath.row] valueForKey:@"medicalname"];
+        NSString *appointmenttime   =           [[temp_sectionAppointmentsMedicalRecords objectAtIndex:indexPath.row] valueForKey:@"medicaltime"];
+        NSString *provider          =           [[temp_sectionAppointmentsMedicalRecords objectAtIndex:indexPath.row] valueForKey:@"provider"];
+        NSString *appointType       =           [[temp_sectionAppointmentsMedicalRecords objectAtIndex:indexPath.row] valueForKey:@"medicaltype"];
+        NSString *AppointmentId=                [[temp_sectionAppointmentsMedicalRecords objectAtIndex:indexPath.row] valueForKey:@"medicalid"];
         
         
         UIButton *CellButtonClick;
@@ -2527,48 +2675,122 @@ else
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {
-    if (index == 0)
+    
+    NSLog(@"BottomNavigationButtonFlag=%d",BottomNavigationButtonFlag);
+    
+    if(BottomNavigationButtonFlag==2)
     {
-        NSIndexPath *cellIndexPath = [AddAppointmentTableView indexPathForCell:cell];
-        NSLog(@"cellIndexPath=%d",cellIndexPath.row);
+        
+        if (index == 0)
+        {
+            NSIndexPath *cellIndexPath = [AddMedicalRerocdsTableView indexPathForCell:cell];
+            NSLog(@"cellIndexPath=%d",cellIndexPath.row);
+            NSLog(@"MedicalRecordstemp_appointmentsDictionary=%@",MedicalRecordstemp_appointmentsDictionary);
+            
+            NSLog(@"temp_sectionAppointments=%@",temp_sectionAppointmentsMedicalRecords);
+            
+            NSString *sectionTitle          =       [temp_appointmentSectionTitles objectAtIndex:cellIndexPath.section];
+            temp_sectionAppointmentsMedicalRecords        =       [[MedicalRecordstemp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+          
+            NSString *appointmentID         =       [[temp_sectionAppointmentsMedicalRecords objectAtIndex:cellIndexPath.row] valueForKey:@"medicalid"];
+            
+            NSLog(@"medicalid %@",appointmentID);
+            NSLog(@"medicalid %@",temp_sectionAppointmentsMedicalRecords );
+            
+            
+            NSLog(@"[sectionAppointments count] ==>%d",[temp_sectionAppointmentsMedicalRecords count]);
+            
+            rowTappedForDelete = appointmentID ;
+            
+            alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Are you sure you want to delete?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
+            alertviewLogout.tag=3;
+            
+            [alertviewLogout show];
+//
+       }
+
+    }
+    
+    else
+    {
+        if (index == 0)
+        {
+            NSIndexPath *cellIndexPath = [AddAppointmentTableView indexPathForCell:cell];
+            NSLog(@"cellIndexPath=%d",cellIndexPath.row);
+            
+            
+            NSLog(@"temp_sectionAppointments=%@",temp_sectionAppointments);
+            NSString *sectionTitle          =       [temp_appointmentSectionTitles objectAtIndex:cellIndexPath.section];
+            temp_sectionAppointments        =       [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
+            NSString *appointmentID         =       [[temp_sectionAppointments objectAtIndex:cellIndexPath.row] valueForKey:@"appointmentid"];
+            
+            NSLog(@"appointmentID to delete is %@",appointmentID);
+            NSLog(@"Section Appointment is %@",temp_sectionAppointments );
+            
+            
+            
+            
+            NSLog(@"[sectionAppointments count] ==>%d",[temp_sectionAppointments count]);
+            
+             rowTappedForDelete = appointmentID ;
+            
+            alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Are you sure you want to delete?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
+            alertviewLogout.tag=4;
+            
+            [alertviewLogout show];
+
         
         
-        NSString *sectionTitle          =       [temp_appointmentSectionTitles objectAtIndex:cellIndexPath.section];
-        temp_sectionAppointments        =       [[temp_appointmentsDictionary valueForKey:sectionTitle] mutableCopy];
-        NSString *appointmentID         =       [[temp_sectionAppointments objectAtIndex:cellIndexPath.row] valueForKey:@"appointmentid"];
-        
-        NSLog(@"appointmentID to delete is %@",appointmentID);
-        NSLog(@"Section Appointment is %@",temp_sectionAppointments );
-        
-      
-        
-        
-        NSLog(@"[sectionAppointments count] ==>%d",[temp_sectionAppointments count]);
-        
-        
-        
-        
-        rowTappedForDelete = appointmentID ;
-        
-        
-       UIAlertView * alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Are you sure you want to delete?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
-        alertviewLogout.tag=3;
-        
-        [alertviewLogout show];
-       
-        
-        
-        
+    }
+    
     }
 }
 #pragma mark Alert view delegate
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     
+    if(alertView.tag==3)
+    {
+        
         if(buttonIndex ==1)
         {
-            [self DeleteAPICallFunction : rowTappedForDelete];
+            [self DeleteMedicalCallFunction : rowTappedForDelete];
         }
+    }
+    
+    else
+        if(alertView.tag==4)
+        {
+            if(buttonIndex ==1)
+            {
+                [self DeleteAPICallFunction : rowTappedForDelete];
+            }
+
+            
+        }
+        else if(alertView.tag==14215)
+        {
+            if(buttonIndex ==1)
+            {
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kLoginData];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kLoginData];
+                
+                
+                NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+                NSString *token = [[NSString alloc] init];
+                token = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"device_token"]];
+                [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+                [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"device_token"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+                
+                
+                ApplifyViewController *MainScreen=[[ApplifyViewController alloc]init];
+                [self.navigationController pushViewController:MainScreen animated:YES];
+                
+            }
+        }
+    
+    
 }
 
 
@@ -2598,7 +2820,7 @@ else
 }
 
 #pragma mark DeleteAPICall
--(void) DeleteAPICallFunction :(NSString*)deleteTag
+-(void) DeleteMedicalCallFunction :(NSString*)deleteTag
 {
 
     Reachability *reach = [Reachability reachabilityForInternetConnection];
@@ -2614,11 +2836,11 @@ else
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         NSDictionary *params = @{ @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
-                                  @"appointmentid":deleteTag
+                                  @"medicalid":deleteTag
                                  };
         NSLog(@"Parameter=>%@",params);
         [self ShowActivityIndicatorWithTitle:@"Loading..."];
-        [manager POST:[NSString stringWithFormat:@"%@/delete_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+        [manager POST:[NSString stringWithFormat:@"%@/delete_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
             NSLog(@"JSON--->%@",json);
             if([json objectForKey:@"error"])
             {
@@ -2632,7 +2854,7 @@ else
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"log"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [myAlertView show];
                 
-                [self APICallForUserAppointment];
+                [self APICallForUserMedicalAppointment];
 //                [AddAppointmentTableView reloadData];
 
             }
@@ -2650,6 +2872,61 @@ else
     }
 
 }
+
+#pragma mark DeleteAPICall
+-(void) DeleteAPICallFunction :(NSString*)deleteTag
+{
+    
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{ @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
+                                  @"appointmentid":deleteTag
+                                  };
+        NSLog(@"Parameter=>%@",params);
+        [self ShowActivityIndicatorWithTitle:@"Loading..."];
+        [manager POST:[NSString stringWithFormat:@"%@/delete_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            NSLog(@"JSON--->%@",json);
+            if([json objectForKey:@"error"])
+            {
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
+            }
+            else if([json objectForKey:@"log"])
+            {
+                NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
+                
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"log"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
+                
+                [self APICallForUserAppointment];
+                //                [AddAppointmentTableView reloadData];
+                
+            }
+            
+            [self HideActivityIndicator];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
+    
+}
+
 #pragma mark Search bar AddMedicalAppointmentsTableViewFunction
 -(void)AddMedicalAppointmentsTableViewFunction{
     
@@ -3501,7 +3778,7 @@ else
     
     
     NSLog(@"appointmentsDictionary=%@",appointmentsDictionary);
-      [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"AppointmentIdGetValue"];
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"AppointmentIdGetValue"];
     NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"AppointmentIdGetValue"]);
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
     
@@ -3711,7 +3988,7 @@ return anObject;
         NSLog(@"APICallForUserMedicalAppointment >>>>Parameter=>%@",params);
         
         [manager POST:[NSString stringWithFormat:@"%@/get_all_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
-            NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%@",json);
+            NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%d",[[json objectForKey:@"data"] count]);
             if([json objectForKey:@"error"])
             {
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -3834,11 +4111,11 @@ return anObject;
                     
                     appointmentsDictionary = [[NSMutableDictionary alloc]init];
                     temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
-                    appointmentsDictionary = json;
-                    temp_appointmentsDictionary = [json mutableCopy];
+                    appointmentsDictionary = [json objectForKey:@"data"];
+                    temp_appointmentsDictionary = [[json objectForKey:@"json"] mutableCopy];
                     
                     
-                    
+                    NSLog(@"appointmentsDictionary=%@",appointmentsDictionary);
                     
                     [array_AppointmentName removeAllObjects];
                     
@@ -3910,7 +4187,7 @@ return anObject;
                         
                     {
                         
-                        [array_AppointmentName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
+                        [array_AppointmentName addObject:   [[[json objectForKey:@"data"] objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
                         
                         [array_AppointmentID addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
                         

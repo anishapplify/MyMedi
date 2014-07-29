@@ -24,9 +24,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     UIButton *BackButton;
     UIButton *DoneButton;
+    NSString *path;
+    NSData *imageData;
     
+    ASIFormDataRequest *RequestForSync;
     
-    
+    BOOL attachedFileTrue;
+
     UIView *TopBarView;
     
     
@@ -445,7 +449,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
     [ProviderButton addSubview:ProviderTitleLable];
     
-    [self InformationAction];
+    [self FirstTimeRunView];
 
     [self informationScrollAction];
     
@@ -453,13 +457,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         
         
-        NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString]);
+        //NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString]);
         
         MedicalRecordAppointmentLable.text=@"Edit Medical Record";
         appointmentTextField.text =[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString];
         consultantTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameConsultantString];
         dateTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameDate];
-        hospitalTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital];
+        hospitalTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameHospital];
         
         ////appointment//appointment_type
         
@@ -513,7 +517,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     }
     else{
         MedicalRecordAppointmentLable.text=@"New Medical Record";
-        appointmentTextField.placeholder = @"Appointment Name";
+        appointmentTextField.placeholder = @"Medical Appointment Name";
         consultantTextField.placeholder = @"Consultant Name";
         dateTextField.placeholder = @"Date";
         hospitalTextField.placeholder = @"Hospital Name";
@@ -768,7 +772,97 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.view addSubview:ProviderTableView];
     
 }
-
+-(void)FirstTimeRunView{
+    [self scrollViewDidTapped];
+    
+    
+    
+    typeStatus=0;
+    
+    purposeStatus=0;
+    
+    notesStatus=0;
+    
+    attachmentsStatus=0;
+    
+    
+    
+    informationScrollView.hidden=YES;
+    
+    [TypeTableView removeFromSuperview];
+    
+    [ProviderTableView removeFromSuperview];
+    
+    [plusButton removeFromSuperview];
+    
+    TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    
+    ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    
+    NotesImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    
+    AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    
+    NotesTextView.hidden=YES;
+    
+    if(informationStatus==0){
+        
+        informationStatus=1;
+        
+        [UIView animateWithDuration:.6f animations:^{
+            
+            
+            
+            InformationButton.frame = CGRectMake(0, 178, 320, 45);
+            
+            TypeButton.frame = CGRectMake(0, 388, 320, 45);
+            
+            ProviderButton.frame = CGRectMake(0,TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+            
+            NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            informationScrollView.hidden=NO;
+            
+            InformationImageView.image=[UIImage imageNamed:@"MinusImage.png"];
+            
+        }];
+        
+    }
+    
+    else{
+        
+        informationStatus=0;
+        
+        [UIView animateWithDuration:.2f animations:^{
+            
+            
+            
+            InformationButton.frame = CGRectMake(0,343, 320, 45);
+            
+            
+            
+            TypeButton.frame = CGRectMake(0,  InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
+            
+            ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+            
+            NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+            
+            
+            
+        }];
+        
+    }
+}
 -(void)InformationAction
 
 {
@@ -1395,34 +1489,16 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [picker dismissViewControllerAnimated:YES completion:NULL];
     
-    
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    
     
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
+    path= [documentsDirectory stringByAppendingPathComponent:@"MedicalAttachmentsPictures.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
     
-    
-    NSString *path= [documentsDirectory stringByAppendingPathComponent:@"userprofile.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
-    
-    
-    
-    NSData* imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
-    
-    
+    imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
     
     [imageData writeToFile:path atomically:YES];
-    
-    
-    
-    // STORING THE PATH OF IMAGE IN NSUserDefault
-    
-    [[NSUserDefaults standardUserDefaults]setObject:path forKey:@"pathOfAttachmentinCreateAppointmentPage"];
-    
-    [[NSUserDefaults standardUserDefaults]synchronize];
-    
+    attachedFileTrue=true;
     
     
 }
@@ -1475,7 +1551,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     appointmentTextField.delegate = self;
     
-    appointmentTextField.placeholder = @"Appointment Name";
     
     appointmentTextField.textColor=[UIColor blackColor];
     
@@ -1509,7 +1584,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     UILabel *AppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 125, 40) ];
     
-    AppointmentLable.text= [NSString stringWithFormat:@"   %@",@"Appointment Name"];
+    AppointmentLable.text= [NSString stringWithFormat:@"   %@",@"Medical Name"];
     
     AppointmentLable.textAlignment=NSTextAlignmentLeft;
     
@@ -1527,7 +1602,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     consultantTextField.delegate = self;
     
-    consultantTextField.placeholder = @"Consultant Name";
     
     //[consultantTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1623,8 +1697,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     dateTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, consultantTextField.frame.size.height+consultantTextField.frame.origin.y+1, 200, 40)];
     
     dateTextField.delegate = self;
-    
-    dateTextField.placeholder = @"Date";
+
     
     // [dateTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1704,7 +1777,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     hospitalTextField.delegate = self;
     
-    hospitalTextField.placeholder = @"Hospital Name";
     
     //[hospitalTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
@@ -1740,8 +1812,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
     
-    
-    
     UILabel *HospitalLable=[[UILabel alloc]initWithFrame:CGRectMake(0, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 125, 40) ];
     
     HospitalLable.text= [NSString stringWithFormat:@"   %@",@"Hospital Name"];
@@ -1756,14 +1826,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [informationScrollView addSubview:HospitalLable];
     
-    
-    
-    
-    
+
 }
-
-
-
 
 
 -(void)updateDateField
@@ -1894,9 +1958,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
         
     }
-    
-    
-    
+
     CGRect viewFrame = self.view.frame;
     
     NSLog(@"animated=%f",animatedDistance);
@@ -2016,7 +2078,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         {
             [self ShowActivityIndicatorWithTitle:@"Loading..."];
             
-            [self performSelector:@selector(serverCallForAddMedicalReport) withObject:nil afterDelay:0.1];
+            [self performSelector:@selector(serverCall) withObject:nil afterDelay:0.1];
         }
     
     
@@ -2305,9 +2367,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                 
                  [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewMedicalCreatedByUser"];
                 [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
+               
+                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
                 
-                
-                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your medical records '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your medical records '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
                 
                 complete.tag = 111;
                 
@@ -2373,6 +2436,78 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     informationStatus=1;
     [self InformationAction];
+}
+-(void)serverCall{
+    
+    NSLog(@"intTypeServerCall=%d",intTypeServerCall);
+    NSLog(@"MedicalIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"MedicalIdGetValue"]);
+    [self scrollViewDidTapped];
+    
+    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/create_or_edit_user_medical",kBaseUrl]];
+    RequestForSync = [ASIFormDataRequest requestWithURL:url];
+    [RequestForSync setTimeOutSeconds:30];
+    RequestForSync.delegate=self;
+    [RequestForSync setRequestMethod:@"POST"];
+    
+    
+
+    [RequestForSync setPostValue:[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"] forKey:@"accesstoken"];
+    
+    [RequestForSync setPostValue:appointmentTextField.text forKey:@"medicalname"];
+    [RequestForSync setPostValue:consultantTextField.text forKey:@"consultantname"];
+    [RequestForSync setPostValue:dateTextField.text forKey:@"datetime"];
+    [RequestForSync setPostValue:hospitalTextField.text forKey:@"hospital"];
+    [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",TypeTagValue] forKey:@"medicaltype"];
+    [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",ProiverTagValue] forKey:@"provider"];
+    [RequestForSync setPostValue:NotesTextView.text forKey:@"notes"];
+    [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",intTypeServerCall] forKey:@"type"];
+    [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+    [RequestForSync setPostValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MedicalIdGetValue"] forKey:@"medicalid"];
+    
+    //    if(attachedFileTrue==true){
+    
+    //[RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    path= [documentsDirectory stringByAppendingPathComponent:@"MedicalAttachmentsPictures.png" ];
+    [RequestForSync setFile:path forKey:@"attachment"];
+    // }
+    
+    
+    
+    RequestForSync.tag = 20001;
+    
+    [RequestForSync startAsynchronous];
+}
+- (void)requestStarted:(ASIHTTPRequest *)request
+
+{
+    NSLog(@"starteeeddd");
+    
+}
+- (void)requestFinished:(ASIHTTPRequest *)request
+
+{
+    if(request.tag==20001)
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[RequestForSync responseData] options:kNilOptions error:nil];
+        
+        //           NSLog(@"json in app delegate ==>> %@",json);
+        
+        [[NSUserDefaults standardUserDefaults] setObject:json forKey:kAppointmentData];
+        NSLog(@"kAppointmentData=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kAppointmentData]);
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
+        
+        UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        complete.tag = 111;
+        
+        [complete show];
+        
+    }
+    [self HideActivityIndicator];
 }
 
 

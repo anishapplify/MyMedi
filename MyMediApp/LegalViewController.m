@@ -48,13 +48,121 @@
     [TopBarView addSubview:BackButton];
     
     LegalLable=[[UILabel alloc]initWithFrame:CGRectMake(80, 25, 150, 30)];
-    LegalLable.text=@"Legal";
+    LegalLable.text=@"Send Feedback";
     LegalLable.font=[UIFont fontWithName:helveticaRegular size:18];
     LegalLable.textColor=[UIColor blackColor];
     LegalLable.textAlignment=NSTextAlignmentCenter;
     [TopBarView addSubview:LegalLable];
     
     [self.view addSubview:TopBarView];
+    
+    UIButton *ReportProblem=[[UIButton alloc]initWithFrame:CGRectMake(0, 100,320 ,45)];
+    [ReportProblem setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [ReportProblem setTitle:@"Report a Problem" forState:(UIControlState)UIControlStateNormal];
+    ReportProblem.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    ReportProblem.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    ReportProblem.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    ReportProblem.backgroundColor=[UIColor whiteColor];
+    [ReportProblem addTarget:self action:@selector(ReportProblemAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:ReportProblem];
+    
+    UIButton *Messages=[[UIButton alloc]initWithFrame:CGRectMake(0, ReportProblem.frame.size.height+ReportProblem.frame.origin.y+1,320 ,45)];
+    [Messages setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [Messages setTitle:@"Message" forState:(UIControlState)UIControlStateNormal];
+    Messages.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
+    Messages.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    Messages.titleEdgeInsets = UIEdgeInsetsMake(5, 25, 0, 0);
+    [Messages addTarget:self action:@selector(MessagesAction) forControlEvents:UIControlEventTouchUpInside];
+    Messages.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:Messages];
+    
+}
+//-(void)ReportProblemAction{
+//    
+//}
+-(void)MessagesAction{
+    
+}
+- (void)ReportProblemAction:(id)sender
+{
+    
+    if ([MFMailComposeViewController canSendMail])
+        
+    {
+        
+        MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+        mailer.mailComposeDelegate = self;
+        [mailer setSubject:@"Feedback on MyMedi!"];
+        
+        NSArray *toRecipients = [NSArray arrayWithObjects:@"care@mymedi.com",nil];
+        
+        [mailer setToRecipients:toRecipients];
+        
+        NSString *emailBody = @"";
+        
+        [mailer setMessageBody:emailBody isHTML:NO];
+        [self presentViewController:mailer animated:YES completion:nil];
+        
+    }
+    
+    
+    
+    else
+        
+        
+    {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure"message:@"Your device doesn't support the composer sheet" delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil];
+        
+        
+        [alert show];
+        
+        
+    }
+    
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    
+    
+    switch (result)
+    {
+            
+        case MFMailComposeResultCancelled:
+            
+            NSLog(@"mail cancelled");
+            
+            break;
+            
+        case MFMailComposeResultSent:
+            
+            NSLog(@"mail sent");
+            
+            break;
+            
+        case MFMailComposeResultSaved:
+            
+            NSLog(@"mail saved");
+            
+            break;
+            
+        case MFMailComposeResultFailed:
+            
+            NSLog(@"error,mail not sent");
+            
+            break;
+            
+            
+            
+        default:NSLog(@"mail not sent");
+            
+            break;
+            
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+    // [self dismissModalViewControllerAnimated:YES];
+    
 }
 -(void)BackButtonAction
 {

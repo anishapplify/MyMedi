@@ -10,7 +10,7 @@
 
 @interface CreateAccountViewController (){
     
-    
+    BOOL PicClickYes;
     AsyncImageView *EditChangeImage;
     NSString *urlString2;
     
@@ -90,6 +90,8 @@
     NSString *PhoneNumber;
     NSString *Gender;
     NSString *image;
+    
+    ASIFormDataRequest  *RequestForSync;
 }
 
 @end
@@ -1303,6 +1305,8 @@
     
     EditChangeImage.image=[UIImage imageWithContentsOfFile:path];
     
+    PicClickYes=YES;
+    
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -1532,10 +1536,9 @@
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         NSDictionary *params = @{
                                  @"firstname":FirstNameTextField.text,
-                                 @"lastname": LastNameTextField.text,
+                                 @"lastname":LastNameTextField.text,
                                  @"email": emailtextField.text,
                                  @"password":PassWordTextField.text,
-                                 //                                   @"image":EditChangeImage.image,
                                  @"address":AddressTextField.text,
                                  @"zip": ZipCodeTextFeild.text,
                                  @"dob":AgeTextField.text,
@@ -1545,10 +1548,12 @@
                                  @"gender":GenderTextField.text,
                                  @"devicetoken":@"1",
                                  @"login":@"0"
+                                 
                                  };
         NSLog(@"Parameter=>%@",params);
         
-        [manager POST:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+        [manager POST:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+         {
             NSLog(@"JSON--->%@",json);
             if([json objectForKey:@"error"])
             {
@@ -1600,7 +1605,167 @@
         
     }
 }
+-(void)serverCall{
+    
+    NSString *phoneNumber;
+    NSString *height;
+    NSString *weight;
+    if (StdCodeTextField.text.length>0)
+    {
+        phoneNumber = [[StdCodeTextField.text stringByAppendingString:@"-"]stringByAppendingString:PhoneTextField.text];
+    }
+    else
+    {
+        phoneNumber = PhoneTextField.text;
+    }
+    
+    if (Height2TextField.text.length>0 && HeightTextField.text.length>0) {
+        height = [[Height2TextField.text stringByAppendingString:@" "]stringByAppendingString:HeightTextField.text];
+    }
+    else
+    {
+        height = @"";
+    }
+    if (Weight2TextField.text.length>0 && WeightTextField.text.length>0) {
+        weight = [[Weight2TextField.text stringByAppendingString:@" "]stringByAppendingString:WeightTextField.text];
+    }
+    else
+    {
+        weight= @"";
+    }
 
+    
+    
+    
+    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl]];
+    
+    
+    
+    RequestForSync = [ASIFormDataRequest requestWithURL:url];
+    
+    
+     [RequestForSync setPostValue:FirstNameTextField.text forKey:@"firstname"];
+    
+    
+     [RequestForSync setPostValue:LastNameTextField.text forKey:@"lastname"];
+    
+    
+     [RequestForSync setPostValue:emailtextField.text forKey:@"email"];
+    
+    
+     [RequestForSync setPostValue:PassWordTextField.text forKey:@"password"];
+    
+    
+     [RequestForSync setPostValue:AddressTextField.text forKey:@"address"];
+    
+    
+    [RequestForSync setPostValue:ZipCodeTextFeild.text forKey:@"zip"];
+    
+    
+      [RequestForSync setPostValue:AgeTextField.text forKey:@"dob"];
+    
+    
+    
+      [RequestForSync setPostValue:height forKey:@"height"];
+    
+    
+      [RequestForSync setPostValue:weight forKey:@"weight"];
+    
+    
+     [RequestForSync setPostValue:phoneNumber forKey:@"phone"];
+    
+    
+     [RequestForSync setPostValue:GenderTextField.text forKey:@"gender"];
+    
+      [RequestForSync setPostValue:@"1" forKey:@"devicetoken"];
+    
+     [RequestForSync setPostValue:@"0" forKey:@"login"];
+    
+    
+    
+    
+    if(PicClickYes==YES){
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        path= [documentsDirectory stringByAppendingPathComponent:@"userprofile.png" ];
+        
+        [RequestForSync setFile:path forKey:@"userpic"];
+    }
+    else{
+       // [RequestForSync setPostValue:@"" forKey:@"userpic"];
+    }
+   
+    
+
+    RequestForSync.tag = 20001;
+    
+    [RequestForSync setTimeOutSeconds:30];
+    
+    
+    
+    RequestForSync.delegate=self;
+    
+    
+    
+    [RequestForSync setRequestMethod:@"POST"];
+    
+    [RequestForSync startAsynchronous];
+    
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)reques
+
+{
+
+    
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[RequestForSync responseData] options:kNilOptions error:nil];
+    
+    
+    
+    NSLog(@"json in app delegate ==>> %@",json);
+    
+    if([[json objectForKey:@"error"] isEqualToString:@"Email already exists!"])
+    {
+        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [myAlertView show];
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_data"] objectForKey:@"id"]] forKey:kIDForLogout];
+        
+        NSLog(@"login data=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]);
+        
+        userId = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"userid"]];
+        firstName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"firstname"]];
+        lastName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"lastname"]];
+        Email  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"email"]];
+        //image  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"image"]];
+        image = @"";
+        Address  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"address"]];
+        Zip  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"zip"]];
+        DOB  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"dob"]];
+        Height  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"height"]];
+        Weight  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"weight"]];
+        PhoneNumber  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"phone"]];
+        Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
+        
+        
+      //  [self createDataBaseFunction];
+       // [self InsertIntoDataBase];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        CreateVerificationViewController *veri=[[CreateVerificationViewController  alloc]init];
+        [self.navigationController pushViewController:veri animated:YES];
+        
+    }
+    
+    
+    [self HideActivityIndicator];
+    
+}
 #pragma mark DataBase
 -(void) createDataBaseFunction
 {

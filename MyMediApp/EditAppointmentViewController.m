@@ -537,7 +537,7 @@
     
     if(test==1)
     {
-        
+        NSLog(@"kMedicalRecordeNameHospital=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameHospital]);
         
         
         appointmentTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameString];
@@ -548,7 +548,7 @@
         AppointtypeProivderTextField.text=[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordeNameProviderName]];
         descriptionString=[NSString stringWithFormat:@"     %@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordsNotes]];
         
-         EditAppointmentLable.text=@"Edit Medical Records";
+         EditAppointmentLable.text=@"Medical Records";
     }
     else
     {
@@ -560,7 +560,7 @@
         AppointtypeProivderTextField.text=[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameProviderName]];
         descriptionString=[NSString stringWithFormat:@"     %@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNotes]];
         
-         EditAppointmentLable.text=@"Edit Appointment";
+         EditAppointmentLable.text=@"Appointment";
     }
     
     CGSize constraint;
@@ -611,10 +611,12 @@
     
     if(test==1)
     {
+        
         MedicalRecordsHomeViewController  *crete=[[MedicalRecordsHomeViewController alloc ]init];
         [self.navigationController pushViewController:crete animated:YES];
     }
     else{
+         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"isEditAppointmentPressed"];
         CreateNewAppointmentViewController *crete=[[CreateNewAppointmentViewController alloc ]init];
         [self.navigationController pushViewController:crete animated:YES];
     }

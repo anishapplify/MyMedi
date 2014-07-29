@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface LegalViewController : UIViewController
+#import <MessageUI/MessageUI.h>
+@interface LegalViewController : UIViewController<MFMailComposeViewControllerDelegate>
 
 @end

@@ -56,11 +56,11 @@
     [TopBarView addSubview:BackButton];
     [self.view addSubview:TopBarView];
     
-    LogOutButto=[[UIButton alloc]initWithFrame:CGRectMake(270, 25, [UIImage imageNamed:@"logout_button.png"].size.width, [UIImage imageNamed:@"logout_button.png"].size.height)];
-    LogOutButto.backgroundColor=[UIColor clearColor];
-    [LogOutButto setImage:[UIImage imageNamed:@"logout_button.png"] forState:UIControlStateNormal];
-    [LogOutButto addTarget:self action:@selector(LogOutAction) forControlEvents:UIControlEventTouchUpInside];
-    [TopBarView addSubview:LogOutButto];
+//    LogOutButto=[[UIButton alloc]initWithFrame:CGRectMake(270, 25, [UIImage imageNamed:@"logout_button.png"].size.width, [UIImage imageNamed:@"logout_button.png"].size.height)];
+//    LogOutButto.backgroundColor=[UIColor clearColor];
+//    [LogOutButto setImage:[UIImage imageNamed:@"logout_button.png"] forState:UIControlStateNormal];
+//    [LogOutButto addTarget:self action:@selector(LogOutAction) forControlEvents:UIControlEventTouchUpInside];
+//    [TopBarView addSubview:LogOutButto];
     
     SettingLable=[[UILabel alloc]initWithFrame:CGRectMake(80, 25, 150, 30)];
     SettingLable.text=@"Settings";

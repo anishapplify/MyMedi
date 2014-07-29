@@ -20,6 +20,7 @@
     UIImageView *SecondHomeImageView;
     UIImageView *ThirdHomeImageView;
     UIView *BottomHomeView;
+    UIImageView *SplashImageView;
 }
 
 @end
@@ -35,15 +36,20 @@
     if([[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] valueForKey:@"accesstoken"])
     {
         
-        UIImageView *SplashImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, [UIImage imageNamed:@"SplashScreen.png"].size.height)];
+        SplashImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, [UIImage imageNamed:@"SplashScreen.png"].size.height)];
         SplashImageView.image=[UIImage imageNamed:@"SplashScreen.png"];
         [self.view addSubview:SplashImageView];
+        
+        
         
       // EditAppointmentViewController *veri=[[EditAppointmentViewController  alloc]init];
       // [self.navigationController pushViewController:veri animated:YES];
         
+      // CreateNewAppointmentViewController *veri=[[CreateNewAppointmentViewController  alloc]init];
+      //[self.navigationController pushViewController:veri animated:YES];
         
-         [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];
+        
+      [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];
     }
     else
     {
@@ -239,8 +245,10 @@
          
          {
              NSLog(@"JSON--->%@",json);
-             if([[json objectForKey:@"error"] isEqualToString:@"User not confirmed!"])
+             if([[json objectForKey:@"error"] isEqualToString:@"Registeration is not confirmed. Please check your email for confirmation."])
              {
+                 [SplashImageView removeFromSuperview];
+                 
                  ImageScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 480)];
                  ImageScrollView.backgroundColor=[UIColor clearColor];
                  ImageScrollView.pagingEnabled=TRUE;

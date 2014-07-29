@@ -22,7 +22,7 @@ static const CGFloat MINIMUM_SCROLL_FRACTION = 0.1;
 
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 
-static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 80;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 170;
 
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
@@ -33,8 +33,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 {
     
     
-    
-    
+     NSString *path;
+    NSData *imageData;
     
     UIButton *BackButton;
     
@@ -63,7 +63,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     UIView *lineView;
     
     
-    
+    UIImagePickerController *groupPhotoPicker;
     UITableView *TypeTableView;
     
     UITableView *ProviderTableView;
@@ -125,7 +125,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     UIImageView *AttachmentsImageView;
     
     
-    
+    int height;
+    int heightProvider;
     UILabel *TypeTitleLable;
     
     UILabel *ProviderTitleLable;
@@ -137,11 +138,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     int ProiverTagValue;
     
     CGFloat animatedDistance;
-    
-    
   int  intTypeServerCall;
     
+     ASIFormDataRequest *RequestForSync;
     
+    BOOL attachedFileTrue;
 }
 
 
@@ -458,8 +459,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NotesTextView=[[AYTextViewWithUnderline alloc]init];
     
     
-    [self InformationAction];
     
+    [self firstTimeRun];
     [self informationScrollAction];
     
     informationScrollView.hidden=true;
@@ -549,16 +550,27 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         intTypeServerCall=0;
     }
     
-    
+  //  [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(InformationAction) userInfo:nil repeats:NO];
     
 }
 
 -(void)TypeFunctionCall
 
 {
+    TypeTableView=[[UITableView alloc]init];
     
-    TypeTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 350)];
+    int heightY=0;
+    if(343-height<90)
+    {
+        heightY=273;
+    }
+    else{
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+        
+    }
     
+    
+    TypeTableView.frame=CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y,320 , heightY);
     TypeTableView.backgroundColor=[UIColor clearColor];
     
     TypeTableView.delegate=self;
@@ -654,7 +666,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
             
             
             
-            [TypeValuesShowButton setTitle:[NSString stringWithFormat:@"%@",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:indexPath.row]] forState:(UIControlState)UIControlStateNormal];
+           [TypeValuesShowButton setTitle:[NSString stringWithFormat:@"%@",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:indexPath.row]] forState:(UIControlState)UIControlStateNormal];
             
             [TypeValuesShowButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             
@@ -666,7 +678,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
             
             TypeValuesShowButton.layer.borderWidth = 1.0f;
             
-            TypeValuesShowButton.tag=[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:indexPath.row] integerValue];
+           TypeValuesShowButton.tag=[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:indexPath.row] integerValue];
             
             [TypeValuesShowButton addTarget:self action:@selector(selectTypeUser:) forControlEvents:UIControlEventTouchDown];
             
@@ -755,9 +767,18 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)ProviderFunction{
     
     
+    int heightY=0;
+    if(475-heightProvider<90)
+    {
+        heightY=273;
+    }
+    else{
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
+        
+    }
     
-    ProviderTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 300)];
-    
+    ProviderTableView=[[UITableView alloc]init];
+    ProviderTableView.frame=CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y,320 , heightY);
     ProviderTableView.backgroundColor=[UIColor clearColor];
     
     ProviderTableView.delegate=self;
@@ -769,15 +790,101 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.view addSubview:ProviderTableView];
     
 }
+-(void)firstTimeRun{
+        
+        [self scrollViewDidTapped];
+        typeStatus=0;
+        
+        purposeStatus=0;
+        
+        notesStatus=0;
+        
+        attachmentsStatus=0;
+        
+        
+        
+        informationScrollView.hidden=YES;
+        
+        [TypeTableView removeFromSuperview];
+        
+        [ProviderTableView removeFromSuperview];
+        
+        [plusButton removeFromSuperview];
+        
+        TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+        
+        ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+        
+        NotesImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+        
+        AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+        
+        NotesTextView.hidden=YES;
+        
+        if(informationStatus==0){
+            
+            informationStatus=1;
+            
+            [UIView animateWithDuration:0.6f animations:^{
+                
+                
+                
+                InformationButton.frame = CGRectMake(0, 178, 320, 45);
+                
+                TypeButton.frame = CGRectMake(0, 388, 320, 45);
+                
+                ProviderButton.frame = CGRectMake(0,TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+                
+                NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+                
+                AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
+                
+            } completion:^(BOOL finished) {
+                
+                informationScrollView.hidden=NO;
+                
+                InformationImageView.image=[UIImage imageNamed:@"MinusImage.png"];
+                
+            }];
+            
+        }
+        
+        else{
+            
+            informationStatus=0;
+            
+            [UIView animateWithDuration:.2f animations:^{
+                
+                
+                
+                InformationButton.frame = CGRectMake(0,343, 320, 45);
+                
+                
+                
+                TypeButton.frame = CGRectMake(0,  InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
+                
+                ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+                
+                NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+                
+                AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
+                
+            } completion:^(BOOL finished) {
+                
+                InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+                
+                
+                
+            }];
+            
+        }
+}
 
 -(void)InformationAction
 
 {
     
     [self scrollViewDidTapped];
-    
-    
-    
     typeStatus=0;
     
     purposeStatus=0;
@@ -810,7 +917,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         informationStatus=1;
         
-        [UIView animateWithDuration:.2f animations:^{
+        [UIView animateWithDuration:0.2f animations:^{
             
             
             
@@ -865,16 +972,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     }
     
 }
-
-
-
 -(void)typeAction
 
 {
     
     [self scrollViewDidTapped];
-    
-    
     
     informationStatus=0;
     
@@ -885,13 +987,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     attachmentsStatus=0;
     
     
-    
     informationScrollView.hidden=YES;
     
     [ProviderTableView removeFromSuperview];
     
     [plusButton removeFromSuperview];
-    
     
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -904,7 +1004,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     NotesTextView.hidden=YES;
     
-    
+    ProviderButton.hidden=YES;
     
     if(typeStatus==0)
         
@@ -914,21 +1014,40 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         [UIView animateWithDuration:.2f animations:^{
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+           
+            height=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+            
+            NSLog(@"height=%d",height);
+            
+           // height=498-height;
+            
+            NSLog(@"height=%d",height);
+            
+            int heightY=0;
+            if(343-height<90)
+            {
+                heightY=TopBarView.frame.origin.y+TopBarView.frame.size.height;
+            }
+            else{
+                heightY=343-height;
+                
+            }
+            
+            InformationButton.frame = CGRectMake(0, heightY, 320, 45);
             
             TypeButton.frame = CGRectMake(0, InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
-            
-            ProviderButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            NotesButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            AttachmentButton.frame = CGRectMake(0, 800, 320, 45);
-            
             
             
         } completion:^(BOOL finished) {
             
             [self TypeFunctionCall];
+             ProviderButton.hidden=NO;
+            
+            ProviderButton.frame = CGRectMake(0, TypeTableView.frame.size.height+TypeTableView.frame.origin.y, 320, 45);
+            
+            NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
             
             TypeImageView.image=[UIImage imageNamed:@"MinusImage.png"];
             
@@ -943,14 +1062,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         
         typeStatus=0;
-        
+          ProviderButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             [TypeTableView removeFromSuperview];
             
             [ProviderTableView removeFromSuperview];
-            
-            
             
             InformationButton.frame = CGRectMake(0, 343, 320, 45);
             
@@ -971,8 +1088,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         }];
         
     }
-    
-    
     
 }
 
@@ -1011,7 +1126,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     NotesTextView.hidden=YES;
-    
+    NotesButton.hidden=YES;
+    AttachmentButton.hidden=YES;
     if(purposeStatus==0){
         
         purposeStatus=1;
@@ -1019,22 +1135,35 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         [UIView animateWithDuration:.2f animations:^{
             
             
+            heightProvider=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+            NSLog(@"height=%d",heightProvider);
             
+            // height=498-height;
+            
+            NSLog(@"height=%d",heightProvider);
+            
+            int heightY=0;
+            if(343-heightProvider<90)
+            {
+                heightY=TopBarView.frame.origin.y+TopBarView.frame.size.height;
+            }
+            else{
+                heightY=343-heightProvider;
+                
+            }
+
+            InformationButton.frame = CGRectMake(0, heightY, 320, 45);
             TypeButton.frame = CGRectMake(0, InformationButton.frame.origin.y+InformationButton.frame.size.height, 320, 45);
-            
             ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
-            
-            NotesButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            AttachmentButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            
             
         } completion:^(BOOL finished) {
             
             [self ProviderFunction];
+           NotesButton.hidden=NO;
+            AttachmentButton.hidden=NO;
+            NotesButton.frame = CGRectMake(0, ProviderTableView.frame.size.height+ProviderTableView.frame.origin.y, 320, 45);
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
             
             ProviderImageView.image=[UIImage imageNamed:@"MinusImage.png"];
             
@@ -1045,7 +1174,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else{
         
         purposeStatus=0;
-        
+        NotesButton.hidden=NO;
+        AttachmentButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             [ProviderTableView removeFromSuperview];
@@ -1087,7 +1217,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
-    
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
     
     
     informationStatus=0;
@@ -1108,7 +1239,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
-    
+    AttachmentButton.hidden=YES;
     
     if(notesStatus==0){
         
@@ -1116,7 +1247,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         [UIView animateWithDuration:.2f animations:^{
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+            InformationButton.frame = CGRectMake(0, 213, 320, 45);
             
             TypeButton.frame = CGRectMake(0, InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
             
@@ -1129,7 +1260,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         } completion:^(BOOL finished) {
             
             [self NotesFunction];
-            
+             AttachmentButton.hidden=NO;
             AttachmentButton.frame = CGRectMake(0, NotesTextView.frame.size.height+NotesTextView.frame.origin.y, 320, 45);
             
             NotesImageView.image=[UIImage imageNamed:@"MinusImage.png"];
@@ -1141,7 +1272,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else{
         
         notesStatus=0;
-        
+         AttachmentButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             NotesTextView.hidden=YES;
@@ -1175,7 +1306,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
-    
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
     
     
     
@@ -1300,89 +1432,100 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     NSLog(@"UIIMAge Picker");
     
-    UIActionSheet *actionSheet1 = [[UIActionSheet alloc] initWithTitle: nil delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil otherButtonTitles: @"Take a new photo", @"Choose from existing", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose Existing Photo",@"Choose Video", @"Capture Video", nil];
     
-    [actionSheet1 showInView:self.view];
+    
+    
+    
+    
+    [actionSheet setTag:1000001];
+    
+    [actionSheet showInView:self.view];
+    
+    
+//    UIActionSheet *actionSheet1 = [[UIActionSheet alloc] initWithTitle: nil delegate: self cancelButtonTitle: @"Cancel" destructiveButtonTitle: nil otherButtonTitles: @"Take a new photo", @"Choose from existing", nil];
+//    
+//    [actionSheet1 showInView:self.view];
     
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-
-{
-    
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    
-    
-    
-    picker.delegate  = self;
-    
-    
-    
-    picker.allowsEditing = YES;
-    
-    switch (buttonIndex) {
-            
-        case 0:
-            
-            
-            
-            if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-                
-            {
-                
-                
-                
-                UIAlertView*  myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                             
-                                                                       message:@"Device has no camera"
-                                             
-                                                                      delegate:nil
-                                             
-                                                             cancelButtonTitle:@"OK"
-                                             
-                                                             otherButtonTitles: nil];
-                
-                
-                
-                [myAlertView show];
-                
-                
-                
-            }
-            
-            else
-                
-            {
-                
-                
-                
-                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                
-                
-                
-                [self presentViewController:picker animated:YES completion:Nil];
-                
-            }
-            
-            
-            
-            break;
-            
-        case 1:
-            
-            
-            
-            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            
-            [self presentViewController:picker animated:YES completion:NULL];
-            
-        default:
-            
-            break;
-            
-    }
-    
-}
+//- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//
+//{
+//    
+//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//    
+//    
+//    
+//    picker.delegate  = self;
+//    
+//    
+//    
+//    picker.allowsEditing = YES;
+//    
+//    switch (buttonIndex) {
+//            
+//        case 0:
+//            
+//            
+//            
+//            if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+//                
+//            {
+//                
+//                
+//                
+//                UIAlertView*  myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                             
+//                                                                       message:@"Device has no camera"
+//                                             
+//                                                                      delegate:nil
+//                                             
+//                                                             cancelButtonTitle:@"OK"
+//                                             
+//                                                             otherButtonTitles: nil];
+//                
+//                
+//                
+//                [myAlertView show];
+//                
+//                
+//                
+//            }
+//            
+//            else
+//                
+//            {
+//                
+//                
+//                
+//                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+//                
+//                
+//                
+//                [self presentViewController:picker animated:YES completion:Nil];
+//                
+//            }
+//            
+//            
+//            
+//            break;
+//            
+//        case 1:
+//            
+//            
+//            
+//            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//            
+//            [self presentViewController:picker animated:YES completion:NULL];
+//            
+//        default:
+//            
+//            break;
+//            
+//    }
+//    
+//}
 
 
 
@@ -1391,41 +1534,19 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 {
-    
-    
-    
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    
-    
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
-    
-    
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
+    path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
     
-    
-    NSString *path= [documentsDirectory stringByAppendingPathComponent:@"userprofile.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
-    
-    
-    
-    NSData* imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
-    
-    
+    imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
     
     [imageData writeToFile:path atomically:YES];
-    
-    
-    
-    // STORING THE PATH OF IMAGE IN NSUserDefault
-    
-    [[NSUserDefaults standardUserDefaults]setObject:path forKey:@"pathOfAttachmentinCreateAppointmentPage"];
-    
-    [[NSUserDefaults standardUserDefaults]synchronize];
-    
-    
-    
+    attachedFileTrue=true;
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -1756,14 +1877,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [informationScrollView addSubview:HospitalLable];
     
     
-    
-    
+
     
 }
-
-
-
-
 
 -(void)updateDateField
 {
@@ -1790,7 +1906,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     NotesTextView.hidden=NO;
     
-    NotesTextView.frame=CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 80);
+    NotesTextView.frame=CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 130);
     
     NotesTextView.backgroundColor=[UIColor whiteColor];
     
@@ -2006,7 +2122,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         [self ShowActivityIndicatorWithTitle:@"Loading..."];
         
-        [self performSelector:@selector(serverCallForAddApointment) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(serverCall) withObject:nil afterDelay:0.1];
     }
     
     
@@ -2242,6 +2358,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         NSLog(@"intTypeServerCall=%d",intTypeServerCall);
         NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]);
         
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         
         NSDictionary *params = @{
@@ -2249,22 +2370,18 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                  @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
                                  
                                  @"appointmentname":appointmentTextField.text,
-                                 
                                  @"consultantname":consultantTextField.text,
-                                 
                                  @"datetime":dateTextField.text,
-                                 
                                  @"hospital":hospitalTextField.text,
                                  
                                  @"appointmenttype":[NSString stringWithFormat:@"%d",TypeTagValue],
-                                 
                                  @"provider":[NSString stringWithFormat:@"%d",ProiverTagValue],
                                  
                                  @"notes":NotesTextView.text,
-                                 
                                  @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
-                                 
-                                 @"appointmentid":[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"],
+                                 @"attachmenttype":@"1",
+                                 @"attachment":path,
+                                 @"appointmentid":[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]
                                  
                                  };
         
@@ -2295,7 +2412,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                 
                 [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
                 
-                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your appointment '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                
+                // UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:[NSString stringWithFormat:@"Your appointment '%@' has been confirmed",appointmentTextField.text]delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                
                   //[[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
                 complete.tag = 111;
                 
@@ -2326,6 +2446,79 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
     }
     
+}
+-(void)serverCall{
+    
+    
+    NSLog(@"intTypeServerCall=%d",intTypeServerCall);
+    NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]);
+    [self scrollViewDidTapped];
+    
+    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/create_or_edit_user_appointment",kBaseUrl]];
+    RequestForSync = [ASIFormDataRequest requestWithURL:url];
+    [RequestForSync setTimeOutSeconds:30];
+    RequestForSync.delegate=self;
+    [RequestForSync setRequestMethod:@"POST"];
+    
+    
+    
+    [RequestForSync setPostValue:[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"] forKey:@"accesstoken"];
+    
+     [RequestForSync setPostValue:appointmentTextField.text forKey:@"appointmentname"];
+    [RequestForSync setPostValue:consultantTextField.text forKey:@"consultantname"];
+    [RequestForSync setPostValue:dateTextField.text forKey:@"datetime"];
+    [RequestForSync setPostValue:hospitalTextField.text forKey:@"hospital"];
+    [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",TypeTagValue] forKey:@"appointmenttype"];
+    [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",ProiverTagValue] forKey:@"provider"];
+    [RequestForSync setPostValue:NotesTextView.text forKey:@"notes"];
+     [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",intTypeServerCall] forKey:@"type"];
+    [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+    [RequestForSync setPostValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"] forKey:@"appointmentid"];
+    
+//    if(attachedFileTrue==true){
+    
+        //[RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];
+        [RequestForSync setFile:path forKey:@"attachment"];
+   // }
+    
+    
+    
+    RequestForSync.tag = 20001;
+    
+    [RequestForSync startAsynchronous];
+}
+- (void)requestStarted:(ASIHTTPRequest *)request
+
+{
+    NSLog(@"starteeeddd");
+    
+}
+- (void)requestFinished:(ASIHTTPRequest *)request
+
+{
+    if(request.tag==20001)
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[RequestForSync responseData] options:kNilOptions error:nil];
+        
+//           NSLog(@"json in app delegate ==>> %@",json);
+        
+        [[NSUserDefaults standardUserDefaults] setObject:json forKey:kAppointmentData];
+        NSLog(@"kAppointmentData=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kAppointmentData]);
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
+        
+        UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        complete.tag = 111;
+        
+        [complete show];
+        
+    }
+    [self HideActivityIndicator];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -2370,22 +2563,215 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self InformationAction];
 }
 
-/*
- 
- #pragma mark - Navigation
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- 
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- 
- {
- 
- // Get the new view controller using [segue destinationViewController].
- 
- // Pass the selected object to the new view controller.
- 
- }
- 
- */
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+
+{
+    
+    if(actionSheet.tag==1000001)
+        
+    {
+        
+       
+        
+        switch (buttonIndex)
+        
+        {
+                
+                
+                
+            case 0:
+                
+            {
+                
+                
+                if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+                {
+                    
+                    UIAlertView*  myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                           message:@"Device has no camera"
+                                                                          delegate:nil
+                                                                 cancelButtonTitle:@"OK"
+                                                                 otherButtonTitles: nil];
+                    
+                    [myAlertView show];
+                    
+                }
+                else
+                {
+                    groupPhotoPicker = [[UIImagePickerController alloc]init];
+                    
+                    groupPhotoPicker.delegate = self;
+                    
+                    groupPhotoPicker.allowsEditing = YES;
+                    
+                    
+                    
+                    
+                    
+                    groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    
+                    
+                    
+                    [self presentViewController:groupPhotoPicker animated:YES completion:NULL];
+                    
+                }
+                
+               
+                
+            }
+                
+                break;
+                
+            case 1:
+                
+            {
+                
+                groupPhotoPicker = [[UIImagePickerController alloc]init];
+                
+                groupPhotoPicker.delegate = self;
+                
+                groupPhotoPicker.allowsEditing = YES;
+                
+                
+                
+              
+                
+                groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                
+                [self presentViewController:groupPhotoPicker animated:YES completion:NULL];
+                
+                //[self addSubview:groupPhotoPicker.view];
+                
+                break;
+                
+            }
+                
+            case 2:
+                
+            {
+                
+                groupPhotoPicker = [[UIImagePickerController alloc]init];
+                
+                groupPhotoPicker.delegate = self;
+                
+                groupPhotoPicker.allowsEditing = YES;
+                
+                
+                
+              
+                
+                groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                
+                groupPhotoPicker.videoQuality=UIImagePickerControllerQualityType640x480;
+                
+                groupPhotoPicker.mediaTypes=[[NSArray alloc] initWithObjects:(NSString *)kUTTypeMovie,      nil];
+                
+                
+                
+                [self presentViewController:groupPhotoPicker animated:YES completion:NULL];
+                
+                NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:groupPhotoPicker.sourceType];
+                
+                
+                
+                if (![sourceTypes containsObject:(NSString *)kUTTypeMovie ])
+                    
+                {
+                    
+                    NSLog(@"no video");
+                    
+                }
+                
+                
+                
+                break;
+                
+            }
+                
+            case 3:
+                
+            {
+                
+                if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+                {
+                    
+                    UIAlertView*  myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                           message:@"Device has no camera"
+                                                                          delegate:nil
+                                                                 cancelButtonTitle:@"OK"
+                                                                 otherButtonTitles: nil];
+                    
+                    [myAlertView show];
+                    
+                }
+                else{
+                
+                
+                groupPhotoPicker = [[UIImagePickerController alloc]init];
+                
+                groupPhotoPicker.delegate = self;
+                
+                groupPhotoPicker.allowsEditing = YES;
+                
+                
+                
+               
+                
+                groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                
+                groupPhotoPicker.videoQuality=UIImagePickerControllerQualityType640x480;
+                
+                groupPhotoPicker.mediaTypes=[[NSArray alloc] initWithObjects:(NSString *)kUTTypeMovie,      nil];
+                
+                
+                
+                NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:groupPhotoPicker.sourceType];
+                
+                
+                
+                if (![sourceTypes containsObject:(NSString *)kUTTypeMovie ])
+                    
+                {
+                    
+                    NSLog(@"no video");
+                    
+                }
+                
+                
+                
+                [self presentViewController:groupPhotoPicker animated:YES completion:NULL];
+                
+                }
+                
+                break;
+                
+            }
+                
+            case 4:
+                
+            {
+                
+                NSLog(@"buttonindex=%d",buttonIndex);
+                
+                
+                break;
+                
+            }
+                
+            default:
+                
+                break;
+                
+        }
+        
+        
+        
+    }
+    
+    
+    
+}
 
 @end
 
