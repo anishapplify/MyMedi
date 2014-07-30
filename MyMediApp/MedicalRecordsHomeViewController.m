@@ -2483,7 +2483,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     RequestForSync.delegate=self;
     [RequestForSync setRequestMethod:@"POST"];
     
-    
+
 
     [RequestForSync setPostValue:[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"] forKey:@"accesstoken"];
     
@@ -2495,23 +2495,37 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",ProiverTagValue] forKey:@"provider"];
     [RequestForSync setPostValue:NotesTextView.text forKey:@"notes"];
     [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",intTypeServerCall] forKey:@"type"];
-    [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
     [RequestForSync setPostValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"MedicalIdGetValue"] forKey:@"medicalid"];
     
-    //    if(attachedFileTrue==true){
-    
-    //[RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+    if(attachedFileTrue==true)
+    {
+    [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     path= [documentsDirectory stringByAppendingPathComponent:@"MedicalAttachmentsPictures.png" ];
     [RequestForSync setFile:path forKey:@"attachment"];
-    // }
+     }
+    else{
+        [RequestForSync setPostValue:@"0" forKey:@"attachmenttype"];
+    }
     
-    
-    
+
     RequestForSync.tag = 20001;
     
     [RequestForSync startAsynchronous];
+}
+- (void)requestFailed:(ASIHTTPRequest *)request
+
+{
+    
+    
+    
+    NSError *error = [request error];
+    
+    NSLog(@" error   ==> %@",error);
+    
+    
+    
 }
 - (void)requestStarted:(ASIHTTPRequest *)request
 

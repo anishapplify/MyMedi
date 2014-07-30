@@ -2511,7 +2511,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         path= [documentsDirectory stringByAppendingPathComponent:@""];
-        [RequestForSync setFile:path forKey:@"attachment"];
+        [RequestForSync setPostValue:@"" forKey:@"attachment"];
     }
     
     RequestForSync.tag = 20001;

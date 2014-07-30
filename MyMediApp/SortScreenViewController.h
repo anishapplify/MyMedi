@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SortScreenViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface SortScreenViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @end

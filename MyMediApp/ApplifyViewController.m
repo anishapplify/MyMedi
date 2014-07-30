@@ -42,8 +42,8 @@
         
         
         
-     // SortScreenViewController  *veri=[[SortScreenViewController  alloc]init];
-      //[self.navigationController pushViewController:veri animated:YES];
+     //SortScreenViewController  *veri=[[SortScreenViewController  alloc]init];
+     // [self.navigationController pushViewController:veri animated:YES];
         
       // CreateNewAppointmentViewController *veri=[[CreateNewAppointmentViewController  alloc]init];
       //[self.navigationController pushViewController:veri animated:YES];

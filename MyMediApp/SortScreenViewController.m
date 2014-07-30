@@ -8,6 +8,12 @@
 
 #import "SortScreenViewController.h"
 
+static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.2;
+static const CGFloat MINIMUM_SCROLL_FRACTION = 0.1;
+static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 150;
+static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
+
 @interface SortScreenViewController (){
     UIView *TopBarView;
     UIButton *EdiButton;
@@ -26,6 +32,7 @@
     int currentYear;
     int days;
     int month;
+     CGFloat animatedDistance;
     int year;
     UIButton* SelectDateButton;
      UIImage*   selectimage;
@@ -55,7 +62,9 @@
     UIButton *SortByButton;
     UIView *meraApnaView;
     UIView *  teraApnaView;
-    
+     UIDatePicker *DateDatePicker;
+     UIDatePicker *EndDateDatePicker;
+    UIToolbar *toolba;
     UIImageView *DropImageButtonImageView;
      UIImageView *CancelDropImageButtonImageView;
     UIView *BottomUpView;
@@ -81,10 +90,28 @@
     
     int typeStatus;
     
+     int DateStatus;
+    
     int purposeStatus;
     
     UIButton *TypeButton;
     UIButton   *ProviderButton;
+    UIImageView *TypeImageView;
+    UIImageView *ProviderImageView;
+    UIImageView *StartDateImageView;
+    
+    UIButton *StartDateButton;
+    UITextField *StartdateTextField;
+    UITextField *EnddateTextField;
+    
+    UILabel *StartDateLable;
+    UILabel *EndDateLable;
+    
+    NSString *SearhType;
+    NSString  *SearhProvider;
+    NSString   *searchDate;
+    NSString *finalString;
+
 }
 
 @end
@@ -105,6 +132,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
+    SearhType=@"0";
+    SearhProvider=@"0";
+    searchDate=@"0";
+    finalString=@"0";
+    
+     finalString=@"000";
     self.view.backgroundColor=[UIColor whiteColor];
     
     TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,70)];
@@ -139,12 +173,7 @@
 //    [TopBarView addSubview:EditAppointmentLable];
     
     
-    
-   
-
-    
     Backbutton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
     Backbutton.frame = CGRectMake(5,20,[UIImage imageNamed:@"backButtonNew.png"].size.width ,[UIImage imageNamed:@"backButtonNew.png"].size.height);
     
     Backbutton.backgroundColor=[UIColor clearColor];
@@ -154,6 +183,29 @@
     [Backbutton addTarget:self action:@selector(BackButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
     [TopBarView addSubview:Backbutton];
+    
+    
+    
+  UIButton *DoneButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 35, 50, 25)];
+    
+    DoneButton.backgroundColor=[UIColor clearColor];
+    
+    [DoneButton setTitle:@"Done" forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    
+    DoneButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 15];
+    
+    [DoneButton addTarget:self action:@selector(DoneButtonFuction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [TopBarView addSubview:DoneButton];
+    
+    DoneButton.exclusiveTouch=YES;
+    
+    
+    
     [self.view addSubview:TopBarView];
     
     
@@ -161,8 +213,8 @@
     
     DropImageButtonImageView.image=[UIImage imageNamed:@"dropdown_btn.png"];
     
-  ViewByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45)];
-    ViewByButton.backgroundColor=[UIColor grayColor];
+   ViewByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45)];
+    ViewByButton.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     ViewByButton.tag=100;
     [ViewByButton setTitle:@"View By" forState:UIControlStateNormal];
     [ViewByButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -181,7 +233,7 @@
     CancelDropImageButtonImageView.image=[UIImage imageNamed:@"dropdown_btn.png"];
     
     SortByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, ViewByButton.frame.size.height+ViewByButton.frame.origin.y+10, 320 , 45)];
-    SortByButton.backgroundColor=[UIColor grayColor];
+    SortByButton.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     SortByButton.tag=100;
     [SortByButton setTitle:@"Sort By" forState:UIControlStateNormal];
     [SortByButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -194,8 +246,17 @@
      [SortByButton addSubview:CancelDropImageButtonImageView];
     
     
+   
+    
     
     [self.view addSubview:SortByButton];
+    
+    [self startDateEndDate];
+    
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
 
     
 }
@@ -356,35 +417,40 @@
         sender.selected=YES;
         CancelDropImageButtonImageView.hidden=NO;
         [self listBySortActionView];
+        [TypeTableView removeFromSuperview];
+        [ProviderTableView removeFromSuperview];
         
     }
     else
     {
         CancelDropImageButtonImageView.hidden=YES;
         sender.selected=NO;
-        teraApnaView.hidden = YES;
+        
+        [ProviderImageView removeFromSuperview];
+        [TypeTableView removeFromSuperview];
+        
+        SortByButton.frame=CGRectMake(0,ViewByButton.frame.size.height+ViewByButton.frame.origin.y+10, 320 , 45);
+        ViewByButton.hidden=NO;
+        TypeButton.hidden=YES;
+         ProviderButton.hidden=YES;
+         StartDateButton.hidden=YES;
     }
 }
 -(void) listBySortActionView
 {
-    teraApnaView = [[UIView alloc]init];
-    teraApnaView.backgroundColor=[UIColor whiteColor];
-    teraApnaView.frame = CGRectMake(0, 433, 320, 135);
-    
-    
-  
-    
-  UIImageView *TypeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
+
+    [TypeImageView removeFromSuperview];
+  TypeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
     TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     
+    [TypeButton removeFromSuperview];
+  TypeButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 433, 320, 45)];
     
-  TypeButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 320, 45)];
-    
-   // [TypeButton addTarget:self action:@selector(typeAction)
+    [TypeButton addTarget:self action:@selector(typeAction)
      
-         //forControlEvents:UIControlEventTouchUpInside];
+         forControlEvents:UIControlEventTouchUpInside];
     
     [TypeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -403,23 +469,19 @@
     [TypeButton addSubview:TypeImageView];
     
     
-    [teraApnaView addSubview:TypeButton];
+    [self.view addSubview:TypeButton];
     
-    
-    
-    
-    
-  UIImageView *ProviderImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
+     [ProviderImageView removeFromSuperview];
+    ProviderImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
     ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
-    
-    
+ [ProviderButton removeFromSuperview];
  ProviderButton=[[UIButton alloc]initWithFrame:CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45)];
     
-    //[ProviderButton addTarget:self action:@selector(ProviderAction)
+    [ProviderButton addTarget:self action:@selector(ProviderAction)
      
-             //forControlEvents:UIControlEventTouchUpInside];
+             forControlEvents:UIControlEventTouchUpInside];
     
     [ProviderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -439,19 +501,19 @@
     
     [ProviderButton addSubview:ProviderImageView];
     
-    [teraApnaView addSubview:ProviderButton];
+    [self.view addSubview:ProviderButton];
     
-    UIImageView *StartDateImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
+     [StartDateImageView removeFromSuperview];
+   StartDateImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
     StartDateImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     
+    StartDateButton=[[UIButton alloc]initWithFrame:CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45)];
     
-    UIButton *StartDateButton=[[UIButton alloc]initWithFrame:CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45)];
+     [StartDateButton addTarget:self action:@selector(DateActionButton)
     
-    // [TypeButton addTarget:self action:@selector(typeAction)
-    
-    //forControlEvents:UIControlEventTouchUpInside];
+    forControlEvents:UIControlEventTouchUpInside];
     
     [StartDateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -469,12 +531,30 @@
     
      [StartDateButton addSubview:StartDateImageView];
     
-    [teraApnaView addSubview:StartDateButton];
+    [self.view addSubview:StartDateButton];
+    
+    [TypeTitleLable removeFromSuperview];
+    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    TypeTitleLable.backgroundColor=[UIColor clearColor];
+    TypeTitleLable.textColor=[UIColor blackColor];
+    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
+    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [TypeButton addSubview:TypeTitleLable];
+    
+    
+    [ProviderTitleLable removeFromSuperview];
+    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
+    ProviderTitleLable.backgroundColor=[UIColor clearColor];
+    ProviderTitleLable.textColor=[UIColor blackColor];
+    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
+    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    [ProviderButton addSubview:ProviderTitleLable];
 
     
     
-    [self.view addSubview:teraApnaView];
+    //[self.view addSubview:teraApnaView];
 }
+
 -(void)listByListAction{
     BottomUpView.hidden=NO;
       [bylistButton setBackgroundImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
@@ -1100,7 +1180,7 @@
     
 }
 -(void)BackButtonAction{
-    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)previousDateSelected
 
@@ -1317,36 +1397,6 @@
     [self makeCalender];
 
 }
--(void)TypeFunctionCall
-
-{
-    TypeTableView=[[UITableView alloc]init];
-    
-    int heightY=0;
-    if(343-height<90)
-    {
-        heightY=273;
-    }
-    else{
-        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
-        
-    }
-    
-    
-    TypeTableView.frame=CGRectMake(0, 20,320 , heightY);
-    TypeTableView.backgroundColor=[UIColor clearColor];
-    
-    TypeTableView.delegate=self;
-    
-    TypeTableView.dataSource = self;
-    
-    TypeTableView.separatorStyle=UITableViewCellAccessoryNone;
-    
-    TypeTableView.tag=1;
-    
-    [self.view addSubview:TypeTableView];
-    
-}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 
@@ -1492,29 +1542,34 @@
     
     
     TypeTagValue=[sender tag];
-    NSLog(@"TypeTagValue=%d",TypeTagValue);
     
-    [TypeTitleLable removeFromSuperview];
+    NSString *string2 = [NSString stringWithFormat:@"%d", TypeTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count] ; j ++)
+    {
+        NSLog(@"listOfTemArrayApplied=%@",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j]);
+        
+        if(TypeTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    NSLog(@"StatusChange=%d",StatusChange);
     
-    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    TypeTitleLable.backgroundColor=[UIColor clearColor];
-    
-    TypeTitleLable.textColor=[UIColor blackColor];
-    
-    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    
-    TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:[sender tag]-1]];
-    
-    [TypeButton addSubview:TypeTitleLable];
-    
-    
+    TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:StatusChange]];
     
     typeStatus=1;
     
-  //  [self typeAction];
+    SearhType=@"1";
+    SearhProvider=@"0";
+    searchDate=@"0";
+    
+    finalString=[[SearhType stringByAppendingString:SearhProvider] stringByAppendingString:searchDate];
+    NSLog(@"finalString=%@",finalString);
+    [self typeAction];
     
 }
 
@@ -1526,28 +1581,30 @@
     
     ProiverTagValue=[sender tag];
     
-    [ProviderTitleLable removeFromSuperview];
-    
-    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    ProviderTitleLable.backgroundColor=[UIColor clearColor];
-    
-    ProviderTitleLable.textColor=[UIColor blackColor];
-    
-    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    
-    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:[sender tag]-1]];
-    
-    [ProviderButton addSubview:ProviderTitleLable];
-    
-    
+    NSString *string2 = [NSString stringWithFormat:@"%d", ProiverTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count] ; j ++)
+    {
+        
+        
+        if(ProiverTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:StatusChange]];
     
     purposeStatus=1;
+    SearhType=@"0";
+    SearhProvider=@"1";
+    searchDate=@"0";
     
-    //[self ProviderAction];
+    finalString=[[SearhType stringByAppendingString:SearhProvider] stringByAppendingString:searchDate];;
     
+    [self ProviderAction];
 }
 
 - (void)didReceiveMemoryWarning
@@ -1555,7 +1612,665 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+-(void)typeAction
 
+{
+    
+    ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    StartDateImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    
+    ViewByButton.hidden=YES;
+    SortByButton.frame=CGRectMake(0,TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45);
+    purposeStatus=0;
+     [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
+    if(typeStatus==0)
+    {
+        
+        typeStatus=1;
+        
+        [UIView animateWithDuration:.2f animations:^{
+            
+            
+            height=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+            
+            NSLog(@"height=%d",height);
+            
+            int heightY=0;
+            if(400-height<90)
+            {
+                heightY=SortByButton.frame.origin.y+SortByButton.frame.size.height;
+            }
+            else{
+                heightY=343-height;
+                
+            }
+            TypeButton.frame = CGRectMake(0, heightY, 320, 45);
+            
+            
+        } completion:^(BOOL finished) {
+            
+            [self TypeFunctionCall];
+          //  ProviderButton.hidden=NO;
+            
+            ProviderButton.frame = CGRectMake(0, TypeTableView.frame.size.height+TypeTableView.frame.origin.y, 320, 45);
+            StartDateButton.frame= CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            TypeImageView.image=[UIImage imageNamed:@"MinusImage.png"];
+            
+        }];
+    }
+    else
+    {
+        typeStatus=0;
+        ProviderButton.hidden=NO;
+        [UIView animateWithDuration:.2f animations:^{
+            
+            [TypeTableView removeFromSuperview];
+            
+            [ProviderTableView removeFromSuperview];
+            
+            TypeButton.frame = CGRectMake(0,433, 320, 45);
+            
+            ProviderButton.frame = CGRectMake(0, TypeTableView.frame.size.height+TypeTableView.frame.origin.y, 320, 45);
+            StartDateButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+    
+            
+        } completion:^(BOOL finished) {
+            
+            TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+            
+        }];
+        
+    }
+    
+}
+-(void)TypeFunctionCall
+
+{
+    TypeTableView=[[UITableView alloc]init];
+    
+    int heightY=0;
+    if(343-height<90)
+    {
+        heightY=308;
+    }
+    else
+    {
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+        
+    }
+    TypeTableView.frame=CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y,320 , heightY);
+    TypeTableView.backgroundColor=[UIColor yellowColor];
+    
+    TypeTableView.delegate=self;
+    
+    TypeTableView.dataSource = self;
+    
+    TypeTableView.separatorStyle=UITableViewCellAccessoryNone;
+    
+    TypeTableView.tag=1;
+    
+    [self.view addSubview:TypeTableView];
+    
+}
+
+-(void)ProviderAction{
+    
+    typeStatus=0;
+    ViewByButton.hidden=YES;
+    SortByButton.frame=CGRectMake(0,TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45);
+
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
+    TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    StartDateImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    StartDateButton.hidden=YES;
+
+    if(purposeStatus==0){
+        
+        purposeStatus=1;
+        
+        [UIView animateWithDuration:.2f animations:^{
+            
+            
+            heightProvider=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
+            
+            NSLog(@"height=%d",heightProvider);
+            
+            NSLog(@"height=%d",heightProvider);
+            
+            int heightY=0;
+            if(343-heightProvider<90)
+            {
+                heightY=SortByButton.frame.origin.y+SortByButton.frame.size.height;
+            }
+            else
+            {
+                heightY=343-heightProvider;
+                
+            }
+            
+            TypeButton.frame = CGRectMake(0, heightY, 320, 45);
+            ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            [self ProviderFunction];
+            StartDateButton.hidden=NO;
+             StartDateButton.frame = CGRectMake(0, ProviderTableView.frame.size.height+ProviderTableView.frame.origin.y, 320, 45);
+            ProviderImageView.image=[UIImage imageNamed:@"MinusImage.png"];
+            
+        }];
+        
+    }
+    
+    else{
+        
+        purposeStatus=0;
+           StartDateButton.hidden=NO;
+        [UIView animateWithDuration:.2f animations:^{
+            
+            [ProviderTableView removeFromSuperview];
+            
+            [TypeTableView removeFromSuperview];
+            
+            TypeButton.frame = CGRectMake(0, 433, 320, 45);
+            
+            ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+            StartDateButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+            
+        }];
+        
+    }
+    
+}
+-(void)ProviderFunction{
+    
+
+    int heightY=0;
+    if(373-heightProvider<90)
+    {
+        heightY=250;
+    }
+    else{
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
+        
+    }
+    
+    ProviderTableView=[[UITableView alloc]init];
+    ProviderTableView.frame=CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y,320 , heightY);
+    ProviderTableView.backgroundColor=[UIColor clearColor];
+    
+    ProviderTableView.delegate=self;
+    
+    ProviderTableView.dataSource = self;
+    
+    ProviderTableView.separatorStyle=UITableViewCellAccessoryNone;
+    
+    [self.view addSubview:ProviderTableView];
+    
+}
+-(void)DateActionButton{
+    
+    typeStatus=0;
+    purposeStatus=0;
+    
+    
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
+    
+    ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+    if(DateStatus==0){
+        
+        DateStatus=1;
+        
+        [UIView animateWithDuration:.2f animations:^{
+            
+        
+            TypeButton.frame = CGRectMake(0, SortByButton.frame.size.height+SortByButton.frame.origin.y , 320, 45);
+            ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+             StartDateButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            [self startDateEndDateHiddenNo];
+            
+            StartDateImageView.image=[UIImage imageNamed:@"MinusImage.png"];
+            
+        }];
+        
+    }
+    
+    else{
+        
+        DateStatus=0;
+        StartDateButton.hidden=NO;
+        [UIView animateWithDuration:.2f animations:^{
+            
+            TypeButton.frame = CGRectMake(0, 433, 320, 45);
+            
+            ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
+            StartDateButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+        } completion:^(BOOL finished) {
+            
+            StartDateImageView.image=[UIImage imageNamed:@"PlusImage.png"];
+            
+        }];
+        
+    }
+    
+}
+-(void)startDateEndDateHiddenNo{
+    
+    StartdateTextField.hidden=NO;
+    EnddateTextField.hidden=NO;
+    StartDateLable.hidden=NO;
+    EndDateLable.hidden=NO;
+}
+-(void)startDateEndDate{
+    
+    [StartdateTextField removeFromSuperview];
+    [EnddateTextField removeFromSuperview];
+    [StartDateLable removeFromSuperview];
+    [EndDateLable removeFromSuperview];
+    
+    [DateDatePicker removeFromSuperview];
+    DateDatePicker  = [[UIDatePicker alloc]init];
+    [DateDatePicker setFrame:CGRectMake(100, 518, 320, 100)];
+    
+    DateDatePicker.datePickerMode = UIDatePickerModeDate;
+    [DateDatePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
+    
+    
+    [EndDateDatePicker removeFromSuperview];
+    EndDateDatePicker = [[UIDatePicker alloc]init];
+    [EndDateDatePicker setFrame:CGRectMake(100, 518, 320, 100)];
+    EndDateDatePicker.datePickerMode = UIDatePickerModeDate;
+    [EndDateDatePicker addTarget:self action:@selector(EndupdateDateField) forControlEvents:UIControlEventValueChanged];
+    
+    [toolba removeFromSuperview];
+    toolba = [[UIToolbar alloc] initWithFrame: CGRectMake(0,477 ,320,45)];
+    
+    toolba.barStyle = UIBarStyleBlackOpaque;
+    
+    
+    
+    UIBarButtonItem *flexibleSpaceBarButton = [[UIBarButtonItem alloc]
+                                               
+                                               initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                               
+                                               target:nil
+                                               
+                                               action:nil];
+    
+    
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle: @"Done" style: UIBarButtonItemStyleBordered target: self action: @selector(dismissKeyboard)];
+    
+    doneButton.width = 50;
+    
+    
+    
+    toolba.items = [NSArray arrayWithObjects:flexibleSpaceBarButton, doneButton,nil];
+    
+
+   StartdateTextField = [[UITextField alloc] initWithFrame:CGRectMake(135, 350, 150, 40)];
+    
+    StartdateTextField.delegate = self;
+    
+    StartdateTextField.textColor=[UIColor blackColor];
+    
+    StartdateTextField.backgroundColor = [UIColor grayColor];
+    
+    StartdateTextField.tag=108;
+    
+    StartdateTextField.textAlignment = NSTextAlignmentLeft;
+    
+    [StartdateTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    
+    StartdateTextField.leftView = paddingView;
+    
+    StartdateTextField.leftViewMode = UITextFieldViewModeAlways;
+    
+    StartdateTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    
+    StartdateTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+    [StartdateTextField setFont:[UIFont fontWithName:helveticaRegular size:13]];
+    
+    StartdateTextField.autocapitalizationType = NO;
+    
+    StartdateTextField.returnKeyType=UIReturnKeyNext;
+    
+    [StartdateTextField setInputView:DateDatePicker];
+    
+    [StartdateTextField setInputAccessoryView:toolba];
+    
+    //[dateTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
+    
+    [self.view addSubview:StartdateTextField];
+    
+
+    StartDateLable=[[UILabel alloc]initWithFrame:CGRectMake(20, 350, 100, 40) ];
+    
+    StartDateLable.text= [NSString stringWithFormat:@"   %@",@"Start Date"];
+    
+    StartDateLable.textAlignment=NSTextAlignmentLeft;
+    
+    StartDateLable.font = [UIFont fontWithName:helveticaRegular size:15];
+    
+    StartDateLable.textColor=[UIColor blackColor];
+    
+    StartDateLable.backgroundColor = [UIColor whiteColor];
+    
+    [self.view addSubview:StartDateLable];
+    
+    
+    EnddateTextField = [[UITextField alloc] initWithFrame:CGRectMake(135, StartdateTextField.frame.size.height+StartdateTextField.frame.origin.y+10, 150, 40)];
+    
+    EnddateTextField.delegate = self;
+    
+    EnddateTextField.textColor=[UIColor blackColor];
+    
+    EnddateTextField.backgroundColor = [UIColor grayColor];
+    
+    EnddateTextField.tag=109;
+    
+    EnddateTextField.textAlignment = NSTextAlignmentLeft;
+    
+    [EnddateTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    
+    UIView *paddingView3 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    
+    EnddateTextField.leftView = paddingView3;
+    
+    EnddateTextField.leftViewMode = UITextFieldViewModeAlways;
+    
+    EnddateTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    
+    EnddateTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+    [EnddateTextField setFont:[UIFont fontWithName:helveticaRegular size:13]];
+    
+    EnddateTextField.autocapitalizationType = NO;
+    
+    EnddateTextField.returnKeyType=UIReturnKeyNext;
+    
+    [EnddateTextField setInputView:EndDateDatePicker];
+    
+    [EnddateTextField setInputAccessoryView:toolba];
+    
+    [self.view addSubview:EnddateTextField];
+    
+
+    EndDateLable=[[UILabel alloc]initWithFrame:CGRectMake(20, StartdateTextField.frame.size.height+StartdateTextField.frame.origin.y+10, 100, 40) ];
+    
+    EndDateLable.text= [NSString stringWithFormat:@"   %@",@"End Date"];
+    
+    EndDateLable.textAlignment=NSTextAlignmentLeft;
+    
+    EndDateLable.font = [UIFont fontWithName:helveticaRegular size:15];
+    
+    EndDateLable.textColor=[UIColor blackColor];
+    
+    EndDateLable.backgroundColor = [UIColor whiteColor];
+    
+    [self.view addSubview:EndDateLable];
+    
+}
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    
+    
+    if(textField.tag==108 || textField.tag==109 )
+        
+    {
+        
+        return NO;
+        
+    }
+    
+    return YES;
+    
+}
+
+-(void)EndupdateDateField{
+    EnddateTextField.text = [self formatDate:EndDateDatePicker.date];
+    NSLog(@"dateTextField=%@",EnddateTextField.text);
+    
+    SearhType=@"0";
+    SearhProvider=@"0";
+    searchDate=@"1";
+    
+    finalString=[[SearhType stringByAppendingString:SearhProvider] stringByAppendingString:searchDate];
+    NSLog(@"finalString=%@",finalString);
+}
+-(void)updateDateField
+{
+    SearhType=@"0";
+    SearhProvider=@"0";
+    searchDate=@"1";
+    
+     finalString=[[SearhType stringByAppendingString:SearhProvider] stringByAppendingString:searchDate];
+    NSLog(@"finalString=%@",finalString);
+    StartdateTextField.text = [self formatDate:DateDatePicker.date];
+    NSLog(@"dateTextField=%@",StartdateTextField.text);
+}
+- (NSString *)formatDate:(NSDate *)date
+{
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+    
+    [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
+    
+    NSString *formattedDate = [dateFormatter stringFromDate:date];
+    
+    return formattedDate;
+}
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [StartdateTextField resignFirstResponder];
+    [EnddateTextField     resignFirstResponder];
+}
+-(void)dismissKeyboard
+{
+    
+    [self.view endEditing:YES];
+    
+    
+}
+
+#pragma mark- slide Keyboard up
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    CGRect textFieldRect = [self.view.window convertRect:textField.bounds fromView:textField];
+    CGRect viewRect = [self.view.window convertRect:self.view.bounds fromView:self.view];
+    CGFloat midline = textFieldRect.origin.y + 0.5 * textFieldRect.size.height;
+    CGFloat numerator =midline - viewRect.origin.y- MINIMUM_SCROLL_FRACTION * viewRect.size.height;
+    CGFloat denominator =(MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION)* viewRect.size.height;
+    CGFloat heightFraction = numerator / denominator;
+    if (heightFraction < 0.0)
+    {
+        heightFraction = 0.0;
+    }
+    else if (heightFraction > 1.0)
+    {
+        heightFraction = 1.0;
+    }
+    UIInterfaceOrientation orientation =[[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
+        
+    {
+        animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
+    }
+    else
+    {
+        animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
+    }
+    
+    CGRect viewFrame = self.view.frame;
+    NSLog(@"animated=%f",animatedDistance);
+    NSLog(@"y=%f",viewFrame.origin.y);
+    viewFrame.origin.y -= animatedDistance;
+    NSLog(@"y=%f",viewFrame.origin.y);
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    [self.view setFrame:viewFrame];
+    [UIView commitAnimations];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y += animatedDistance;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    [self.view setFrame:viewFrame];
+    [UIView commitAnimations];
+    
+    
+}
+-(void)DoneButtonFuction{
+    
+    
+   if(TypeTitleLable.text.length<1 && ProviderTitleLable.text.length<1 && StartdateTextField.text.length<1 && EnddateTextField.text.length<1)
+   {
+       [StartdateTextField resignFirstResponder];
+       [EnddateTextField resignFirstResponder  ];
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:@"Enter atleast one type" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+        alert = nil;
+    }
+    else
+      {
+            [self ShowActivityIndicatorWithTitle:@"Loading..."];
+            [self performSelector:@selector(serverCallFoSortAction) withObject:nil afterDelay:0.1];
+    }
+}
+#pragma mark server CallFor AddApointment
+-(void)serverCallFoSortAction
+{
+
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+    
+        NSLog(@"TypeTagValue=%d",TypeTagValue);
+         NSLog(@"ProiverTagValue=%d",ProiverTagValue);
+        NSLog(@"StartdateTextField=%@",StartdateTextField.text);
+        NSLog(@"EnddateTextField=%@",EnddateTextField.text);
+        
+         NSLog(@"FinalString=%@",finalString);
+        
+        
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
+        NSDictionary *params = @{
+                                 
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
+                                 @"type":[NSString stringWithFormat:@"%d",TypeTagValue],
+                                 @"provider":[NSString stringWithFormat:@"%d",ProiverTagValue],
+                                 @"startdate":StartdateTextField.text,
+                                 @"enddate":EnddateTextField.text,
+                                 @"searchtype":finalString
+                                 
+                                 };
+        
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/get_sorted_data_based_on_type",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            
+            NSLog(@"Sort Wala data Json--->%@",json);
+            
+            if([[json objectForKey:@"log"] isEqualToString:@"No apointment yet!"])
+                
+            {
+                
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"log"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                
+                [myAlertView show];
+                
+            }
+            
+            else
+                
+            {
+                
+                
+              
+                
+               // [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
+                
+                UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                
+        
+                complete.tag = 111;
+                
+                [complete show];
+            }
+            
+            
+            
+            [self HideActivityIndicator];
+            
+            NSLog(@"JSON: %@", json);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         
+         {
+             
+             NSLog(@"Error: %@", error.description);
+             
+             [self HideActivityIndicator];
+             
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             
+             [unable show];
+             
+         }];
+        
+        
+        
+    }
+    
+}
+
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title
+{
+    
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+    
+}
+
+-(void)HideActivityIndicator
+{
+    [SVProgressHUD dismiss];
+    
+    
+    
+}
 /*
 #pragma mark - Navigation
 

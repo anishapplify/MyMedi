@@ -280,15 +280,14 @@
     dummyArray = [[NSMutableArray alloc]init];
    
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
-     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewMedicalCreatedByUser"];
-     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
+    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewMedicalCreatedByUser"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"AppointmentIdGetValue"];
-     [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"MedicalIdGetValue"];
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"MedicalIdGetValue"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     
    
-    
     
     array_AppointmentName = [[NSMutableArray alloc]init];
     
@@ -332,8 +331,6 @@
     
     
     
-    
-    
     array_AppointmentNam_Main = [[NSMutableArray alloc]init];
     
     array_AppointmentID_Main = [[NSMutableArray alloc]init];
@@ -353,9 +350,6 @@
     array_TimeStamp_Main = [[NSMutableArray alloc]init];
     
     
-   
-    
-    NSLog(@"heightheightheight=%f",self.view.frame.size.height);
     appointmentsDictionary = [[NSMutableDictionary alloc]init];
     medicalrecordsDictionary=[[NSMutableDictionary alloc]init];
     temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
@@ -417,7 +411,8 @@
     if ([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"lastname"] isEqualToString:@""]) {
             lastNameLable.text=@"---";
     }
-    else{
+    else
+    {
     lastNameLable.text=[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"lastname"];
     }
     lastNameLable.backgroundColor=[UIColor clearColor];
@@ -436,7 +431,8 @@
     if ([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"address"] isEqualToString:@""]) {
         addressNameLable.text=@"---";
     }
-    else{
+    else
+    {
         addressNameLable.text=[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"address"];
     }
     addressNameLable.backgroundColor=[UIColor clearColor];
@@ -534,11 +530,9 @@ else
     
 }
     
-        [UpcommingView addSubview:UpcommingButtonActionArrow];
-        [CenterView addSubview:UpcommingView];
+    [UpcommingView addSubview:UpcommingButtonActionArrow];
+    [CenterView addSubview:UpcommingView];
     
-    
-
     RecentView=[[UIView alloc]initWithFrame:CGRectMake(10, UpcommingView.frame.size.height+UpcommingView.frame.origin.y+25, 300, 160)];
     RecentView.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
@@ -601,6 +595,8 @@ else
     
     SortButton=[[UIButton alloc]initWithFrame:CGRectMake(10, 20,[UIImage imageNamed:@"sort_button.png"].size.width ,[UIImage imageNamed:@"sort_button.png"].size.height)];
     [SortButton setImage:[UIImage imageNamed:@"sort_button.png"] forState:UIControlStateNormal];
+     [SortButton addTarget:self action:@selector(MedicalSortButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    
     SortButton.backgroundColor=[UIColor clearColor];
     [MedicalTopBarView addSubview:SortButton];
     
@@ -666,6 +662,7 @@ else
     AppointmentSortButton=[[UIButton alloc]initWithFrame:CGRectMake(10, 20,[UIImage imageNamed:@"sort_button.png"].size.width ,[UIImage imageNamed:@"sort_button.png"].size.height)];
    [AppointmentSortButton setImage:[UIImage imageNamed:@"sort_button.png"] forState:UIControlStateNormal];
      AppointmentSortButton.backgroundColor=[UIColor clearColor];
+    [AppointmentSortButton addTarget:self action:@selector(AppointmentSortButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [AppointmentTopBarView addSubview:AppointmentSortButton];
     
     
@@ -985,6 +982,14 @@ else
     }
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AddAppointmentClick"];
 }
+-(void)MedicalSortButtonAction{
+    SortScreenViewController *createnewAppointment=[[SortScreenViewController alloc]init];
+    [self.navigationController pushViewController:createnewAppointment animated:YES];
+}
+-(void)AppointmentSortButtonAction{
+    SortScreenViewController *createnewAppointment=[[SortScreenViewController alloc]init];
+    [self.navigationController pushViewController:createnewAppointment animated:YES];
+}
 -(void)LogOutAction{
     alertviewLogout = [[UIAlertView alloc] initWithTitle:@"Log Out" message:@"Are you sure you want to log out?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
     alertviewLogout.tag=14215;
@@ -1139,7 +1144,7 @@ else
     [FirstRowCellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     FirstRowCellButtonClick.layer.masksToBounds = NO;
     FirstRowCellButtonClick.exclusiveTouch=YES;
-   // [FirstRowCellButtonClick addTarget:self action:@selector(firstRowData) forControlEvents:UIControlEventTouchUpInside];
+   [FirstRowCellButtonClick addTarget:self action:@selector(firstRecentRowData) forControlEvents:UIControlEventTouchUpInside];
     [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
     [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
     
@@ -1264,10 +1269,12 @@ else
    
     
 }
+-(void)firstRecentRowData{
+    
+}
 -(void)firstRowData{
     
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
-    
     [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
     
     [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] valueForKey:@"appointmentname"] objectAtIndex:0] forKeyPath:kAppointmentmentNameString];
