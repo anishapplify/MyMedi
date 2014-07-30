@@ -49,7 +49,7 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
+    self.view.backgroundColor=[UIColor whiteColor];
     
     TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,70)];
     
@@ -104,7 +104,7 @@
     
     informationScrollView.hidden=NO;
     
-    informationScrollView.frame=CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+20, 320, 245);
+    informationScrollView.frame=CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+20, 320, 200);
     
     informationScrollView.backgroundColor=[UIColor whiteColor];
     
@@ -122,16 +122,9 @@
     
     
     
-    appointmentTextField = [[UITextField alloc] initWithFrame:CGRectMake(125,0, 200, 40)];
-    
-    appointmentTextField.backgroundColor=[UIColor whiteColor];
-    
+    appointmentTextField = [[UITextField alloc] initWithFrame:CGRectMake(125,0, 180, 30)];
+    appointmentTextField.backgroundColor=[UIColor clearColor];
     appointmentTextField.delegate = self;
-    
-  
-    
-    
-    
     appointmentTextField.textColor=[UIColor blackColor];
     
     appointmentTextField.textAlignment = NSTextAlignmentLeft;
@@ -155,19 +148,18 @@
     appointmentTextField.userInteractionEnabled=FALSE;
     
     appointmentTextField.returnKeyType=UIReturnKeyNext;
-//    appointmentTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-//    appointmentTextField.layer.borderWidth = 1;
-
     
     [appointmentTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
     [informationScrollView addSubview:appointmentTextField];
     
+    UIView *LineView=[[UIView alloc]initWithFrame:CGRectMake(130, appointmentTextField.frame.size.height+appointmentTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
     
     
-    
-    
-    UILabel *AppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 125, 40) ];
+    UILabel *AppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 125, 30) ];
     
     AppointmentLable.text= [NSString stringWithFormat:@"   %@",@"Appointment Name"];
     
@@ -175,21 +167,17 @@
     
     AppointmentLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    AppointmentLable.textColor=[UIColor blackColor];
+    AppointmentLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    AppointmentLable.backgroundColor = [UIColor grayColor];
+    AppointmentLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:AppointmentLable];
     
     
     
-    consultantTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, appointmentTextField.frame.size.height+appointmentTextField.frame.origin.y+1, 200, 40)];
+    consultantTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, appointmentTextField.frame.size.height+appointmentTextField.frame.origin.y+1, 200, 30)];
     
     consultantTextField.delegate = self;
-    
-    
-    
-    //[consultantTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
     consultantTextField.textColor=[UIColor blackColor];
     
@@ -216,15 +204,18 @@
      consultantTextField.userInteractionEnabled=FALSE;
     consultantTextField.returnKeyType=UIReturnKeyNext;
     
-    consultantTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    consultantTextField.layer.borderWidth = 1;
     [consultantTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
     [informationScrollView addSubview:consultantTextField];
     
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(130, consultantTextField.frame.size.height+consultantTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
     
     
-    UILabel *ConsultantLable=[[UILabel alloc]initWithFrame:CGRectMake(0, appointmentTextField.frame.size.height+appointmentTextField.frame.origin.y+1, 125, 40) ];
+    
+    UILabel *ConsultantLable=[[UILabel alloc]initWithFrame:CGRectMake(0, appointmentTextField.frame.size.height+appointmentTextField.frame.origin.y+1, 125, 30) ];
     
     ConsultantLable.text= [NSString stringWithFormat:@"   %@",@"Consultant Name"];
     
@@ -232,9 +223,9 @@
     
     ConsultantLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    ConsultantLable.textColor=[UIColor blackColor];
+    ConsultantLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    ConsultantLable.backgroundColor = [UIColor grayColor];
+    ConsultantLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:ConsultantLable];
     
@@ -282,7 +273,7 @@
     
     
     
-    dateTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, consultantTextField.frame.size.height+consultantTextField.frame.origin.y+1, 200, 40)];
+    dateTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, consultantTextField.frame.size.height+consultantTextField.frame.origin.y+1, 200, 30)];
     
     dateTextField.delegate = self;
     
@@ -331,7 +322,7 @@
     
     
     
-    UILabel *DateLable=[[UILabel alloc]initWithFrame:CGRectMake(0, consultantTextField.frame.size.height+consultantTextField.frame.origin.y+1, 125, 40) ];
+    UILabel *DateLable=[[UILabel alloc]initWithFrame:CGRectMake(0, consultantTextField.frame.size.height+consultantTextField.frame.origin.y+1, 125, 30) ];
     
     DateLable.text= [NSString stringWithFormat:@"   %@",@"Date"];
     
@@ -339,18 +330,21 @@
     
     DateLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    DateLable.textColor=[UIColor blackColor];
+    DateLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    DateLable.backgroundColor = [UIColor grayColor];
+    DateLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:DateLable];
     
     
-
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(130, dateTextField.frame.size.height+dateTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
     
     
     
-    hospitalTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 200, 40)];
+    hospitalTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 200, 30)];
     
     hospitalTextField.delegate = self;
     
@@ -383,8 +377,6 @@
     hospitalTextField.userInteractionEnabled=FALSE;
     hospitalTextField.returnKeyType=UIReturnKeyNext;
     
-    hospitalTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    hospitalTextField.layer.borderWidth = 1;
     
     [hospitalTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -392,7 +384,7 @@
 
     
     
-    UILabel *HospitalLable=[[UILabel alloc]initWithFrame:CGRectMake(0, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 125, 40) ];
+    UILabel *HospitalLable=[[UILabel alloc]initWithFrame:CGRectMake(0, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 125, 30) ];
     
     HospitalLable.text= [NSString stringWithFormat:@"   %@",@"Hospital Name"];
     
@@ -400,15 +392,20 @@
     
     HospitalLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    HospitalLable.textColor=[UIColor blackColor];
+    HospitalLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    HospitalLable.backgroundColor = [UIColor grayColor];
+    HospitalLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:HospitalLable];
     
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(130, hospitalTextField.frame.size.height+hospitalTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
     
     
-  UITextField *AppointtypeTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, hospitalTextField.frame.size.height+hospitalTextField.frame.origin.y+1, 200, 40)];
+    
+  UITextField *AppointtypeTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, hospitalTextField.frame.size.height+hospitalTextField.frame.origin.y+1, 200, 30)];
     
     AppointtypeTextField.delegate = self;
     
@@ -448,7 +445,7 @@
     
     
     
-    UILabel *AppointmentTypeLable=[[UILabel alloc]initWithFrame:CGRectMake(0, hospitalTextField.frame.size.height+hospitalTextField.frame.origin.y+1, 125, 40) ];
+    UILabel *AppointmentTypeLable=[[UILabel alloc]initWithFrame:CGRectMake(0, hospitalTextField.frame.size.height+hospitalTextField.frame.origin.y+1, 125, 30) ];
     
     AppointmentTypeLable.text= [NSString stringWithFormat:@"   %@",@"Type"];
     
@@ -456,20 +453,22 @@
     
     AppointmentTypeLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    AppointmentTypeLable.textColor=[UIColor blackColor];
+    AppointmentTypeLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    AppointmentTypeLable.backgroundColor = [UIColor grayColor];
+    AppointmentTypeLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:AppointmentTypeLable];
+    
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(130, AppointtypeTextField.frame.size.height+AppointtypeTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
 
     
-    UITextField *AppointtypeProivderTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, AppointtypeTextField.frame.size.height+AppointtypeTextField.frame.origin.y+1, 200, 40)];
+    UITextField *AppointtypeProivderTextField = [[UITextField alloc] initWithFrame:CGRectMake(125, AppointtypeTextField.frame.size.height+AppointtypeTextField.frame.origin.y+1, 200, 30)];
     
     AppointtypeProivderTextField.delegate = self;
     
-   
-    
-    //[hospitalTextField setBackground:[UIImage imageNamed:@"inputBoxfor-shiping.png"]];
     
     AppointtypeProivderTextField.textColor=[UIColor blackColor];
     
@@ -494,8 +493,6 @@
     
     AppointtypeProivderTextField.autocapitalizationType = NO;
     
-    AppointtypeProivderTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
-    AppointtypeProivderTextField.layer.borderWidth = 1;
     AppointtypeProivderTextField.returnKeyType=UIReturnKeyNext;
     
     [AppointtypeProivderTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
@@ -503,8 +500,7 @@
     [informationScrollView addSubview:AppointtypeProivderTextField];
     
     
-    
-    UILabel *AppointmentProivderLable=[[UILabel alloc]initWithFrame:CGRectMake(0, AppointtypeTextField.frame.size.height+AppointtypeTextField.frame.origin.y+1, 125, 40) ];
+    UILabel *AppointmentProivderLable=[[UILabel alloc]initWithFrame:CGRectMake(0, AppointtypeTextField.frame.size.height+AppointtypeTextField.frame.origin.y+1, 125, 30) ];
     
     AppointmentProivderLable.text= [NSString stringWithFormat:@"   %@",@"Provider"];
     
@@ -512,21 +508,34 @@
     
     AppointmentProivderLable.font = [UIFont fontWithName:helveticaRegular size:13];
     
-    AppointmentProivderLable.textColor=[UIColor blackColor];
+    AppointmentProivderLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
-    AppointmentProivderLable.backgroundColor = [UIColor grayColor];
+    AppointmentProivderLable.backgroundColor = [UIColor clearColor];
     
     [informationScrollView addSubview:AppointmentProivderLable];
+    
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(130, AppointtypeProivderTextField.frame.size.height+AppointtypeProivderTextField.frame.origin.y, 180, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [informationScrollView addSubview:LineView];
+  //  informationScrollView.backgroundColor=[UIColor   greenColor ];
 
         [self.view addSubview:informationScrollView];
 
-    UILabel  *NoteStaticLable=[[UILabel alloc]initWithFrame:CGRectMake(20, informationScrollView.frame.size.height+informationScrollView.frame.origin.y+5 , 100 , 45)];
+    UILabel  *NoteStaticLable=[[UILabel alloc]initWithFrame:CGRectMake(10, informationScrollView.frame.size.height+informationScrollView.frame.origin.y+5 , 100 , 45)];
     NoteStaticLable.text=@"Notes";
+    NoteStaticLable.textAlignment=NSTextAlignmentLeft;
     NoteStaticLable.backgroundColor=[UIColor clearColor];
     NoteStaticLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    NoteStaticLable.textColor=[UIColor blackColor];
+    NoteStaticLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     [self.view addSubview:NoteStaticLable];
-    //
+    
+    
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(10, 330, 310, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    //LineView.backgroundColor=[UIColor greenColor];
+    [self.view addSubview:LineView];
     
     NSString *descriptionString;
 
@@ -583,19 +592,25 @@
     BioView.textColor=[UIColor blackColor];
     BioView.delegate=self;
     BioView.text=descriptionString;
-    BioView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
-    BioView.layer.borderWidth = 0.5f;
+  //  BioView.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
+   // BioView.layer.borderWidth = 0.5f;
     BioView.textAlignment=NSTextAlignmentLeft;
     BioView.returnKeyType=UIReturnKeyDone;
     BioView.userInteractionEnabled=FALSE;
    [self.view addSubview:BioView];
     
-    UILabel  *AttachmentsStaticLable=[[UILabel alloc]initWithFrame:CGRectMake(20, BioView.frame.size.height+BioView.frame.origin.y , 100 , 45)];
+    UILabel  *AttachmentsStaticLable=[[UILabel alloc]initWithFrame:CGRectMake(10, BioView.frame.size.height+BioView.frame.origin.y , 100 , 45)];
     AttachmentsStaticLable.text=@"Attachments";
     AttachmentsStaticLable.backgroundColor=[UIColor clearColor];
     AttachmentsStaticLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    AttachmentsStaticLable.textColor=[UIColor blackColor];
+    AttachmentsStaticLable.textColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     [self.view addSubview:AttachmentsStaticLable];
+    
+    LineView=[[UIView alloc]initWithFrame:CGRectMake(10, 435, 310, 1)];
+    LineView.layer.borderColor = [UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0].CGColor;
+    LineView.layer.borderWidth = 1;
+    [self.view addSubview:LineView];
+
     
     // Do any additional setup after loading the view.
 }

@@ -42,14 +42,14 @@
         
         
         
-      // EditAppointmentViewController *veri=[[EditAppointmentViewController  alloc]init];
-      // [self.navigationController pushViewController:veri animated:YES];
+     // SortScreenViewController  *veri=[[SortScreenViewController  alloc]init];
+      //[self.navigationController pushViewController:veri animated:YES];
         
       // CreateNewAppointmentViewController *veri=[[CreateNewAppointmentViewController  alloc]init];
       //[self.navigationController pushViewController:veri animated:YES];
         
         
-      [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];
+     [self performSelector:@selector(loginVerifyEmailOrNOT) withObject:nil afterDelay:0.1];
     }
     else
     {

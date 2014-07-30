@@ -263,6 +263,8 @@
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewAppointmentCreatedByUser"];
         
         [self APICallForUserAppointment];       // API CALL FOR USER APPOINTMENTS
+        
+        [self loginWithAccessToken];
     }
    
     else
@@ -285,19 +287,7 @@
      [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"MedicalIdGetValue"];
     [[NSUserDefaults standardUserDefaults]synchronize];
     
-    appointmentSectionTitles = [[NSMutableArray alloc]init];
-    [appointmentSectionTitles insertObject:@"July" atIndex:0];
-    [appointmentSectionTitles insertObject:@"August" atIndex:1];
-    [appointmentSectionTitles insertObject:@"September" atIndex:2];
-    [appointmentSectionTitles insertObject:@"October" atIndex:3];
-    [appointmentSectionTitles insertObject:@"November" atIndex:4];
-    [appointmentSectionTitles insertObject:@"December" atIndex:5];
-    [appointmentSectionTitles insertObject:@"January" atIndex:6];
-    [appointmentSectionTitles insertObject:@"February" atIndex:7];
-    [appointmentSectionTitles insertObject:@"March" atIndex:8];
-    [appointmentSectionTitles insertObject:@"April" atIndex:9];
-    [appointmentSectionTitles insertObject:@"May" atIndex:10];
-    [appointmentSectionTitles insertObject:@"June" atIndex:11];
+   
     
     
     array_AppointmentName = [[NSMutableArray alloc]init];
@@ -363,10 +353,7 @@
     array_TimeStamp_Main = [[NSMutableArray alloc]init];
     
     
-    temp_appointmentSectionTitles = [[NSMutableArray alloc]initWithArray:appointmentSectionTitles];
-    
-    NSLog(@"temp_appointmentSectionTitles is %@",temp_appointmentSectionTitles);
-
+   
     
     NSLog(@"heightheightheight=%f",self.view.frame.size.height);
     appointmentsDictionary = [[NSMutableDictionary alloc]init];
@@ -547,22 +534,10 @@ else
     
 }
     
-    
-//        UIButton*FirstUpcommingButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, UpcommingButtonActionArrow.frame.size.height+UpcommingButtonActionArrow.frame.origin.y, 300, 40)];
-//        FirstUpcommingButtonActionArrow.backgroundColor=[UIColor yellowColor];
-//        [FirstUpcommingButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"sample_text.png"] forState:UIControlStateNormal];
-//        [UpcommingView addSubview:FirstUpcommingButtonActionArrow];
-//    
-//        UIButton*SecondViewUpcommingButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, FirstUpcommingButtonActionArrow.frame.size.height+FirstUpcommingButtonActionArrow.frame.origin.y+1, 300, 40)];
-//        SecondViewUpcommingButtonActionArrow.backgroundColor=[UIColor yellowColor];
-//         [SecondViewUpcommingButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"sample_text.png"] forState:UIControlStateNormal];
-       [UpcommingView addSubview:FirstRowCellButtonClick];
-    
-    [UpcommingView addSubview:SecondRowCellButtonClick];
-    
-    
         [UpcommingView addSubview:UpcommingButtonActionArrow];
         [CenterView addSubview:UpcommingView];
+    
+    
 
     RecentView=[[UIView alloc]initWithFrame:CGRectMake(10, UpcommingView.frame.size.height+UpcommingView.frame.origin.y+25, 300, 160)];
     RecentView.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
@@ -580,28 +555,34 @@ else
     [RecentButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"bar_with_arrow.png"] forState:UIControlStateNormal];
     RecentButtonActionArrow.titleEdgeInsets = UIEdgeInsetsMake(5, 20, 0, 0);
     
-    
-    
-    UIButton*FirstRecntButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, RecentButtonActionArrow.frame.size.height+RecentButtonActionArrow.frame.origin.y, 300, 40)];
+    if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]<1)
+    {
+        UIButton*FirstRecntButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, RecentButtonActionArrow.frame.size.height+RecentButtonActionArrow.frame.origin.y, 300, 40)];
         FirstRecntButtonActionArrow.backgroundColor=[UIColor whiteColor];
-      [FirstRecntButtonActionArrow setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [FirstRecntButtonActionArrow setTitle:@"NO RECENT UPDATES" forState:(UIControlState)UIControlStateNormal];
+        [FirstRecntButtonActionArrow setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [FirstRecntButtonActionArrow setTitle:@"NO RECENT UPDATES" forState:(UIControlState)UIControlStateNormal];
         FirstRecntButtonActionArrow.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 12];
-    [FirstRecntButtonActionArrow setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-    [RecentButtonActionArrow setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-       // [FirstRecntButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"sample_text.png"] forState:UIControlStateNormal];
-       [RecentView addSubview:FirstRecntButtonActionArrow];
+        [FirstRecntButtonActionArrow setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [RecentButtonActionArrow setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [RecentView addSubview:FirstRecntButtonActionArrow];
+    }
+    else{
+        
+        if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]==1){
+            [self NewRecentUpdateView :0];
+        }
+        else
+        if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]>=2)
+        {
+            [self NewRecentUpdateView :0];
+           [self SecondRecentUpdateFunciton :1];
+        }
+        
+    }
     
-//        UIButton*SecondViewRecentButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, FirstRecntButtonActionArrow.frame.size.height+FirstRecntButtonActionArrow.frame.origin.y+1, 300, 40)];
-//        SecondViewRecentButtonActionArrow.backgroundColor=[UIColor whiteColor];
-//         [SecondViewRecentButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"sample_text.png"] forState:UIControlStateNormal];
-//        [RecentView addSubview:SecondViewRecentButtonActionArrow];
-//    
-//        UIButton*ThirdRecentButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, SecondViewRecentButtonActionArrow.frame.size.height+SecondViewRecentButtonActionArrow.frame.origin.y+1, 300, 40)];
-//        ThirdRecentButtonActionArrow.backgroundColor=[UIColor whiteColor];
-//         [ThirdRecentButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"sample_text.png"] forState:UIControlStateNormal];
-//        [RecentView addSubview:ThirdRecentButtonActionArrow];
-        [RecentView addSubview:RecentButtonActionArrow];
+    
+    [RecentView addSubview:RecentButtonActionArrow];
+  
     
         [CenterView addSubview:RecentView];
         [UserHomeGroundView addSubview:CenterView];
@@ -1141,8 +1122,147 @@ else
     TimeLable.frame=CGRectMake(290-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
     [FirstRowCellButtonClick addSubview:TimeLable];
     
+    [UpcommingView addSubview:FirstRowCellButtonClick];
+    
+  
 
 
+}
+-(void)NewRecentUpdateView :(int)indexRow
+{
+    
+    FirstRowCellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    FirstRowCellButtonClick.frame = CGRectMake(0, UpcommingButtonActionArrow.frame.size.height+UpcommingButtonActionArrow.frame.origin.y, 300.5, 50);
+    
+    FirstRowCellButtonClick.backgroundColor=[UIColor clearColor];
+    [FirstRowCellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+    FirstRowCellButtonClick.layer.masksToBounds = NO;
+    FirstRowCellButtonClick.exclusiveTouch=YES;
+   // [FirstRowCellButtonClick addTarget:self action:@selector(firstRowData) forControlEvents:UIControlEventTouchUpInside];
+    [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+    [FirstRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+    
+    //[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] objectAtIndex:0]
+    
+    UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+    AppointmentNameTitleShow.textColor = [UIColor blackColor];
+    AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+    AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+    AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+    AppointmentNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmentname"] objectAtIndex:indexRow];
+    AppointmentNameTitleShow.numberOfLines=0;
+    AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+    [AppointmentNameTitleShow sizeToFit];
+    [FirstRowCellButtonClick addSubview:AppointmentNameTitleShow];
+    
+    UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+    TypeNameTitleShow.textColor = [UIColor grayColor];
+    TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+    //TypeNameTitleShow.textAlignment = NSTextAlignmentLeft;
+    TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+    TypeNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttype"] objectAtIndex:indexRow];
+    // TypeNameTitleShow.numberOfLines=0;
+    // TypeNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+    [TypeNameTitleShow sizeToFit];
+    TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+    
+    //TypeNameTitleShow.lineBreakMode = NSLineBreakByCharWrapping;
+    //[TypeNameTitleShow setAdjustsFontSizeToFitWidth:YES];
+    TypeNameTitleShow.minimumScaleFactor=0.3;
+    
+    [FirstRowCellButtonClick addSubview:TypeNameTitleShow];
+    
+    CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                                                             context:nil];
+    
+    UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x-7,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+    line.layer.borderColor = [UIColor grayColor].CGColor;
+    line.layer.borderWidth = 1.0f;
+    [FirstRowCellButtonClick addSubview:line];
+    
+    UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+    ProviderNameTitleShow.textColor = [UIColor grayColor];
+    ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+    ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+    ProviderNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"provider"] objectAtIndex:indexRow];
+    
+    [ProviderNameTitleShow sizeToFit];
+    ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+    
+    //TypeNameTitleShow.lineBreakMode = NSLineBreakByCharWrapping;
+    //[TypeNameTitleShow setAdjustsFontSizeToFitWidth:YES];
+    ProviderNameTitleShow.minimumScaleFactor=0.3;
+    [FirstRowCellButtonClick addSubview:ProviderNameTitleShow];
+    
+    
+    
+    
+    NSArray *dateSplitArray=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttime"] objectAtIndex:indexRow] componentsSeparatedByString:@"T"];
+    NSString *date=[dateSplitArray objectAtIndex:0];
+    
+    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+    
+    
+    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+    
+    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+    
+    NSLog(@"date2=%@",date2);
+    
+    NSLog(@"date3=%@",date3);
+    
+    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+    if([date2 isEqualToString:@"05"]) date2=@"May";
+    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+    
+    UILabel *DateLable = [[UILabel alloc] init];
+    DateLable.textColor = [UIColor grayColor];
+    DateLable.backgroundColor = [UIColor clearColor];
+    DateLable.textAlignment = NSTextAlignmentLeft;
+    DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+    DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+    DateLable.numberOfLines=0;
+    DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+    [DateLable sizeToFit];
+    DateLable.frame=CGRectMake(290-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+    [FirstRowCellButtonClick addSubview:DateLable];
+    
+    
+    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+    //  NSString *TimeString2=[TimeSplitArray2 objectAtIndex:2];
+    
+    NSLog(@"TimeString1=%@",TimeString1);
+    
+    UILabel *TimeLable = [[UILabel alloc] init];
+    TimeLable.textColor = [UIColor grayColor];
+    TimeLable.backgroundColor = [UIColor clearColor];
+    TimeLable.textAlignment = NSTextAlignmentLeft;
+    TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+    TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+    TimeLable.numberOfLines=0;
+    TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+    [TimeLable sizeToFit];
+    TimeLable.frame=CGRectMake(290-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+    [FirstRowCellButtonClick addSubview:TimeLable];
+    
+    [RecentView addSubview:FirstRowCellButtonClick];
+    
+   
+    
 }
 -(void)firstRowData{
     
@@ -1340,10 +1460,146 @@ else
         TimeLable.frame=CGRectMake(290-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
         [SecondRowCellButtonClick addSubview:TimeLable];
         
-        
+          [UpcommingView addSubview:SecondRowCellButtonClick];
     
 
 }
+-(void)SecondRecentUpdateFunciton:(int)indexRow
+{
+    
+    
+    SecondRowCellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    SecondRowCellButtonClick.frame = CGRectMake(0, FirstRowCellButtonClick.frame.size.height+FirstRowCellButtonClick.frame.origin.y, 300.5, 50);
+    
+    SecondRowCellButtonClick.backgroundColor=[UIColor clearColor];
+    [SecondRowCellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+    SecondRowCellButtonClick.layer.masksToBounds = NO;
+    SecondRowCellButtonClick.exclusiveTouch=YES;
+   // [SecondRowCellButtonClick addTarget:self action:@selector(SecondRowData) forControlEvents:UIControlEventTouchUpInside];
+    [SecondRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+    [SecondRowCellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+    
+    
+    UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+    AppointmentNameTitleShow.textColor = [UIColor blackColor];
+    AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+    AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+    AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+    AppointmentNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmentname"] objectAtIndex:indexRow];
+    AppointmentNameTitleShow.numberOfLines=0;
+    AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+    [AppointmentNameTitleShow sizeToFit];
+    [SecondRowCellButtonClick addSubview:AppointmentNameTitleShow];
+    
+    UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+    TypeNameTitleShow.textColor = [UIColor grayColor];
+    TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+    //TypeNameTitleShow.textAlignment = NSTextAlignmentLeft;
+    TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+    TypeNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttype"] objectAtIndex:indexRow];
+    // TypeNameTitleShow.numberOfLines=0;
+    // TypeNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+    [TypeNameTitleShow sizeToFit];
+    TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+    
+    //TypeNameTitleShow.lineBreakMode = NSLineBreakByCharWrapping;
+    //[TypeNameTitleShow setAdjustsFontSizeToFitWidth:YES];
+    TypeNameTitleShow.minimumScaleFactor=0.3;
+    
+    [SecondRowCellButtonClick addSubview:TypeNameTitleShow];
+    
+    CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                                                             context:nil];
+    
+    UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x-7,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+    line.layer.borderColor = [UIColor grayColor].CGColor;
+    line.layer.borderWidth = 1.0f;
+    [SecondRowCellButtonClick addSubview:line];
+    
+    UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+    ProviderNameTitleShow.textColor = [UIColor grayColor];
+    ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+    ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+    ProviderNameTitleShow.text = [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"provider"] objectAtIndex:indexRow];
+    
+    [ProviderNameTitleShow sizeToFit];
+    ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+    
+    //TypeNameTitleShow.lineBreakMode = NSLineBreakByCharWrapping;
+    //[TypeNameTitleShow setAdjustsFontSizeToFitWidth:YES];
+    ProviderNameTitleShow.minimumScaleFactor=0.3;
+    [SecondRowCellButtonClick addSubview:ProviderNameTitleShow];
+    
+    
+    
+    
+    NSArray *dateSplitArray=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttime"] objectAtIndex:indexRow] componentsSeparatedByString:@"T"];
+    NSString *date=[dateSplitArray objectAtIndex:0];
+    
+    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+    
+    
+    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+    
+    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+    
+    NSLog(@"date2=%@",date2);
+    
+    NSLog(@"date3=%@",date3);
+    
+    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+    if([date2 isEqualToString:@"05"]) date2=@"May";
+    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+    
+    UILabel *DateLable = [[UILabel alloc] init];
+    DateLable.textColor = [UIColor grayColor];
+    DateLable.backgroundColor = [UIColor clearColor];
+    DateLable.textAlignment = NSTextAlignmentLeft;
+    DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+    DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+    DateLable.numberOfLines=0;
+    DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+    [DateLable sizeToFit];
+    DateLable.frame=CGRectMake(290-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+    [SecondRowCellButtonClick addSubview:DateLable];
+    
+    
+    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+    //  NSString *TimeString2=[TimeSplitArray2 objectAtIndex:2];
+    
+    NSLog(@"TimeString1=%@",TimeString1);
+    
+    UILabel *TimeLable = [[UILabel alloc] init];
+    TimeLable.textColor = [UIColor grayColor];
+    TimeLable.backgroundColor = [UIColor clearColor];
+    TimeLable.textAlignment = NSTextAlignmentLeft;
+    TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+    TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+    TimeLable.numberOfLines=0;
+    TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+    [TimeLable sizeToFit];
+    TimeLable.frame=CGRectMake(290-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+    [SecondRowCellButtonClick addSubview:TimeLable];
+     [RecentView addSubview:SecondRowCellButtonClick];
+    
+    
+    
+}
+
 -(void)SecondRowData{
     [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
     
@@ -2776,6 +3032,96 @@ else
                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kLoginData];
                 
                 
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kEmergencyDetails];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kEmergencyDetails];
+
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kUpcomingAppointmentData];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kUpcomingAppointmentData];
+
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kRecentAppointmentData];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kRecentAppointmentData];
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentData];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentData];
+                
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameString];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameString];
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameConsultantString];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameConsultantString];
+                
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameDate];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameDate];
+                
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameHospital];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameHospital];
+                
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameTypeName];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameTypeName];
+                
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameProviderName];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameProviderName];
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNotes];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNotes];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameString];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameString];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameConsultantString];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameConsultantString];
+                
+
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameDate];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameDate];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameHospital];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameHospital];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameTypeName];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameTypeName];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameProviderName];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameProviderName];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordsNotes];
+                [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordsNotes];
+                
+//
+              
                 NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
                 NSString *token = [[NSString alloc] init];
                 token = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"device_token"]];
@@ -3254,7 +3600,9 @@ else
             int g = 0;
             
             
-            
+//            NSDictionary * book = NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                                        array_AppointmentType_Main, @"appointmentType", array_AppointmentNam_Main, @"appointmentName", nil];
+//            [array_AppointmentNam_Main addObject:book];
             
             
             NSLog(@"array_AppointmentName is %@",array_AppointmentNam_Main);
@@ -3965,101 +4313,229 @@ else
 {
 return anObject;
 }
+
+
 #pragma mark APICallForUserMedicalAppointment API
+
 -(void)APICallForUserMedicalAppointment
+
 {
+    
     Reachability *reach = [Reachability reachabilityForInternetConnection];
+    
     NetworkStatus netStatus = [reach currentReachabilityStatus];
+    
     if (netStatus == NotReachable)
+        
     {
+        
         [self HideActivityIndicator];
         
+        
+        
         UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
         [unable show];
+        
     }
+    
     else
+        
     {
         
+        
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
         NSDictionary *params = @{
+                                 
                                  @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 
                                  };
+        
+        
         
         NSLog(@"APICallForUserMedicalAppointment >>>>Parameter=>%@",params);
         
+        
+        
         [manager POST:[NSString stringWithFormat:@"%@/get_all_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            
             NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%d",[[json objectForKey:@"data"] count]);
+            
             if([json objectForKey:@"error"])
+                
             {
+                
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                
                 [myAlertView show];
+                
             }
+            
             else
                 
+                
+                
                 if ([[json objectForKey:@"log"]isEqualToString:@"No medical yet!"])
+                    
                 {
+                    
                     NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
                     
+                    
+                    
                     DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imageNamed:@"medecal_records_tuts.png"].size.width, [UIImage imageNamed:@"medecal_records_tuts.png"].size.height)];
+                    
                     DemoImageView.image=[UIImage imageNamed:@"medecal_records_tuts.png"];
+                    
                     [MedicalSubView addSubview:DemoImageView];
                     
-                 [AddMedicalRerocdsTableView removeFromSuperview];
+                    
+                    
+                    [AddMedicalRerocdsTableView removeFromSuperview];
+                    
                     AddMedicalRerocdsTableView=nil;
+                    
                     MedicalSearchBar=nil;
+                    
                 }
+            
                 else
+                    
                 {
                     
+                    
+                    
                     medicalrecordsDictionary = nil;
+                    
                     MedicalRecordstemp_appointmentsDictionary = nil;
                     
+                    
+                    
                     medicalrecordsDictionary = [[NSMutableDictionary alloc]init];
+                    
                     MedicalRecordstemp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
+                    
                     medicalrecordsDictionary = json;
+                    
                     MedicalRecordstemp_appointmentsDictionary = [json mutableCopy];
                     
                     
-    
-                  //  [totalData removeAllObjects];
-                   // [dummyArray removeAllObjects];
+                    
+                    
+                    NSArray *monthArray = [MedicalRecordstemp_appointmentsDictionary allKeys];
+                    NSMutableArray *monthMutableArray = [[NSMutableArray alloc]initWithArray:monthArray];
+                    NSMutableArray *jaaduArray = [[NSMutableArray alloc]init];
+                    
+                    
+                    for (int i=0; i<[[MedicalRecordstemp_appointmentsDictionary allKeys]count]; i++)
+                    {
+                        if ([[MedicalRecordstemp_appointmentsDictionary objectForKey:[monthMutableArray objectAtIndex:i]]count] > 0)
+                        {
+                            [jaaduArray addObject:[monthMutableArray objectAtIndex:i]];
+                        }
+                    }
+                    
+                    NSLog(@"jaaduArray is %@",jaaduArray);
+                    
+                    
+                    [appointmentSectionTitles removeAllObjects];
+                    [temp_appointmentSectionTitles removeAllObjects];
+                    
+                    appointmentSectionTitles = jaaduArray;
+                    temp_appointmentSectionTitles = jaaduArray;
+                    
+                    NSLog(@"appointmentSectionTitles is %@",temp_appointmentSectionTitles);
+                    
+                    
+                    
+                    
+                    //  [totalData removeAllObjects];
+                    
+                    // [dummyArray removeAllObjects];
+                    
                     NSLog(@"All Keys of APpointments is %@",[medicalrecordsDictionary allKeys]);
                     
                     
-                    for (int i = 0; i<12; i++)
+                    
+                    
+                    
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+                        
                     {
+                        
                         [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicalname"]];
                         
+                        
+                        
                     }
+                    
                     NSLog(@"total Data is %@",totalData);
                     
                     
                     
-                    for (int i = 0; i<12; i++)
+                    
+                    
+                    
+                    
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+                        
                     {
+                        
                         for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
+                            
                         {
+                            
                             [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
+                            
                         }
+                        
                     }
+                    
+                    
                     
                     NSLog(@"dummy array is %@",dummyArray);
                     
+                    
+                    
                     [self AddMedicalAppointmentsTableViewFunction];
+                    
                 }
+            
+            
             
             [self HideActivityIndicator];
             
+            
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         
          {
+             
              NSLog(@"Error: %@", error.description);
+             
              [self HideActivityIndicator];
+             
              UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             
              [unable show];
+             
          }];
         
+        
+        
     }
+    
 }
+
+
+
+
+
+
+
+
 #pragma mark UserAppointment API
 -(void)APICallForUserAppointment
 {
@@ -4111,11 +4587,44 @@ return anObject;
                     
                     appointmentsDictionary = [[NSMutableDictionary alloc]init];
                     temp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
-                    appointmentsDictionary = [json objectForKey:@"data"];
-                    temp_appointmentsDictionary = [[json objectForKey:@"json"] mutableCopy];
+                    appointmentsDictionary = json;
+                    temp_appointmentsDictionary = [json  mutableCopy];
                     
                     
-                    NSLog(@"appointmentsDictionary=%@",appointmentsDictionary);
+                    temp_sectionAppointments = nil;
+                    appointmentSectionTitles = nil;
+                    temp_sectionAppointments = [[NSMutableArray alloc]init];
+                    appointmentSectionTitles = [[NSMutableArray alloc]init];
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    NSArray *monthArray = [appointmentsDictionary allKeys];
+                    NSMutableArray *monthMutableArray = [[NSMutableArray alloc]initWithArray:monthArray];
+                    NSMutableArray *jaaduArray = [[NSMutableArray alloc]init];
+                   
+                    
+                    for (int i=0; i<[[appointmentsDictionary allKeys]count]; i++)
+                    {
+                        if ([[appointmentsDictionary objectForKey:[monthMutableArray objectAtIndex:i]]count] > 0)
+                        {
+                            [jaaduArray addObject:[monthMutableArray objectAtIndex:i]];
+                        }
+                    }
+                    
+                    NSLog(@"jaaduArray is %@",jaaduArray);
+                    
+                    
+                    [appointmentSectionTitles removeAllObjects];
+                    [temp_appointmentSectionTitles removeAllObjects];
+                    
+                    appointmentSectionTitles = jaaduArray;
+                    temp_appointmentSectionTitles = jaaduArray;
+                    
+                    NSLog(@"appointmentSectionTitles is %@",temp_appointmentSectionTitles);
                     
                     [array_AppointmentName removeAllObjects];
                     
@@ -4183,11 +4692,11 @@ return anObject;
                     
                     
                     
-                    for (int i = 0; i<12; i++)
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
                         
                     {
                         
-                        [array_AppointmentName addObject:   [[[json objectForKey:@"data"] objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
+                        [array_AppointmentName addObject:   [[json  objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentname"]];
                         
                         [array_AppointmentID addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"appointmentid"]];
                         
@@ -4215,7 +4724,7 @@ return anObject;
                     
                     
                     
-                    for (int i = 0; i<12; i++)
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
                         
                     {
                         
@@ -4493,5 +5002,74 @@ return anObject;
     
        // NSString *value
         NSLog(@"kAppointmentmentNameHospital=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital]);
+}
+-(void)loginWithAccessToken
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 };
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/login_through_accesstoken",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+         
+         {
+             NSLog(@"JSON--->%@",json);
+             if([json objectForKey:@"error"])
+             {
+                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [myAlertView show];
+             }
+             else
+             {
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 
+    if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]==1)
+    {
+                     [self NewUpdateView :0];
+                 }
+                 else
+                 if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]>=2)
+                 {
+                     [self NewUpdateView :0];
+                     [self SecondUpdateFunciton :1];
+                 }
+                 
+                 
+                 if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]==1){
+                     [self NewRecentUpdateView :0];
+                 }
+                 else
+                     if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]>=2)
+                     {
+                         [self NewRecentUpdateView :0];
+                         [self SecondRecentUpdateFunciton :1];
+                     }
+                 
+                 
+             }
+             
+             [self HideActivityIndicator];
+             NSLog(@"JSON: %@", json);
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
 }
 @end

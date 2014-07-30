@@ -28,7 +28,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NSData *imageData;
     
     ASIFormDataRequest *RequestForSync;
-    
+    int height;
+    int heightProvider;
     BOOL attachedFileTrue;
 
     UIView *TopBarView;
@@ -153,6 +154,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     // Do any additional setup after loading the view.
     
     self.view.backgroundColor=[UIColor colorWithRed:224/255.0 green:222/255.0 blue:222/255.0 alpha:1.0];
+    //self.view.backgroundColor=[UIColor whiteColor];
     
     [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewAppointmentCreatedByUser"];
     
@@ -161,7 +163,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     TopBarView.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     
     TopBarView.userInteractionEnabled=TRUE;
-    
+   // TopBarView.layer.borderColor = [UIColor blackColor].CGColor;
+   // TopBarView.layer.borderWidth = 1;
     
     
     BackButton=[[UIButton alloc]initWithFrame:CGRectMake(5, 20,[UIImage imageNamed:@"backButtonNew.png"].size.width ,[UIImage imageNamed:@"backButtonNew.png"].size.height)];
@@ -231,7 +234,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
-    //InformationImageView.backgroundColor=[UIColor yellowColor];
     
     InformationButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 343, 320, 45)];
     
@@ -531,9 +533,20 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)TypeFunctionCall
 
 {
+    TypeTableView=[[UITableView alloc]init];
     
-    TypeTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 350)];
+    int heightY=0;
+    if(343-height<90)
+    {
+        heightY=273;
+    }
+    else{
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+        
+    }
     
+    
+    TypeTableView.frame=CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y,320 , heightY);
     TypeTableView.backgroundColor=[UIColor clearColor];
     
     TypeTableView.delegate=self;
@@ -689,31 +702,29 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 }
 
 -(IBAction)selectTypeUser:(id)sender{
-    
-    
-    
+
     TypeTagValue=[sender tag];
-    NSLog(@"TypeTagValue=%d",TypeTagValue);
     
-    [TypeTitleLable removeFromSuperview];
+    NSString *string2 = [NSString stringWithFormat:@"%d", TypeTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count] ; j ++)
+    {
+        NSLog(@"listOfTemArrayApplied=%@",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j]);
+        
+        if(TypeTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    NSLog(@"StatusChange=%d",StatusChange);
     
-    TypeTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    TypeTitleLable.backgroundColor=[UIColor clearColor];
-    
-    TypeTitleLable.textColor=[UIColor blackColor];
-    
-    TypeTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    TypeTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    
-    TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:[sender tag]-1]];
-    
-    [TypeButton addSubview:TypeTitleLable];
-    
-    
+    TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:StatusChange]];
     
     typeStatus=1;
+
     
     [self typeAction];
     
@@ -723,44 +734,47 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(IBAction)selectProvideUser:(id)sender{
     
-    
-    
     ProiverTagValue=[sender tag];
     
-    [ProviderTitleLable removeFromSuperview];
-    
-    ProviderTitleLable=[[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 30)];
-    
-    ProviderTitleLable.backgroundColor=[UIColor clearColor];
-    
-    ProviderTitleLable.textColor=[UIColor blackColor];
-    
-    ProviderTitleLable.textAlignment=NSTextAlignmentLeft;
-    
-    ProviderTitleLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    
-    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:[sender tag]-1]];
-    
-    [ProviderButton addSubview:ProviderTitleLable];
+    NSString *string2 = [NSString stringWithFormat:@"%d", ProiverTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count] ; j ++)
+    {
+        
+        
+        if(ProiverTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:StatusChange]];
     
     
     
     purposeStatus=1;
     
+    
     [self ProviderAction];
     
 }
 
-
-
-
-
 -(void)ProviderFunction{
     
-    
-    
-    ProviderTableView=[[UITableView alloc]initWithFrame:CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 300)];
-    
+    int heightY=0;
+    if(343-heightProvider<90)
+    {
+        heightY=273;
+    }
+    else
+    {
+        heightY=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
+        
+    }
+    ProviderTableView=[[UITableView alloc]init];
+    ProviderTableView.frame=CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y,320 , heightY);
     ProviderTableView.backgroundColor=[UIColor clearColor];
     
     ProviderTableView.delegate=self;
@@ -868,9 +882,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 {
     
     [self scrollViewDidTapped];
-    
-    
-    
     typeStatus=0;
     
     purposeStatus=0;
@@ -903,7 +914,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         informationStatus=1;
         
-        [UIView animateWithDuration:.2f animations:^{
+        [UIView animateWithDuration:0.2f animations:^{
             
             
             
@@ -959,15 +970,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
 }
 
-
-
 -(void)typeAction
 
 {
     
     [self scrollViewDidTapped];
-    
-    
     
     informationStatus=0;
     
@@ -978,13 +985,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     attachmentsStatus=0;
     
     
-    
     informationScrollView.hidden=YES;
     
     [ProviderTableView removeFromSuperview];
     
     [plusButton removeFromSuperview];
-    
     
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -997,7 +1002,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     NotesTextView.hidden=YES;
     
-    
+    ProviderButton.hidden=YES;
     
     if(typeStatus==0)
         
@@ -1007,21 +1012,40 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         [UIView animateWithDuration:.2f animations:^{
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+            
+            height=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]*44;
+            
+            NSLog(@"height=%d",height);
+            
+            // height=498-height;
+            
+            NSLog(@"height=%d",height);
+            
+            int heightY=0;
+            if(343-height<90)
+            {
+                heightY=TopBarView.frame.origin.y+TopBarView.frame.size.height;
+            }
+            else{
+                heightY=343-height;
+                
+            }
+            
+            InformationButton.frame = CGRectMake(0, heightY, 320, 45);
             
             TypeButton.frame = CGRectMake(0, InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
-            
-            ProviderButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            NotesButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            AttachmentButton.frame = CGRectMake(0, 800, 320, 45);
-            
             
             
         } completion:^(BOOL finished) {
             
             [self TypeFunctionCall];
+            ProviderButton.hidden=NO;
+            
+            ProviderButton.frame = CGRectMake(0, TypeTableView.frame.size.height+TypeTableView.frame.origin.y, 320, 45);
+            
+            NotesButton.frame = CGRectMake(0, ProviderButton.frame.size.height+ProviderButton.frame.origin.y, 320, 45);
+            
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
             
             TypeImageView.image=[UIImage imageNamed:@"MinusImage.png"];
             
@@ -1036,14 +1060,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         
         typeStatus=0;
-        
+        ProviderButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             [TypeTableView removeFromSuperview];
             
             [ProviderTableView removeFromSuperview];
-            
-            
             
             InformationButton.frame = CGRectMake(0, 343, 320, 45);
             
@@ -1064,8 +1086,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         }];
         
     }
-    
-    
     
 }
 
@@ -1104,7 +1124,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     NotesTextView.hidden=YES;
-    
+    NotesButton.hidden=YES;
+    AttachmentButton.hidden=YES;
     if(purposeStatus==0){
         
         purposeStatus=1;
@@ -1112,22 +1133,35 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         [UIView animateWithDuration:.2f animations:^{
             
             
+            heightProvider=[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count]*44;
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+            NSLog(@"height=%d",heightProvider);
             
+            // height=498-height;
+            
+            NSLog(@"height=%d",heightProvider);
+            
+            int heightY=0;
+            if(343-heightProvider<90)
+            {
+                heightY=TopBarView.frame.origin.y+TopBarView.frame.size.height;
+            }
+            else{
+                heightY=343-heightProvider;
+                
+            }
+            
+            InformationButton.frame = CGRectMake(0, heightY, 320, 45);
             TypeButton.frame = CGRectMake(0, InformationButton.frame.origin.y+InformationButton.frame.size.height, 320, 45);
-            
             ProviderButton.frame = CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y, 320, 45);
-            
-            NotesButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            AttachmentButton.frame = CGRectMake(0, 800, 320, 45);
-            
-            
             
         } completion:^(BOOL finished) {
             
             [self ProviderFunction];
+            NotesButton.hidden=NO;
+            AttachmentButton.hidden=NO;
+            NotesButton.frame = CGRectMake(0, ProviderTableView.frame.size.height+ProviderTableView.frame.origin.y, 320, 45);
+            AttachmentButton.frame = CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 45);
             
             ProviderImageView.image=[UIImage imageNamed:@"MinusImage.png"];
             
@@ -1138,7 +1172,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else{
         
         purposeStatus=0;
-        
+        NotesButton.hidden=NO;
+        AttachmentButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             [ProviderTableView removeFromSuperview];
@@ -1169,8 +1204,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
 }
 
-
-
 -(void)notesAction{
     
     
@@ -1180,7 +1213,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
-    
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
     
     
     informationStatus=0;
@@ -1201,7 +1235,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
-    
+    AttachmentButton.hidden=YES;
     
     if(notesStatus==0){
         
@@ -1209,7 +1243,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         [UIView animateWithDuration:.2f animations:^{
             
-            InformationButton.frame = CGRectMake(0, 155, 320, 45);
+            InformationButton.frame = CGRectMake(0, 213, 320, 45);
             
             TypeButton.frame = CGRectMake(0, InformationButton.frame.size.height+InformationButton.frame.origin.y, 320, 45);
             
@@ -1222,7 +1256,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         } completion:^(BOOL finished) {
             
             [self NotesFunction];
-            
+            AttachmentButton.hidden=NO;
             AttachmentButton.frame = CGRectMake(0, NotesTextView.frame.size.height+NotesTextView.frame.origin.y, 320, 45);
             
             NotesImageView.image=[UIImage imageNamed:@"MinusImage.png"];
@@ -1234,7 +1268,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     else{
         
         notesStatus=0;
-        
+        AttachmentButton.hidden=NO;
         [UIView animateWithDuration:.2f animations:^{
             
             NotesTextView.hidden=YES;
@@ -1268,7 +1302,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
-    
+    [TypeTableView removeFromSuperview];
+    [ProviderTableView removeFromSuperview];
     
     
     
@@ -1858,12 +1893,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 
 -(void)NotesFunction
-
 {
     
     NotesTextView.hidden=NO;
     
-    NotesTextView.frame=CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 80);
+    NotesTextView.frame=CGRectMake(0, NotesButton.frame.size.height+NotesButton.frame.origin.y, 320, 130);
     
     NotesTextView.backgroundColor=[UIColor whiteColor];
     

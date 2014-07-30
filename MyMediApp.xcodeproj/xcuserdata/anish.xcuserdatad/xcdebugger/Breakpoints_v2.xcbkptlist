@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "428034360.120288"
+            timestampString = "428399897.313637"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1884"
-            endingLineNumber = "1884"
-            landmarkName = "-FourthFrameNextButton"
+            startingLineNumber = "2148"
+            endingLineNumber = "2148"
+            landmarkName = "-LastFrameNextButton"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/CreateNewAppointmentViewController.m"
-            timestampString = "428294197.4415"
+            timestampString = "428394207.581656"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2386"
-            endingLineNumber = "2386"
+            startingLineNumber = "2407"
+            endingLineNumber = "2407"
             landmarkName = "-serverCallForAddApointment"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,60 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MyMediApp/CreateNewAppointmentViewController.m"
-            timestampString = "428294197.4415"
+            timestampString = "428394207.581656"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2367"
-            endingLineNumber = "2367"
+            startingLineNumber = "2388"
+            endingLineNumber = "2388"
             landmarkName = "-serverCallForAddApointment"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MyMediApp/CreateNewAppointmentViewController.m"
-            timestampString = "428294197.4415"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2455"
-            endingLineNumber = "2455"
-            landmarkName = "-serverCall"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MyMediApp/CreateNewAppointmentViewController.m"
-            timestampString = "428294197.4415"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2503"
-            endingLineNumber = "2503"
-            landmarkName = "-requestFinished:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MyMediApp/UserHomeScreenViewController.m"
-            timestampString = "428297096.559603"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4189"
-            endingLineNumber = "4189"
-            landmarkName = "-APICallForUserAppointment"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -730,9 +730,24 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
     TypeTagValue=[sender tag];
-    NSLog(@"TypeTagValue=%d",TypeTagValue);
     
-    TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:[sender tag]-1]];
+    NSString *string2 = [NSString stringWithFormat:@"%d", TypeTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count] ; j ++)
+    {
+        NSLog(@"listOfTemArrayApplied=%@",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j]);
+        
+        if(TypeTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    NSLog(@"StatusChange=%d",StatusChange);
+    
+TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"]valueForKey:@"appointmenttype"] objectAtIndex:StatusChange]];
     
     typeStatus=1;
     
@@ -744,13 +759,24 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(IBAction)selectProvideUser:(id)sender{
     
-    
-    
+
     ProiverTagValue=[sender tag];
     
-   
-    
-    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:[sender tag]-1]];
+    NSString *string2 = [NSString stringWithFormat:@"%d", ProiverTagValue];
+    NSLog(@"TypeTagValue=%@",string2);
+    int StatusChange;
+    for(int j = 0 ; j < [[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"] count] ; j ++)
+    {
+
+        
+        if(ProiverTagValue==[[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"id"] objectAtIndex:j] integerValue])
+        {
+            StatusChange=[[NSString stringWithFormat:@"%d",j] integerValue];
+            break;
+        }
+        
+    }
+    ProviderTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_provider"]valueForKey:@"provider"] objectAtIndex:StatusChange]];
     
    
     
@@ -759,9 +785,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self ProviderAction];
     
 }
-
-
-
 
 
 -(void)ProviderFunction{
@@ -2472,22 +2495,26 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",ProiverTagValue] forKey:@"provider"];
     [RequestForSync setPostValue:NotesTextView.text forKey:@"notes"];
      [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",intTypeServerCall] forKey:@"type"];
-    [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+   
     [RequestForSync setPostValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"] forKey:@"appointmentid"];
-    
-//    if(attachedFileTrue==true){
-    
-        //[RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
+   
+    if(attachedFileTrue==true)
+    {
+        [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];
         [RequestForSync setFile:path forKey:@"attachment"];
-   // }
-    
-    
+    }
+    else{
+        [RequestForSync setPostValue:@"0" forKey:@"attachmenttype"];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        path= [documentsDirectory stringByAppendingPathComponent:@""];
+        [RequestForSync setFile:path forKey:@"attachment"];
+    }
     
     RequestForSync.tag = 20001;
-    
     [RequestForSync startAsynchronous];
 }
 - (void)requestStarted:(ASIHTTPRequest *)request

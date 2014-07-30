@@ -31,9 +31,6 @@
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor whiteColor];
     
-   
-    
-    
     
     StaticImageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 100, [UIImage imageNamed:@"log_inVerification.jpg"].size.width, [UIImage imageNamed:@"log_inVerification.jpg"].size.height)];
     StaticImageView.image=[UIImage   imageNamed:@"log_inVerification.jpg"];
