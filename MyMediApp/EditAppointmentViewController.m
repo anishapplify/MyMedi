@@ -21,6 +21,8 @@
     
     UIScrollView *informationScrollView;
     
+    AsyncImageView *thumbImageViewForVideo;
+    
     
     
     UITextField *appointmentTextField;
@@ -570,6 +572,55 @@
         descriptionString=[NSString stringWithFormat:@"     %@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNotes]];
         
          EditAppointmentLable.text=@"Appointment";
+        
+       
+        
+        NSString *originalString = [[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString];
+        NSLog(@"originalString is %@",originalString);
+        
+        if  ([originalString rangeOfString:@".png"].location==NSNotFound)
+        {
+            NSLog(@"Image Not Found");
+            
+        }
+        else
+        {
+            NSLog(@"Image Found Successfully");
+           
+            AsyncImageView *thumbImageView = [[AsyncImageView alloc]initWithFrame:CGRectMake(5, 440, 100, 100)];
+            thumbImageView.backgroundColor = [UIColor whiteColor];
+            thumbImageView.layer.borderWidth = 1;
+            thumbImageView.layer.borderColor = [UIColor grayColor].CGColor;
+            thumbImageView.imageURL = [NSURL URLWithString:originalString];
+            [self.view addSubview:thumbImageView];
+        }
+        
+       
+        if ([originalString rangeOfString:@".mp4"].location == NSNotFound)
+        {
+            NSLog(@"string does not contain video");
+        }
+        else
+        {
+            NSLog(@"string contains video!");
+            
+            
+        
+            
+            thumbImageViewForVideo = [[AsyncImageView alloc]initWithFrame:CGRectMake(5, 440, 100, 100)];
+            thumbImageViewForVideo.backgroundColor = [UIColor whiteColor];
+            thumbImageViewForVideo.layer.borderWidth = 1;
+            thumbImageViewForVideo.layer.borderColor = [UIColor grayColor].CGColor;
+            [self.view addSubview:thumbImageViewForVideo];
+
+            [self performSelector:@selector(loadThumbNail:) withObject:originalString afterDelay:0.1];
+            
+           
+            
+            
+        }
+        
+
     }
     
     CGSize constraint;
@@ -610,10 +661,34 @@
     LineView.layer.borderColor = [UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0].CGColor;
     LineView.layer.borderWidth = 1;
     [self.view addSubview:LineView];
+    
+   
+    
 
     
     // Do any additional setup after loading the view.
 }
+
+
+#pragma mark Generate thumbnail
+-(void)loadThumbNail:(NSString *)urlVideo
+{
+    
+    
+    NSString *strVideoURL = urlVideo;
+    NSURL *videoURL = [NSURL URLWithString:strVideoURL] ;
+    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+    UIImage  *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+    player = nil;
+    
+   
+    thumbImageViewForVideo.image = thumbnail;
+    
+}
+
+
+
+
 -(void)BackButtonAction{
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     [self.navigationController popViewControllerAnimated:YES];

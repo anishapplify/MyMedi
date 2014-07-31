@@ -31,8 +31,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 
 {
+    AsyncImageView *thumbImageView1;
+    AsyncImageView *thumbImageViewForVideo;
     
-    
+    UIImage *thumbImageOfVideo;
      NSString *path;
     NSData *imageData;
     
@@ -40,10 +42,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     UIButton *DoneButton;
     
-    
+    NSURL *urlofVideoToBeUpload;
     
     UIView *TopBarView;
     
+   
     
     
     UIButton *TypeButton;
@@ -56,6 +59,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     UIButton *AttachmentButton;
     
+   
     
     
     UILabel*NewAppointmentLable;
@@ -124,6 +128,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     UIImageView *AttachmentsImageView;
     
+    UIImageView *thumbImageView;
+    
     
     int height;
     int heightProvider;
@@ -143,6 +149,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
      ASIFormDataRequest *RequestForSync;
     
     BOOL attachedFileTrue;
+    BOOL attachedVideoFileTrue;
 }
 
 
@@ -180,6 +187,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
     [super viewDidLoad];
+    
+    attachedVideoFileTrue = false;
     
     // Do any additional setup after loading the view.
     
@@ -398,8 +407,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
     
-    
-    
+
     AttachmentsImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
     AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -483,17 +491,62 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditAppointmentPressed"]==true)
     {
-       
-        
-         NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]);
-        
+        NSLog(@"kAppointmentmentNameTypeName=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameTypeName]);
         NewAppointmentLable.text=@"Edit Appointment";
-         appointmentTextField.text =[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameString];
-       consultantTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameConsultantString];
+        appointmentTextField.text =[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameString];
+        consultantTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameConsultantString];
         dateTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameDate];
         hospitalTextField.text=[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameHospital];
-     
-        ////appointment//appointment_type
+        
+        
+        
+        
+        
+        NSString *originalString = [[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString];
+        NSLog(@"originalString is %@",originalString);
+        
+        if  ([originalString rangeOfString:@".png"].location==NSNotFound)
+        {
+            NSLog(@"Image Not Found");
+        }
+        else
+        {
+            NSLog(@"Image Found Successfully");
+            
+            [thumbImageView1 removeFromSuperview];
+            thumbImageView1=nil;
+           
+            
+            thumbImageView1 = [[AsyncImageView alloc]initWithFrame:CGRectMake(5, 450, 100, 100)];
+            thumbImageView1.backgroundColor = [UIColor whiteColor];
+            thumbImageView1.layer.borderWidth = 1;
+            thumbImageView1.layer.borderColor = [UIColor grayColor].CGColor;
+            thumbImageView1.imageURL = [NSURL URLWithString:originalString];
+            thumbImageView1.hidden = YES;
+            [self.view addSubview:thumbImageView1];
+        }
+        if ([originalString rangeOfString:@".mp4"].location == NSNotFound)
+        {
+            NSLog(@"string does not contain video");
+        }
+        else
+        {
+            NSLog(@"string contains video!");
+            [thumbImageViewForVideo removeFromSuperview];
+            thumbImageViewForVideo=nil;
+            thumbImageViewForVideo = [[AsyncImageView alloc]initWithFrame:CGRectMake(5, 450, 100, 100)];
+            thumbImageViewForVideo.backgroundColor = [UIColor whiteColor];
+            thumbImageViewForVideo.layer.borderWidth = 1;
+            thumbImageViewForVideo.layer.borderColor = [UIColor grayColor].CGColor;
+            thumbImageViewForVideo.hidden = YES;
+            [self.view addSubview:thumbImageViewForVideo];
+            
+            [self performSelector:@selector(loadThumbNailForVideo:) withObject:originalString afterDelay:0.1];
+        }
+
+        
+        
+        
         
         NSString *TypeSting;
         for (int k=0; k<[[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"appointment"] objectForKey:@"appointment_type"] count]; k++) {
@@ -553,6 +606,20 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
   //  [NSTimer scheduledTimerWithTimeInterval:0.4 target:self selector:@selector(InformationAction) userInfo:nil repeats:NO];
     
 }
+
+#pragma mark Generate thumbnail
+-(void)loadThumbNailForVideo:(NSString *)urlVideo
+{
+    NSString *strVideoURL = urlVideo;
+    NSURL *videoURL = [NSURL URLWithString:strVideoURL] ;
+    MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+    UIImage  *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+    player = nil;
+    thumbImageViewForVideo.image = thumbnail;
+}
+
+
+
 
 -(void)TypeFunctionCall
 
@@ -833,7 +900,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
         [ProviderTableView removeFromSuperview];
         
         [plusButton removeFromSuperview];
-        
+    
+        thumbImageView.hidden = YES;
+    
         TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
         
         ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -926,6 +995,11 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     [plusButton removeFromSuperview];
     
+   thumbImageView.hidden = YES;
+    
+  
+
+    
     TypeImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -1015,6 +1089,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     [ProviderTableView removeFromSuperview];
     
     [plusButton removeFromSuperview];
+    
+   thumbImageView.hidden = YES;
+    
     
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -1138,6 +1215,10 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     [plusButton removeFromSuperview];
     
+    thumbImageView.hidden = YES;
+    
+  
+    
     
     
     InformationImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -1240,6 +1321,10 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
+    thumbImageView.hidden = YES;
+    
+   
+    
     [TypeTableView removeFromSuperview];
     [ProviderTableView removeFromSuperview];
     
@@ -1322,17 +1407,20 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
 }
 
+#pragma mark Ankit
 -(void)attachmentAction{
     
     [self scrollViewDidTapped];
+   
     
     informationScrollView.hidden=YES;
     
     [plusButton removeFromSuperview];
+    thumbImageView.hidden = YES;
     [TypeTableView removeFromSuperview];
     [ProviderTableView removeFromSuperview];
     
-    
+   
     
     
     informationStatus=0;
@@ -1359,6 +1447,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
         
     {
         
+        
         attachmentsStatus=1;
         
         [UIView animateWithDuration:.2f animations:^{
@@ -1383,13 +1472,21 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
             
             AttachmentsImageView.image=[UIImage imageNamed:@"MinusImage.png"];
             
+            thumbImageView1.hidden = NO;
+            thumbImageViewForVideo.hidden = NO;
+            
         }];
+        
+        
         
     }
     
     else{
         
         attachmentsStatus=0;
+        
+         thumbImageView1.hidden = YES;
+        thumbImageViewForVideo.hidden = YES;
         
         [UIView animateWithDuration:.2f animations:^{
             
@@ -1407,6 +1504,11 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
             
             [plusButton removeFromSuperview];
             
+            thumbImageView.hidden = YES;
+            
+           
+            
+            
             
             
             AttachmentsImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -1423,7 +1525,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 
 {
     
-    plusButton=[[UIButton alloc]initWithFrame:CGRectMake(30, NotesButton.frame.size.height+NotesButton.frame.origin.y+80, 50, 40)];
+    plusButton=[[UIButton alloc]initWithFrame:CGRectMake(5, NotesButton.frame.size.height+NotesButton.frame.origin.y+60, 50, 40)];
     
     [plusButton addTarget:self action:@selector(AttachmentActionForPicker)
      
@@ -1444,6 +1546,13 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     plusButton.layer.cornerRadius = 5;
     
     [self.view addSubview:plusButton];
+    
+   
+    thumbImageView.hidden = NO;
+    
+   
+
+    
     
     
     
@@ -1559,27 +1668,93 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 {
     [picker dismissViewControllerAnimated:YES completion:NULL];
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
-    
-    imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
-    
-    [imageData writeToFile:path atomically:YES];
-    attachedFileTrue=true;
+     NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
+     if ([type isEqualToString:(NSString *)kUTTypeImage])
+         {
+             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+             NSString *documentsDirectory = [paths objectAtIndex:0];
+             path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];  // IT IS THE PATH OF CHOOSEN IMAGE
+             imageData= UIImagePNGRepresentation([info objectForKey:@"UIImagePickerControllerEditedImage"]);
+             [imageData writeToFile:path atomically:YES];
+             attachedFileTrue=true;
+             [thumbImageView removeFromSuperview];
+             thumbImageView=nil;
+             [thumbImageView1 removeFromSuperview];
+             thumbImageView1=nil;
+            
+             
+             
+             thumbImageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, NotesButton.frame.size.height+NotesButton.frame.origin.y+110, 100, 100)];
+             thumbImageView.image = [UIImage imageWithContentsOfFile:path];
+             thumbImageView.hidden = NO;
+             
+             [self.view addSubview:thumbImageView];
+             
+             [[NSUserDefaults standardUserDefaults]setValue:path forKey:@"pathofUploadedFile"];
+             [[NSUserDefaults standardUserDefaults]synchronize];
+             
+         }
+     else  if ([type isEqualToString:(NSString *)kUTTypeVideo] || [type isEqualToString:(NSString *)kUTTypeMovie])
+     {
+         
+         NSURL *videoUrl = (NSURL *)[info objectForKey:UIImagePickerControllerMediaURL];
+         NSDate *now = [NSDate date];
+         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+         dateFormatter.dateFormat = @"hh:mm:ss";
+         [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+         
+         NSData *videoData = [NSData dataWithContentsOfURL:videoUrl];
+         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+         NSString *documentsDirectory = [paths objectAtIndex:0];
+         
+         NSString *savedvedioPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:now]]];
+         savedvedioPath  = [savedvedioPath stringByAppendingFormat:@".mp4"];
+         [videoData writeToFile:savedvedioPath atomically:NO];
+         
+         NSLog(@"saved Path is %@",savedvedioPath);
+         
+         
+         urlofVideoToBeUpload = [info objectForKey:UIImagePickerControllerMediaURL];
+         NSLog(@"%@",urlofVideoToBeUpload);
+         thumbImageOfVideo = [self loadThumbNail:urlofVideoToBeUpload];
+         attachedFileTrue=true;
+         attachedVideoFileTrue =true;
+         
+         [[NSUserDefaults standardUserDefaults]setValue:savedvedioPath forKey:@"pathofUploadedFile"];
+         [[NSUserDefaults standardUserDefaults]synchronize];
+         
+         
+         [thumbImageViewForVideo removeFromSuperview];
+         thumbImageViewForVideo=nil;
+         [thumbImageView removeFromSuperview];
+         thumbImageView=nil;
+         thumbImageView = [[UIImageView alloc]initWithFrame:CGRectMake(5, NotesButton.frame.size.height+NotesButton.frame.origin.y+110, 100, 100)];
+         thumbImageView.image = thumbImageOfVideo;
+         thumbImageView.hidden = NO;
+        
 
+         
+         [self.view addSubview:thumbImageView];
+     }
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-
 {
-    
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    
 }
 
+#pragma mark Generate Thumbnail of Video
+-(UIImage *)loadThumbNail:(NSURL *)urlVideo
+{
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:urlVideo options:nil];
+    AVAssetImageGenerator *generate = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    generate.appliesPreferredTrackTransform=TRUE;
+    NSError *err = NULL;
+    CMTime time = CMTimeMake(1, 60);
+    CGImageRef imgRef = [generate copyCGImageAtTime:time actualTime:NULL error:&err];
+    NSLog(@"err==%@, imageRef==%@", err, imgRef);
+    return [[UIImage alloc] initWithCGImage:imgRef];
+}
 
 
 
@@ -2232,7 +2407,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 -(void)scrollViewDidTapped
 
 {
-    
+     thumbImageView1.hidden=YES;
+    thumbImageViewForVideo.hidden=YES;
+    thumbImageView.hidden=YES;
     [appointmentTextField  resignFirstResponder];
     
     [dateTextField resignFirstResponder];
@@ -2402,7 +2579,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
                                  
                                  @"notes":NotesTextView.text,
                                  @"type":[NSString stringWithFormat:@"%d",intTypeServerCall],
-                                 @"attachmenttype":@"1",
+                                 @"attachmenttype":@"2",
                                  @"attachment":path,
                                  @"appointmentid":[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]
                                  
@@ -2497,31 +2674,70 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
      [RequestForSync setPostValue:[NSString stringWithFormat:@"%d",intTypeServerCall] forKey:@"type"];
    
     [RequestForSync setPostValue:[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"] forKey:@"appointmentid"];
+    
+    
    
     if(attachedFileTrue==true)
     {
+        if (attachedVideoFileTrue == true)
+        {
+            [RequestForSync setPostValue:@"2" forKey:@"attachmenttype"];
+        }
+        else
+        {
         [RequestForSync setPostValue:@"1" forKey:@"attachmenttype"];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        path= [documentsDirectory stringByAppendingPathComponent:@"AttachemtnsPictures.png" ];
-        [RequestForSync setFile:path forKey:@"attachment"];
+        }
+       
+        NSString *documentsDirectoryPath = [[NSUserDefaults standardUserDefaults]valueForKey:@"pathofUploadedFile"];
+        NSLog(@"path of image uploaded is %@",documentsDirectoryPath);
+        
+        [RequestForSync setFile:documentsDirectoryPath forKey:@"attachment"];
     }
-    else{
+    else
+    {
         [RequestForSync setPostValue:@"0" forKey:@"attachmenttype"];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        path= [documentsDirectory stringByAppendingPathComponent:@""];
-        [RequestForSync setPostValue:@"" forKey:@"attachment"];
+        
+        if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditAppointmentPressed"]==true)
+        {
+            NSLog(@"kAppointmentmentAttachmentString=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString]);
+            //NSString *documentsDirectoryPath = [[NSUserDefaults standardUserDefaults]valueForKey:@"pathofUploadedFile"];
+            [RequestForSync setFile:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString] forKey:@"attachment"];
+        }
+        else{
+            
+            
+            [[NSUserDefaults standardUserDefaults]setValue:NULL forKey:@"pathofUploadedFile"];
+            [[NSUserDefaults standardUserDefaults]synchronize];
+            
+            
+            NSString *documentsDirectoryPath = [[NSUserDefaults standardUserDefaults]valueForKey:@"pathofUploadedFile"];
+            NSLog(@"path of image uploaded is %@",documentsDirectoryPath);
+            
+            NSString *abc;
+            NSLog(@"abc=%@",abc);
+            [RequestForSync setFile:abc forKey:@"attachment"];
+        }
+        
+        
+       
+        
     }
     
     RequestForSync.tag = 20001;
-    [RequestForSync startAsynchronous];
+    [RequestForSync startSynchronous];
 }
 - (void)requestStarted:(ASIHTTPRequest *)request
 
 {
     NSLog(@"starteeeddd");
     
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSError *error = [request error];
+    NSLog(@"%@",error);
+
 }
 - (void)requestFinished:(ASIHTTPRequest *)request
 
@@ -2585,7 +2801,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"touch");
-    
+    thumbImageViewForVideo.hidden=YES;
+    thumbImageView.hidden=YES;
+    thumbImageView1.hidden=YES;
     informationStatus=1;
     [self InformationAction];
 }
@@ -2679,37 +2897,13 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
             {
                 
                 groupPhotoPicker = [[UIImagePickerController alloc]init];
-                
                 groupPhotoPicker.delegate = self;
-                
                 groupPhotoPicker.allowsEditing = YES;
-                
-                
-                
-              
-                
                 groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                
                 groupPhotoPicker.videoQuality=UIImagePickerControllerQualityType640x480;
-                
                 groupPhotoPicker.mediaTypes=[[NSArray alloc] initWithObjects:(NSString *)kUTTypeMovie,      nil];
-                
-                
-                
+                groupPhotoPicker.navigationBarHidden =YES;
                 [self presentViewController:groupPhotoPicker animated:YES completion:NULL];
-                
-                NSArray *sourceTypes = [UIImagePickerController availableMediaTypesForSourceType:groupPhotoPicker.sourceType];
-                
-                
-                
-                if (![sourceTypes containsObject:(NSString *)kUTTypeMovie ])
-                    
-                {
-                    
-                    NSLog(@"no video");
-                    
-                }
-                
                 
                 
                 break;
@@ -2747,7 +2941,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
                 
                 groupPhotoPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
                 
-                groupPhotoPicker.videoQuality=UIImagePickerControllerQualityType640x480;
+               // groupPhotoPicker.videoQuality=UIImagePickerControllerQualityType640x480;
                 
                 groupPhotoPicker.mediaTypes=[[NSArray alloc] initWithObjects:(NSString *)kUTTypeMovie,      nil];
                 

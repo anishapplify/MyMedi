@@ -14,6 +14,7 @@
     UIView *TopBarView;
     UIButton *BackButton;
     UIButton *RefreashButton;
+    UILabel   *RECENTLable;
     
 }
 
@@ -33,12 +34,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     self.view.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
+    self.view.backgroundColor=[UIColor colorWithRed:23/255.0 green:115/255.0 blue:178/255.0 alpha:1.0];
     
     TopBarView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,70)];
     TopBarView.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     TopBarView.userInteractionEnabled=TRUE;
-    
     
     BackButton = [UIButton buttonWithType:UIButtonTypeCustom];
     BackButton.frame = CGRectMake(5,20,[UIImage imageNamed:@"backButtonNew.png"].size.width, [UIImage imageNamed:@"backButtonNew.png"].size.height);
@@ -46,14 +46,12 @@
     [BackButton addTarget:self action:@selector(BackButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [TopBarView addSubview:BackButton];
     
-    UILabel   *UpcommingLable=[[UILabel alloc]initWithFrame:CGRectMake(55, 30, 210, 20)];
-    UpcommingLable.text=@"RECENT UPDATES";
-    UpcommingLable.font=[UIFont fontWithName:helveticaRegular size:15];
-    UpcommingLable.textColor=[UIColor blackColor];
-    UpcommingLable.textAlignment=NSTextAlignmentCenter;
-    [TopBarView addSubview:UpcommingLable];
-
-    
+    RECENTLable=[[UILabel alloc]initWithFrame:CGRectMake(55, 30, 210, 20)];
+    RECENTLable.text=@"RECENT UPDATES";
+    RECENTLable.font=[UIFont fontWithName:helveticaRegular size:15];
+    RECENTLable.textColor=[UIColor blackColor];
+    RECENTLable.textAlignment=NSTextAlignmentCenter;
+    [TopBarView addSubview:RECENTLable];
 
     RefreashButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 20, [UIImage imageNamed:@"refresh_icon.png"].size.width, [UIImage imageNamed:@"refresh_icon.png"].size.height)];
     RefreashButton.backgroundColor=[UIColor clearColor];
@@ -64,7 +62,6 @@
     
     RecentTableView=[[UITableView alloc]init];
     RecentTableView.frame=CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+50, self.view.frame.size.width, 447);
-    
     [RecentTableView setDelegate:self];
     RecentTableView.dataSource=self;
     [RecentTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
@@ -76,8 +73,6 @@
     RecentTableView.alwaysBounceVertical = NO;
     [self.view addSubview:RecentTableView];
 
-
-    
     // Do any additional setup after loading the view.
 }
 -(void)RefreashButtonAction{
@@ -144,6 +139,8 @@
     [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     CellButtonClick.layer.masksToBounds = NO;
     CellButtonClick.exclusiveTouch=YES;
+    CellButtonClick.tag=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmentid"] objectAtIndex:indexPath.row] integerValue];
+    [CellButtonClick addTarget:self action:@selector(recentViewAction:) forControlEvents:UIControlEventTouchUpInside];
     [CellButtonClick setBackgroundImage:cellBackGrounImageView forState:UIControlStateNormal];
     [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
     
@@ -253,7 +250,10 @@
     
     return cell;
 }
-
+-(IBAction)recentViewAction:(id)sender{
+    
+    NSLog(@"sender=%d",[sender tag]);
+}
 
 /*
 #pragma mark - Navigation

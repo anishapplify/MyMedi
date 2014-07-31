@@ -57,5 +57,7 @@
 #import "ASIFormDataRequest.h"
 #import "SortScreenViewController.h"
 
+#import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 #endif
 //#define NSLog(s,...)

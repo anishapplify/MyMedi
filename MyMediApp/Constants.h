@@ -51,5 +51,7 @@
 
 #define kMedicalRecordsNotes @"AppointmentmentNotes"
 
+#define kAppointmentmentAttachmentString @"AppointmentmentAttachmentString"
+
 
 

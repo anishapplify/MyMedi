@@ -87,7 +87,7 @@
     UIView *AppointmentGroudView;
     UIView *MapGroundView;
     
-    
+    UIView *ViewForSearchingofMedicalRecords;
     //medical elements
     UIButton *SortButton;
     UIButton *SearchButton;
@@ -137,7 +137,7 @@
     UISearchBar *SearchBar;
      UISearchBar *MedicalSearchBar;
     
-    
+    UIView *tableViewForMainTableofMedicalRecords;
     NSMutableArray  *dummyArray;
     
     NSMutableDictionary *appointmentsDictionary;
@@ -160,6 +160,8 @@
     
     UIView *ViewForSearching;
     UITableView *SearchTableView;
+    
+    
     NSMutableArray *array_AppointmentName;
     
     NSMutableArray *array_AppointmentID;
@@ -177,6 +179,8 @@
     NSMutableArray *array_Provider;
     
     NSMutableArray *array_TimeStamp;
+    
+    NSMutableArray *array_Attachemtns;
     
     
     
@@ -200,7 +204,7 @@
     
     NSMutableArray *array_TimeStamp_Main;
     
-    
+     NSMutableArray *array_Attachments_Main;
     
     
     
@@ -225,9 +229,61 @@
     NSMutableArray *temp_array_TimeStamp;
     
     
+     NSMutableArray *temp_array_Attachments;
+    
+    
     UIView *tableViewForMainTable;
     
     
+    
+    NSMutableArray *aaray_Medical_Name;
+    
+    NSMutableArray *temp_aaray_Medical_Name;
+    
+    NSMutableArray *array_Medical_Type;
+    
+    NSMutableArray *temp_array_Medical_Type;
+    
+    NSMutableArray *array_Medical_Provider;
+    
+    NSMutableArray *temp_array_Medical_Provider;
+    
+    NSMutableArray *array_Medical_Time;
+    
+    NSMutableArray *temp_Medical_Time;
+    
+    UITableView *SearchTableViewForMedicalRecords;
+    
+    
+    NSMutableArray *aaray_Medical_Name_Main;
+    
+    NSMutableArray *array_Medical_Type_Main;
+    
+    NSMutableArray *array_Medical_Provider_Main;
+    
+    NSMutableArray *array_Medical_Time_Main;
+    
+    NSMutableArray  *array_Medical_HospitalName;
+    
+    NSMutableArray  *temp_array_Medical_HospitalName;
+    
+    NSMutableArray  *array_Medical_HospitalName_Main;
+    
+    
+    
+    NSMutableArray  *array_Medical_Notes;
+    
+    NSMutableArray  *temp_array_Medical_Notes;
+    
+    NSMutableArray  *array_Medical_Notes_Main;
+    
+    
+    
+    NSMutableArray  *array_Medical_Consultant;
+    
+    NSMutableArray  *temp_array_Medical_Consultant;
+    
+    NSMutableArray  *array_Medical_Consultant_Main;
     
     
 }
@@ -255,6 +311,8 @@
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"isNewMedicalCreatedByUser"];
         
         [self APICallForUserMedicalAppointment];       // API CALL FOR USER MEDICAL APPOINTMENTS
+        
+         [self loginWithAccessToken];
     }
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isNewAppointmentCreatedByUser"] == YES)
     {
@@ -307,7 +365,7 @@
     
     array_TimeStamp = [[NSMutableArray alloc]init];
     
-    
+    array_Attachemtns= [[NSMutableArray alloc]init];
     
     
     
@@ -329,7 +387,7 @@
     
     temp_array_TimeStamp = [[NSMutableArray alloc]init];
     
-    
+    temp_array_Attachments=[[NSMutableArray alloc]init];
     
     array_AppointmentNam_Main = [[NSMutableArray alloc]init];
     
@@ -348,6 +406,61 @@
     array_Provider_Main = [[NSMutableArray alloc]init];
     
     array_TimeStamp_Main = [[NSMutableArray alloc]init];
+    array_Attachments_Main=[[NSMutableArray alloc]init];
+    
+    
+    
+    aaray_Medical_Name = [[NSMutableArray alloc]init];
+    
+    temp_aaray_Medical_Name = [[NSMutableArray alloc]init];
+    
+    array_Medical_Type = [[NSMutableArray alloc]init];
+    
+    temp_array_Medical_Type = [[NSMutableArray alloc]init];
+    
+    array_Medical_Provider = [[NSMutableArray alloc]init];
+    
+    temp_array_Medical_Provider = [[NSMutableArray alloc]init];
+    
+    array_Medical_Time = [[NSMutableArray alloc]init];
+    
+    temp_Medical_Time = [[NSMutableArray alloc]init];
+    
+    
+    array_Medical_HospitalName = [[NSMutableArray alloc]init];
+    
+    temp_array_Medical_HospitalName = [[NSMutableArray alloc]init];
+    
+    array_Medical_HospitalName_Main = [[NSMutableArray alloc]init];
+    
+    
+     array_Medical_Notes = [[NSMutableArray alloc]init];
+    
+     temp_array_Medical_Notes = [[NSMutableArray alloc]init];
+    
+    
+     array_Medical_Notes_Main = [[NSMutableArray alloc]init];
+    
+    
+    array_Medical_Consultant = [[NSMutableArray alloc]init];
+    
+    
+     temp_array_Medical_Consultant = [[NSMutableArray alloc]init];
+    
+    array_Medical_Consultant_Main = [[NSMutableArray alloc]init];
+
+    
+    
+
+    
+    aaray_Medical_Name_Main = [[NSMutableArray alloc]init];
+    
+    array_Medical_Type_Main = [[NSMutableArray alloc]init];
+    
+    array_Medical_Provider_Main = [[NSMutableArray alloc]init];
+    
+    array_Medical_Time_Main = [[NSMutableArray alloc]init];
+    
     
     
     appointmentsDictionary = [[NSMutableDictionary alloc]init];
@@ -549,6 +662,9 @@ else
     [RecentButtonActionArrow setBackgroundImage:[UIImage imageNamed:@"bar_with_arrow.png"] forState:UIControlStateNormal];
     RecentButtonActionArrow.titleEdgeInsets = UIEdgeInsetsMake(5, 20, 0, 0);
     
+    
+    NSLog(@"recentupdates=%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"]);
+    
     if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]<1)
     {
         UIButton*FirstRecntButtonActionArrow=[[UIButton alloc]initWithFrame:CGRectMake(0, RecentButtonActionArrow.frame.size.height+RecentButtonActionArrow.frame.origin.y, 300, 40)];
@@ -566,7 +682,7 @@ else
             [self NewRecentUpdateView :0];
         }
         else
-        if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]>=2)
+        if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]>=2)
         {
             [self NewRecentUpdateView :0];
            [self SecondRecentUpdateFunciton :1];
@@ -1701,6 +1817,10 @@ else
 }
 -(void)MedicalButtonActionDown{
     
+    tableViewForMainTable.hidden=NO;
+    ViewForSearchingofMedicalRecords.hidden=YES;
+    
+    
     BottomNavigationButtonFlag=2;
     HomeButton.userInteractionEnabled=TRUE;
      AppointmentButton.userInteractionEnabled=TRUE;
@@ -1724,6 +1844,10 @@ else
 }
 -(void)AppointmentsButtonDown{
     
+    
+    tableViewForMainTableofMedicalRecords.hidden=NO;
+    
+    ViewForSearchingofMedicalRecords.hidden=YES;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AddAppointmentClick"];
     
     [[soundManager shared] buttonSound];
@@ -2281,7 +2405,7 @@ else
     {
         return [temp_appointmentSectionTitles count];
     }
-    else if(tableView.tag == 4949)
+    else if((tableView.tag == 4949) || (tableView.tag == 9876))
     {
          return 1;
     }
@@ -2302,7 +2426,7 @@ else
         headerLabel.backgroundColor = [UIColor grayColor];
         return headerLabel;
     }
-    else if(tableView.tag == 4949)
+    else if((tableView.tag == 4949) || (tableView.tag == 9876))
     {
         UILabel *headerLabel = [[UILabel alloc] init];
         headerLabel=nil;
@@ -2331,6 +2455,10 @@ else
     else if(tableView.tag == 4949)
     {
         return  [temp_array_AppointmentName count];
+    }
+    else if (tableView.tag == 9876)
+    {
+        return  [temp_aaray_Medical_Name count];
     }
 
     else{
@@ -2746,7 +2874,497 @@ else
         
     }
     
+    else if (tableView.tag == 9876)
+        
+    {
+        
+        
+        
+        UIButton *CellButtonClick;
+        
+        
+        
+        CellButtonClick = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        
+        
+        CellButtonClick.frame = CGRectMake(0,0, self.view.frame.size.width+1,50);
+        
+        
+        
+        [CellButtonClick setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+        
+        
+        
+        CellButtonClick.layer.masksToBounds = NO;
+        
+        
+        
+        CellButtonClick.exclusiveTouch=YES;
+        
+        
+        
+        CellButtonClick.userInteractionEnabled=TRUE;
+        
+        
+        
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"cart_product_info.png"] forState:UIControlStateNormal];
+        
+        
+        
+        [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
+        
+        
+        
+        CellButtonClick.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;
+        
+        [CellButtonClick addTarget:self action:@selector(setIdJaaliViewFromServerofMedicalRecords:) forControlEvents:UIControlEventTouchUpInside];
+        
+        CellButtonClick.layer.borderWidth = 0.5f;
+        
+        
     
+        UILabel *AppointmentNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,10,220,10)];
+        
+        
+        
+        AppointmentNameTitleShow.textColor = [UIColor blackColor];
+        
+        
+        
+        AppointmentNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        AppointmentNameTitleShow.textAlignment = NSTextAlignmentLeft;
+        
+        
+        
+        AppointmentNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:14];
+        
+        
+        
+        AppointmentNameTitleShow.text =  [temp_aaray_Medical_Name objectAtIndex:indexPath.row];
+        
+        
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        
+        
+        
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        
+        
+        [AppointmentNameTitleShow sizeToFit];
+        
+        
+        
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        
+        
+        
+        
+        
+        AppointmentNameTitleShow.numberOfLines=0;
+        
+        
+        
+        AppointmentNameTitleShow.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        
+        
+        [AppointmentNameTitleShow sizeToFit];
+        
+        
+        
+        [CellButtonClick addSubview:AppointmentNameTitleShow];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        UILabel *TypeNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(20,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,30,14)];
+        
+        
+        
+        TypeNameTitleShow.textColor = [UIColor grayColor];
+        
+        
+        
+        TypeNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        TypeNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        
+        
+        TypeNameTitleShow.text =  [temp_array_Medical_Type objectAtIndex:indexPath.row];
+        
+        
+        
+        [TypeNameTitleShow sizeToFit];
+        
+        
+        
+        TypeNameTitleShow.textAlignment = NSTextAlignmentRight;
+        
+        
+        
+        TypeNameTitleShow.minimumScaleFactor=0.3;
+        
+        
+        
+        [CellButtonClick addSubview:TypeNameTitleShow];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        CGRect size_label = [TypeNameTitleShow.text boundingRectWithSize:CGSizeMake(320, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin
+                             
+                             
+                             
+                                                              attributes:@{ NSFontAttributeName : [UIFont fontWithName:helveticaRegular size:12]}
+                             
+                             
+                             
+                                                                 context:nil];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        UIView* line=[[UIView alloc]initWithFrame:CGRectMake(size_label.size.width+TypeNameTitleShow.frame.origin.x,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5, 1,12)];
+        
+        
+        
+        
+        
+        
+        
+        line.layer.borderColor = [UIColor grayColor].CGColor;
+        
+        
+        
+        line.layer.borderWidth = 1.0f;
+        
+        
+        
+        [CellButtonClick addSubview:line];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        UILabel *ProviderNameTitleShow = [[UILabel alloc] initWithFrame:CGRectMake(line.frame.size.width+line.frame.origin.x+5,AppointmentNameTitleShow.frame.size.height+AppointmentNameTitleShow.frame.origin.y+5,50,14)];
+        
+        
+        
+        
+        
+        
+        
+        ProviderNameTitleShow.textColor = [UIColor grayColor];
+        
+        
+        
+        ProviderNameTitleShow.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        ProviderNameTitleShow.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        
+        
+        ProviderNameTitleShow.text = [temp_array_Medical_Provider objectAtIndex:indexPath.row];
+        
+        
+        
+        [ProviderNameTitleShow sizeToFit];
+        
+        
+        
+        ProviderNameTitleShow.textAlignment = NSTextAlignmentRight;
+        
+        
+        
+        ProviderNameTitleShow.minimumScaleFactor=0.3;
+        
+        
+        
+        [CellButtonClick addSubview:ProviderNameTitleShow];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        NSArray *dateSplitArray = [[temp_Medical_Time objectAtIndex:indexPath.row ] componentsSeparatedByString:@"T"];
+        
+        
+        
+        NSString *date=[dateSplitArray objectAtIndex:0];
+        
+        
+        
+        NSString *dateTime=[dateSplitArray objectAtIndex:1];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+        
+        
+        
+        NSString *date2=[dateSplitArray2 objectAtIndex:1];
+        
+        
+        
+        NSString *date3=[dateSplitArray2 objectAtIndex:2];
+        
+        
+        
+        NSString *date4=[dateSplitArray2 objectAtIndex:0];
+        
+        
+        
+        NSLog(@"date2=%@",date2);
+        
+        
+        
+        NSLog(@"date3=%@",date3);
+        
+        
+        
+        
+        
+        
+        
+        if([date2 isEqualToString:@"01"]) date2=@"Jan";
+        
+        
+        
+        if([date2 isEqualToString:@"02"]) date2=@"Feb";
+        
+        
+        
+        if([date2 isEqualToString:@"03"]) date2=@"Mar";
+        
+        
+        
+        if([date2 isEqualToString:@"04"]) date2=@"Apr";
+        
+        
+        
+        if([date2 isEqualToString:@"05"]) date2=@"May";
+        
+        
+        
+        if([date2 isEqualToString:@"06"]) date2=@"Jun";
+        
+        
+        
+        if([date2 isEqualToString:@"07"]) date2=@"Jul";
+        
+        
+        
+        if([date2 isEqualToString:@"08"]) date2=@"Aug";
+        
+        
+        
+        if([date2 isEqualToString:@"09"]) date2=@"Sep";
+        
+        
+        
+        if([date2 isEqualToString:@"10"]) date2=@"Oct";
+        
+        
+        
+        if([date2 isEqualToString:@"11"]) date2=@"Nov";
+        
+        
+        
+        if([date2 isEqualToString:@"12"]) date2=@"Dec";
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        UILabel *DateLable = [[UILabel alloc] init];
+        
+        
+        
+        DateLable.textColor = [UIColor grayColor];
+        
+        
+        
+        DateLable.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        DateLable.textAlignment = NSTextAlignmentLeft;
+        
+        
+        
+        DateLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        
+        
+        DateLable.text =[NSString stringWithFormat:@"%@ %@ %@",date3,date2,date4];
+        
+        
+        
+        DateLable.numberOfLines=0;
+        
+        
+        
+        DateLable.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        
+        
+        [DateLable sizeToFit];
+        
+        
+        
+        DateLable.frame=CGRectMake(300-DateLable.frame.size.width,10,DateLable.frame.size.width,15);
+        
+        
+        
+        [CellButtonClick addSubview:DateLable];
+        
+        
+        
+        
+        
+        
+        
+        NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+        
+        
+        
+        NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+        
+        
+        
+        NSLog(@"TimeString1=%@",TimeString1);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        UILabel *TimeLable = [[UILabel alloc] init];
+        
+        
+        
+        TimeLable.textColor = [UIColor grayColor];
+        
+        
+        
+        TimeLable.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        TimeLable.textAlignment = NSTextAlignmentLeft;
+        
+        
+        
+        TimeLable.font = [UIFont fontWithName:helveticaRegular size:10];
+        
+        
+        
+        TimeLable.text =[NSString stringWithFormat:@"%@",TimeString1];
+        
+        
+        
+        TimeLable.numberOfLines=0;
+        
+        
+        
+        TimeLable.lineBreakMode =NSLineBreakByCharWrapping;
+        
+        
+        
+        [TimeLable sizeToFit];
+        
+        
+        
+        TimeLable.frame=CGRectMake(300-TimeLable.frame.size.width,DateLable.frame.size.height+DateLable.frame.origin.y+3,TimeLable.frame.size.width,13);
+        
+        
+        
+        [CellButtonClick addSubview:TimeLable];
+        
+        
+        
+        
+        
+        
+        
+        [cell.contentView addSubview:CellButtonClick];
+        
+        
+        
+        
+        
+    }
     else {
         
         
@@ -3283,41 +3901,85 @@ else
 #pragma mark Search bar AddMedicalAppointmentsTableViewFunction
 -(void)AddMedicalAppointmentsTableViewFunction{
     
+    
+    
     [MedicalSearchBar removeFromSuperview];
+    
     MedicalSearchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 7, 300, 44)];
+    
     MedicalSearchBar.delegate = self;
+    
     MedicalSearchBar.placeholder = @"Search";
     
+    
+    
     [MedicalSearchBar setSearchFieldBackgroundImage:
+     
      [UIImage imageNamed:@"Rounded-Rectangle-9.png"] forState:UIControlStateNormal];
     
+    
+    
     MedicalSearchBar.translucent = NO;
+    
     MedicalSearchBar.opaque = NO;
+    
     MedicalSearchBar.showsCancelButton=NO;
-   
+    
+    MedicalSearchBar.tag = 777;
+    
+    
+    
     MedicalSearchBar.backgroundColor=[UIColor clearColor];
+    
     MedicalSearchBar.searchBarStyle = UISearchBarStyleMinimal;
+    
     MedicalSearchBar.barTintColor = [UIColor clearColor];
+    
     [MedicalSubView addSubview:MedicalSearchBar];
     
     
+    tableViewForMainTableofMedicalRecords = [[UIView alloc]init];
+    
+    tableViewForMainTableofMedicalRecords.frame = CGRectMake(0, 60, self.view.frame.size.width, 390);
+    
+    [MedicalSubView addSubview:tableViewForMainTableofMedicalRecords];
+    
+    
     [AddMedicalRerocdsTableView removeFromSuperview];
+    
     AddMedicalRerocdsTableView = nil;
+    
     AddMedicalRerocdsTableView=[[UITableView alloc]init];
-    AddMedicalRerocdsTableView.frame=CGRectMake(0, MedicalSearchBar.frame.size.height+MedicalSearchBar.frame.origin.y+5, self.view.frame.size.width, 390);
+    
+    AddMedicalRerocdsTableView.frame=CGRectMake(0, 0, self.view.frame.size.width, 385);
+    
     AddMedicalRerocdsTableView.tag=56700;
+    
     [AddMedicalRerocdsTableView setDelegate:self];
+    
     AddMedicalRerocdsTableView.dataSource=self;
+    
     [AddMedicalRerocdsTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+    
     [AddMedicalRerocdsTableView setSeparatorColor:[UIColor grayColor]];
+    
     [AddMedicalRerocdsTableView setSeparatorInset:UIEdgeInsetsZero];
+    
     AddMedicalRerocdsTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    
     //CastingJobTableView.backgroundColor=[UIColor colorWithRed:0.8515625 green:0.85546875 blue:0.8671875 alpha:1.0];
+    
     AddMedicalRerocdsTableView.backgroundColor=[UIColor whiteColor];
+    
     AddMedicalRerocdsTableView.showsVerticalScrollIndicator = NO;
+    
     AddMedicalRerocdsTableView.alwaysBounceVertical = NO;
+    
     // [searchTableView setBackgroundColor:[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1.0]];
-    [MedicalSubView addSubview:AddMedicalRerocdsTableView];
+    
+    [tableViewForMainTableofMedicalRecords addSubview:AddMedicalRerocdsTableView];
+    
+    
     
 }
 #pragma mark Search bar AddAppointmentTableViewFunction
@@ -3454,69 +4116,69 @@ else
     
     
 }
-- (void) searchBarTextDidBeginEditing: (UISearchBar*) searchBar
-
-{
-    if(searchBar.tag==12345){
-        [SearchBar setShowsCancelButton:YES animated:YES];
-        
-        
-        tableViewForMainTable.hidden = YES;
-        
-        [self searchViewForTable];
-    }
-    else{
-         [MedicalSearchBar setShowsCancelButton:YES animated:YES];
-    }
-    
-    
-    
-    
-    
-}
-
-
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-
-{
-    if(searchBar.tag==12345){
-        [SearchBar resignFirstResponder];
-        
-        SearchBar.showsCancelButton = NO;
-        
-        
-        tableViewForMainTable.hidden = NO;
-        
-        ViewForSearching.hidden = YES;
-    }
-    else {
-        [MedicalSearchBar resignFirstResponder];
-        
-        MedicalSearchBar.showsCancelButton = NO;
-    }
-  
-    
-   
-    
-    
-   
-    
-    
-    
-    //[AddAppointmentTableView reloadData];
-    
-}
+//- (void) searchBarTextDidBeginEditing: (UISearchBar*) searchBar
+//
+//{
+//    if(searchBar.tag==12345){
+//        [SearchBar setShowsCancelButton:YES animated:YES];
+//        
+//        
+//        tableViewForMainTable.hidden = YES;
+//        
+//        [self searchViewForTable];
+//    }
+//    else{
+//         [MedicalSearchBar setShowsCancelButton:YES animated:YES];
+//    }
+//    
+//    
+//    
+//    
+//    
+//}
 
 
 
--(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+//- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+//
+//{
+//    if(searchBar.tag==12345){
+//        [SearchBar resignFirstResponder];
+//        
+//        SearchBar.showsCancelButton = NO;
+//        
+//        
+//        tableViewForMainTable.hidden = NO;
+//        
+//        ViewForSearching.hidden = YES;
+//    }
+//    else {
+//        [MedicalSearchBar resignFirstResponder];
+//        
+//        MedicalSearchBar.showsCancelButton = NO;
+//    }
+//  
+//    
+//   
+//    
+//    
+//   
+//    
+//    
+//    
+//    //[AddAppointmentTableView reloadData];
+//    
+//}
 
-{
-    
-    [searchBar resignFirstResponder];
-    
-}
+
+
+//-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+//
+//{
+//    
+//    [searchBar resignFirstResponder];
+//    
+//}
 
 
 
@@ -3525,6 +4187,7 @@ else
 {
     
     [ SearchBar resignFirstResponder];
+    [MedicalSearchBar resignFirstResponder];
     
 }
 
@@ -3540,126 +4203,130 @@ else
 
 
 
--(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
-
-{
-    if(searchBar1.tag==12345){
-        if ([searchText length]==0)
-            
-        {
-            
-            tableViewForMainTable.hidden = NO;
-            
-            ViewForSearching.hidden = YES;
-            
-            
-            
-            temp_array_AppointmentName =[array_AppointmentNam_Main mutableCopy];
-            
-            temp_array_AppointmentID = [array_AppointmentID_Main mutableCopy];
-            
-            temp_array_AppointmentTime = [array_AppointmentTime_Main mutableCopy];
-            
-            temp_array_AppointmentType = [array_AppointmentType_Main mutableCopy];
-            
-            temp_array_ConsultantName = [array_ConsultantName_Main mutableCopy];
-            
-            temp_array_Hospital = [array_Hospital_Main mutableCopy];
-            
-            temp_array_Notes = [array_Notes_Main mutableCopy];
-            
-            temp_array_Provider = [array_Provider_Main mutableCopy];
-            
-            temp_array_TimeStamp = [array_TimeStamp_Main mutableCopy];
-            
-        }
-        
-        else
-            
-        {
-            
-            tableViewForMainTable.hidden = YES;
-            
-            [self searchViewForTable];
-            
-            
-            
-            [temp_array_AppointmentName removeAllObjects];
-            
-            [temp_array_AppointmentID removeAllObjects];
-            
-            [temp_array_AppointmentTime removeAllObjects];
-            
-            [temp_array_AppointmentType removeAllObjects];
-            
-            [temp_array_ConsultantName removeAllObjects];
-            
-            [temp_array_Hospital removeAllObjects];
-            
-            [temp_array_Notes removeAllObjects];
-            
-            [temp_array_Provider removeAllObjects];
-            
-            [temp_array_TimeStamp removeAllObjects];
-            
-            
-            
-            int g = 0;
-            
-            
-//            NSDictionary * book = NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                                        array_AppointmentType_Main, @"appointmentType", array_AppointmentNam_Main, @"appointmentName", nil];
-//            [array_AppointmentNam_Main addObject:book];
-            
-            
-            NSLog(@"array_AppointmentName is %@",array_AppointmentNam_Main);
-            
-            for (NSString *string in array_AppointmentNam_Main)
-                
-            {
-                
-                NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
-                
-                if (r.location != NSNotFound)
-                    
-                {
-                    
-                    [temp_array_AppointmentName addObject:[array_AppointmentNam_Main objectAtIndex:g]];
-                    
-                    [temp_array_AppointmentID addObject:[array_AppointmentID_Main objectAtIndex:g]];
-                    
-                    [temp_array_AppointmentTime addObject:[array_AppointmentTime_Main objectAtIndex:g]];
-                    
-                    [temp_array_AppointmentType addObject:[array_AppointmentType_Main objectAtIndex:g]];
-                    
-                    [temp_array_ConsultantName addObject:[array_ConsultantName_Main objectAtIndex:g]];
-                    
-                    [temp_array_Hospital addObject:[array_Hospital_Main objectAtIndex:g]];
-                    
-                    [temp_array_Notes addObject:[array_Notes_Main objectAtIndex:g]];
-                    
-                    [temp_array_Provider addObject:[array_Provider_Main objectAtIndex:g]];
-                    
-                    [temp_array_TimeStamp addObject:[array_TimeStamp_Main objectAtIndex:g]];
-                    
-                    
-                    
-                }
-                
-                g++;
-                
-            }
-            
-        }
-        
-        [SearchTableView reloadData];
-    }
-    else{
-        
-    }
-
-    
-}
+//-(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
+//
+//{
+//    if(searchBar1.tag==12345){
+//        if ([searchText length]==0)
+//            
+//        {
+//            
+//            tableViewForMainTable.hidden = NO;
+//            
+//            ViewForSearching.hidden = YES;
+//            
+//            
+//            
+//            temp_array_AppointmentName =[array_AppointmentNam_Main mutableCopy];
+//            
+//            temp_array_AppointmentID = [array_AppointmentID_Main mutableCopy];
+//            
+//            temp_array_AppointmentTime = [array_AppointmentTime_Main mutableCopy];
+//            
+//            temp_array_AppointmentType = [array_AppointmentType_Main mutableCopy];
+//            
+//            temp_array_ConsultantName = [array_ConsultantName_Main mutableCopy];
+//            
+//            temp_array_Hospital = [array_Hospital_Main mutableCopy];
+//            
+//            temp_array_Notes = [array_Notes_Main mutableCopy];
+//            
+//            temp_array_Provider = [array_Provider_Main mutableCopy];
+//            
+//            temp_array_TimeStamp = [array_TimeStamp_Main mutableCopy];
+//            
+//            temp_array_Attachments= [array_Attachments_Main mutableCopy];
+//            
+//        }
+//        
+//        else
+//            
+//        {
+//            
+//            tableViewForMainTable.hidden = YES;
+//            
+//            [self searchViewForTable];
+//            
+//            
+//            
+//            [temp_array_AppointmentName removeAllObjects];
+//            
+//            [temp_array_AppointmentID removeAllObjects];
+//            
+//            [temp_array_AppointmentTime removeAllObjects];
+//            
+//            [temp_array_AppointmentType removeAllObjects];
+//            
+//            [temp_array_ConsultantName removeAllObjects];
+//            
+//            [temp_array_Hospital removeAllObjects];
+//            
+//            [temp_array_Notes removeAllObjects];
+//            
+//            [temp_array_Provider removeAllObjects];
+//            
+//            [temp_array_TimeStamp removeAllObjects];
+//            [temp_array_Attachments removeAllObjects];
+//            
+//            
+//            int g = 0;
+//            
+//            
+////            NSDictionary * book = NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+////                                                        array_AppointmentType_Main, @"appointmentType", array_AppointmentNam_Main, @"appointmentName", nil];
+////            [array_AppointmentNam_Main addObject:book];
+//            
+//            
+//            NSLog(@"array_AppointmentName is %@",array_AppointmentNam_Main);
+//            
+//            for (NSString *string in array_AppointmentNam_Main)
+//                
+//            {
+//                
+//                NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+//                
+//                if (r.location != NSNotFound)
+//                    
+//                {
+//                    
+//                    [temp_array_AppointmentName addObject:[array_AppointmentNam_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_AppointmentID addObject:[array_AppointmentID_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_AppointmentTime addObject:[array_AppointmentTime_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_AppointmentType addObject:[array_AppointmentType_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_ConsultantName addObject:[array_ConsultantName_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_Hospital addObject:[array_Hospital_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_Notes addObject:[array_Notes_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_Provider addObject:[array_Provider_Main objectAtIndex:g]];
+//                    
+//                    [temp_array_TimeStamp addObject:[array_TimeStamp_Main objectAtIndex:g]];
+//                    
+//                     [temp_array_Attachments addObject:[array_Attachments_Main objectAtIndex:g]];
+//                    
+//                    
+//                    
+//                }
+//                
+//                g++;
+//                
+//            }
+//            
+//        }
+//        
+//        [SearchTableView reloadData];
+//    }
+//    else{
+//        
+//    }
+//
+//    
+//}
 
 
 
@@ -4204,7 +4871,7 @@ else
                     
                      [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kAppointmentmentNotes];
                     
-                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"attachment"] objectAtIndex:k] forKeyPath:kAppointmentmentAttachmentString];
                     
                     EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
                     [self.navigationController pushViewController:createnewAppointment animated:YES];
@@ -4326,39 +4993,77 @@ return anObject;
 
 -(void)APICallForUserMedicalAppointment
 
+
+
 {
+    
+    
     
     Reachability *reach = [Reachability reachabilityForInternetConnection];
     
+    
+    
     NetworkStatus netStatus = [reach currentReachabilityStatus];
+    
+    
     
     if (netStatus == NotReachable)
         
+        
+        
     {
+        
+        
         
         [self HideActivityIndicator];
         
         
         
+        
+        
+        
+        
         UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        
         
         [unable show];
         
+        
+        
     }
     
+    
+    
     else
+        
+        
         
     {
         
         
         
+        
+        
+        
+        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        
+        
         
         NSDictionary *params = @{
                                  
+                                 
+                                 
                                  @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
                                  
+                                 
+                                 
                                  };
+        
+        
+        
+        
         
         
         
@@ -4366,101 +5071,189 @@ return anObject;
         
         
         
+        
+        
+        
+        
         [manager POST:[NSString stringWithFormat:@"%@/get_all_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+            
+            
             
             NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%d",[[json objectForKey:@"data"] count]);
             
+            
+            
             if([json objectForKey:@"error"])
+                
+                
                 
             {
                 
+                
+                
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                
+                
                 
                 [myAlertView show];
                 
+                
+                
             }
+            
+            
             
             else
                 
                 
                 
+                
+                
+                
+                
                 if ([[json objectForKey:@"log"]isEqualToString:@"No medical yet!"])
                     
+                    
+                    
                 {
+                    
+                    
                     
                     NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
                     
                     
                     
+                    
+                    
+                    
+                    
                     DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imageNamed:@"medecal_records_tuts.png"].size.width, [UIImage imageNamed:@"medecal_records_tuts.png"].size.height)];
                     
+                    
+                    
                     DemoImageView.image=[UIImage imageNamed:@"medecal_records_tuts.png"];
+                    
+                    
                     
                     [MedicalSubView addSubview:DemoImageView];
                     
                     
                     
+                    
+                    
+                    
+                    
                     [AddMedicalRerocdsTableView removeFromSuperview];
+                    
+                    
                     
                     AddMedicalRerocdsTableView=nil;
                     
+                    
+                    
                     MedicalSearchBar=nil;
+                    
+                    
                     
                 }
             
+            
+            
                 else
+                    
+                    
                     
                 {
                     
                     
                     
+                    NSLog(@"JSON FOR MEDICAL RECORD ==> %@",json);
+                    
+                    
+                    
                     medicalrecordsDictionary = nil;
+                    
+                    
                     
                     MedicalRecordstemp_appointmentsDictionary = nil;
                     
                     
                     
+                    
+                    
+                    
+                    
                     medicalrecordsDictionary = [[NSMutableDictionary alloc]init];
+                    
+                    
                     
                     MedicalRecordstemp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
                     
+                    
+                    
                     medicalrecordsDictionary = json;
+                    
+                    
                     
                     MedicalRecordstemp_appointmentsDictionary = [json mutableCopy];
                     
                     
                     
                     
+                    
+                    
+                    
+                    
+                    
                     NSArray *monthArray = [MedicalRecordstemp_appointmentsDictionary allKeys];
+                    
                     NSMutableArray *monthMutableArray = [[NSMutableArray alloc]initWithArray:monthArray];
+                    
                     NSMutableArray *jaaduArray = [[NSMutableArray alloc]init];
                     
                     
+                    
+                    
+                    
                     for (int i=0; i<[[MedicalRecordstemp_appointmentsDictionary allKeys]count]; i++)
+                        
                     {
+                        
                         if ([[MedicalRecordstemp_appointmentsDictionary objectForKey:[monthMutableArray objectAtIndex:i]]count] > 0)
+                            
                         {
+                            
                             [jaaduArray addObject:[monthMutableArray objectAtIndex:i]];
+                            
                         }
+                        
                     }
+                    
+                    
                     
                     NSLog(@"jaaduArray is %@",jaaduArray);
                     
                     
+                    
+                    
+                    
                     [appointmentSectionTitles removeAllObjects];
+                    
                     [temp_appointmentSectionTitles removeAllObjects];
                     
+                    
+                    
                     appointmentSectionTitles = jaaduArray;
+                    
                     temp_appointmentSectionTitles = jaaduArray;
+                    
+                    
                     
                     NSLog(@"appointmentSectionTitles is %@",temp_appointmentSectionTitles);
                     
                     
                     
                     
-                    //  [totalData removeAllObjects];
-                    
-                    // [dummyArray removeAllObjects];
                     
                     NSLog(@"All Keys of APpointments is %@",[medicalrecordsDictionary allKeys]);
                     
@@ -4474,8 +5267,6 @@ return anObject;
                         
                         [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicalname"]];
                         
-                        
-                        
                     }
                     
                     NSLog(@"total Data is %@",totalData);
@@ -4484,21 +5275,35 @@ return anObject;
                     
                     
                     
-                    
-                    
                     for (int i = 0; i<[appointmentSectionTitles count]; i++)
+                        
+                        
                         
                     {
                         
+                        
+                        
                         for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
+                            
+                            
                             
                         {
                             
+                            
+                            
                             [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
+                            
+                            
                             
                         }
                         
+                        
+                        
                     }
+                    
+                    
+                    
+                    
                     
                     
                     
@@ -4506,9 +5311,328 @@ return anObject;
                     
                     
                     
+                    
+                    
+                    [aaray_Medical_Name removeAllObjects];
+                    
+                    [array_Medical_Type removeAllObjects];
+                    
+                    [array_Medical_Provider removeAllObjects];
+                    
+                    [array_Medical_Time removeAllObjects];
+                    
+                    [array_Medical_HospitalName removeAllObjects];
+                    
+                    [array_Medical_Notes removeAllObjects];
+                    
+                    
+                    [array_Medical_Consultant removeAllObjects];
+                   
+                    
+                    
+                    [temp_Medical_Time removeAllObjects];
+                    
+                    [temp_aaray_Medical_Name removeAllObjects];
+                    
+                    [temp_array_Medical_Type removeAllObjects];
+                    
+                    [temp_array_Medical_Provider removeAllObjects];
+                    
+                    
+                    [temp_array_Medical_Notes removeAllObjects];
+                    
+                    
+                    [temp_array_Medical_Consultant removeAllObjects];
+                    
+                    
+                    [aaray_Medical_Name_Main removeAllObjects];
+                    
+                    [array_Medical_Type_Main removeAllObjects];
+                    
+                    [array_Medical_Provider_Main removeAllObjects];
+                    
+                    [array_Medical_Time_Main removeAllObjects];
+                    
+                    [array_Medical_Notes_Main removeAllObjects];
+                    
+                    [array_Medical_Consultant_Main removeAllObjects];
+                    
+                    
+                   
+                    
+                    
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+                        
+                    {
+                        
+                        [aaray_Medical_Name addObject:   [[json  objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicalname"]];
+                        
+                        [array_Medical_Type addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicaltype"]];
+                        
+                        [array_Medical_Provider addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"provider"]];
+                        
+                        [array_Medical_Time addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"timestamp"]];
+                        
+                         [array_Medical_HospitalName addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"hospital"]];
+                        
+                         [array_Medical_Notes addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"notes"]];
+                        
+                        
+                         [array_Medical_Consultant addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"consultantname"]];
+                       
+                        
+                    }
+                    
+                    
+                    
+                    NSLog(@"Appopintment Section Count is %d", [appointmentSectionTitles count]);
+                    
+                    NSLog(@"aaray_Medical_Name is %@",aaray_Medical_Name);
+                    
+                    
+                    
+                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+                        
+                        
+                        
+                    {
+                        
+                        
+                        
+                        for (int j=0; j<[[aaray_Medical_Name objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_aaray_Medical_Name addObject:[[aaray_Medical_Name objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [aaray_Medical_Name_Main addObject:[[aaray_Medical_Name objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Medical_Type objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Medical_Type addObject:[[array_Medical_Type objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_Type_Main addObject:[[array_Medical_Type objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Medical_Time objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_Medical_Time addObject:[[array_Medical_Time objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_Time_Main addObject:[[array_Medical_Time objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Medical_Provider objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Medical_Provider addObject:[[array_Medical_Provider objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_Provider_Main addObject:[[array_Medical_Provider objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        for (int j=0; j<[[array_Medical_HospitalName objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Medical_HospitalName addObject:[[array_Medical_HospitalName objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_HospitalName_Main addObject:[[array_Medical_HospitalName objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                        
+                        
+                        for (int j=0; j<[[array_Medical_Notes objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Medical_Notes addObject:[[array_Medical_Notes objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_Notes_Main addObject:[[array_Medical_Notes objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        for (int j=0; j<[[array_Medical_Consultant objectAtIndex:i]count]; j++)
+                            
+                        {
+                            
+                            [temp_array_Medical_Consultant addObject:[[array_Medical_Consultant objectAtIndex:i] objectAtIndex:j]];
+                            
+                            [array_Medical_Consultant_Main addObject:[[array_Medical_Consultant objectAtIndex:i] objectAtIndex:j]];
+                            
+                        }
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+
+                    
+                    
+                    NSLog(@"temp_aaray_Medical_Name is %@",temp_aaray_Medical_Name);
+                    
+                    
+                    
+                    NSLog(@"temp_array_Medical_Type %@",temp_array_Medical_Type);
+                    
+                    
+                    
+                    NSLog(@"temp_Medical_Time is %@",temp_Medical_Time);
+                    
+                    
+                    
+                    NSLog(@"temp_array_Medical_Type is %@",temp_array_Medical_Provider);
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    // VIEW FOR SEARCH TABLE
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    [ViewForSearchingofMedicalRecords removeFromSuperview];
+                    
+                    
+                    
+                    ViewForSearchingofMedicalRecords = nil;
+                    
+                    
+                    
+                    ViewForSearchingofMedicalRecords = [[UIView alloc]init];
+                    
+                    
+                    
+                    ViewForSearchingofMedicalRecords.frame = CGRectMake(0, 60, self.view.frame.size.width, 390);
+                    
+                    
+                    
+                    ViewForSearchingofMedicalRecords.backgroundColor=[UIColor yellowColor];
+                    
+                    
+                    
+                    ViewForSearchingofMedicalRecords.hidden = YES;
+                    
+                    
+                    
+                    [MedicalSubView addSubview:ViewForSearchingofMedicalRecords];
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords = [[UITableView alloc]init];
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.frame=CGRectMake(0, 0, self.view.frame.size.width, 385);
+                    
+                    
+                    
+                    [SearchTableViewForMedicalRecords setDelegate:self];
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.dataSource=self;
+                    
+                    
+                    
+                    [SearchTableViewForMedicalRecords setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
+                    
+                    
+                    
+                    [SearchTableViewForMedicalRecords setSeparatorColor:[UIColor redColor]];
+                    
+                    
+                    
+                    [SearchTableViewForMedicalRecords setSeparatorInset:UIEdgeInsetsZero];
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.separatorStyle=UITableViewCellSeparatorStyleNone;
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.backgroundColor=[UIColor whiteColor];
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.showsVerticalScrollIndicator = NO;
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.hidden = NO;
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.alwaysBounceVertical = NO;
+                    
+                    
+                    
+                    SearchTableViewForMedicalRecords.tag = 9876;
+                    
+                    
+                    
+                    [ViewForSearchingofMedicalRecords addSubview:SearchTableViewForMedicalRecords];
+                    
+                    
+                    
+                    
+                    
                     [self AddMedicalAppointmentsTableViewFunction];
                     
+                    
+                    
                 }
+            
+            
+            
+            
             
             
             
@@ -4516,25 +5640,261 @@ return anObject;
             
             
             
+            
+            
+            
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         
+         
          
          {
              
+             
+             
              NSLog(@"Error: %@", error.description);
+             
+             
              
              [self HideActivityIndicator];
              
+             
+             
              UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
              
+             
+             
              [unable show];
+             
+             
              
          }];
         
         
         
+        
+        
+        
+        
     }
     
+    
+    
 }
+
+
+
+//-(void)APICallForUserMedicalAppointment
+//
+//{
+//    
+//    Reachability *reach = [Reachability reachabilityForInternetConnection];
+//    
+//    NetworkStatus netStatus = [reach currentReachabilityStatus];
+//    
+//    if (netStatus == NotReachable)
+//        
+//    {
+//        
+//        [self HideActivityIndicator];
+//        
+//        
+//        
+//        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        
+//        [unable show];
+//        
+//    }
+//    
+//    else
+//        
+//    {
+//        
+//        
+//        
+//        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//        
+//        NSDictionary *params = @{
+//                                 
+//                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+//                                 
+//                                 };
+//        
+//        
+//        
+//        NSLog(@"APICallForUserMedicalAppointment >>>>Parameter=>%@",params);
+//        
+//        
+//        
+//        [manager POST:[NSString stringWithFormat:@"%@/get_all_user_medical",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+//            
+//            NSLog(@"APICallForUserMedicalAppointment >>>>JSON--->%@",json);
+//            
+//            if([json objectForKey:@"error"])
+//                
+//            {
+//                
+//                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                
+//                [myAlertView show];
+//                
+//            }
+//            
+//            else
+//                
+//                
+//                
+//                if ([[json objectForKey:@"log"]isEqualToString:@"No medical yet!"])
+//                    
+//                {
+//                    
+//                    NSLog(@"Log --> User Appointment ==>> %@",[json objectForKey:@"log"]);
+//                    
+//                    
+//                    
+//                    DemoImageView=[[UIImageView alloc]initWithFrame:CGRectMake(30, 80, [UIImage imageNamed:@"medecal_records_tuts.png"].size.width, [UIImage imageNamed:@"medecal_records_tuts.png"].size.height)];
+//                    
+//                    DemoImageView.image=[UIImage imageNamed:@"medecal_records_tuts.png"];
+//                    
+//                    [MedicalSubView addSubview:DemoImageView];
+//                    
+//                    
+//                    
+//                    [AddMedicalRerocdsTableView removeFromSuperview];
+//                    
+//                    AddMedicalRerocdsTableView=nil;
+//                    
+//                    MedicalSearchBar=nil;
+//                    
+//                }
+//            
+//                else
+//                    
+//                {
+//                    
+//                    
+//                    
+//                    medicalrecordsDictionary = nil;
+//                    
+//                    MedicalRecordstemp_appointmentsDictionary = nil;
+//                    
+//                    
+//                    
+//                    medicalrecordsDictionary = [[NSMutableDictionary alloc]init];
+//                    
+//                    MedicalRecordstemp_appointmentsDictionary = [[NSMutableDictionary alloc]init];
+//                    
+//                    medicalrecordsDictionary = json;
+//                    
+//                    MedicalRecordstemp_appointmentsDictionary = [json mutableCopy];
+//                    
+//                    
+//                    
+//                    
+//                    NSArray *monthArray = [MedicalRecordstemp_appointmentsDictionary allKeys];
+//                    NSMutableArray *monthMutableArray = [[NSMutableArray alloc]initWithArray:monthArray];
+//                    NSMutableArray *jaaduArray = [[NSMutableArray alloc]init];
+//                    
+//                    
+//                    for (int i=0; i<[[MedicalRecordstemp_appointmentsDictionary allKeys]count]; i++)
+//                    {
+//                        if ([[MedicalRecordstemp_appointmentsDictionary objectForKey:[monthMutableArray objectAtIndex:i]]count] > 0)
+//                        {
+//                            [jaaduArray addObject:[monthMutableArray objectAtIndex:i]];
+//                        }
+//                    }
+//                    
+//                    NSLog(@"jaaduArray is %@",jaaduArray);
+//                    
+//                    
+//                    [appointmentSectionTitles removeAllObjects];
+//                    [temp_appointmentSectionTitles removeAllObjects];
+//                    
+//                    appointmentSectionTitles = jaaduArray;
+//                    temp_appointmentSectionTitles = jaaduArray;
+//                    
+//                    NSLog(@"appointmentSectionTitles is %@",temp_appointmentSectionTitles);
+//                    
+//                    
+//                    
+//                    
+//                    //  [totalData removeAllObjects];
+//                    
+//                    // [dummyArray removeAllObjects];
+//                    
+//                    NSLog(@"All Keys of APpointments is %@",[medicalrecordsDictionary allKeys]);
+//                    
+//                    
+//                    
+//                    
+//                    
+//                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+//                        
+//                    {
+//                        
+//                        [totalData addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"medicalname"]];
+//                        
+//                        
+//                        
+//                    }
+//                    
+//                    NSLog(@"total Data is %@",totalData);
+//                    
+//                    
+//                    
+//                    
+//                    
+//                    
+//                    
+//                    for (int i = 0; i<[appointmentSectionTitles count]; i++)
+//                        
+//                    {
+//                        
+//                        for (int j=0; j<[[totalData objectAtIndex:i]count]; j++)
+//                            
+//                        {
+//                            
+//                            [dummyArray addObject:[[totalData objectAtIndex:i] objectAtIndex:j]];
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                    
+//                    
+//                    NSLog(@"dummy array is %@",dummyArray);
+//                    
+//                    
+//                    
+//                    [self AddMedicalAppointmentsTableViewFunction];
+//                    
+//                }
+//            
+//            
+//            
+//            [self HideActivityIndicator];
+//            
+//            
+//            
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+//         
+//         {
+//             
+//             NSLog(@"Error: %@", error.description);
+//             
+//             [self HideActivityIndicator];
+//             
+//             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//             
+//             [unable show];
+//             
+//         }];
+//        
+//        
+//        
+//    }
+//    
+//}
 
 
 
@@ -4566,7 +5926,7 @@ return anObject;
         NSLog(@"Parameter=>%@",params);
         
         [manager POST:[NSString stringWithFormat:@"%@/get_all_user_appointment",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
-            NSLog(@"JSON--->%@",json);
+            NSLog(@"get_all_user_appointment JSON--->%@",json);
             if([json objectForKey:@"error"])
             {
                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -4693,10 +6053,7 @@ return anObject;
                     
                     [array_TimeStamp_Main removeAllObjects];
                     
-                    
-                    
-                    
-                    
+                    [array_Attachments_Main removeAllObjects];
                     
                     
                     for (int i = 0; i<[appointmentSectionTitles count]; i++)
@@ -4721,15 +6078,9 @@ return anObject;
                         
                         [array_TimeStamp  addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"timestamp"]];
                         
-                        
+                        //[array_Attachemtns  addObject:   [[json objectForKey:[appointmentSectionTitles objectAtIndex:i]]valueForKey:@"timestamp"]];
                         
                     }
-                    
-                    
-                    
-                    
-                    
-                    
                     
                     for (int i = 0; i<[appointmentSectionTitles count]; i++)
                         
@@ -4841,6 +6192,16 @@ return anObject;
                             
                         }
                         
+//                        for (int j=0; j<[[array_Attachemtns objectAtIndex:i]count]; j++)
+//                            
+//                        {
+//                            
+//                            [temp_array_Attachments addObject:[[array_Attachemtns objectAtIndex:i] objectAtIndex:j]];
+//                            
+//                            [array_Attachments_Main addObject:[[array_Attachemtns objectAtIndex:i] objectAtIndex:j]];
+//                            
+//                        }
+                        
                         
                         
                     }
@@ -4946,6 +6307,86 @@ return anObject;
     
     
 }
+-(IBAction)setIdJaaliViewFromServerofMedicalRecords:(id)sender
+{
+    
+    NSLog(@"medicalrecordsDictionary=%@",medicalrecordsDictionary);
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag]forKey:@"MedicalIdGetValue"];
+    NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults]valueForKey:@"MedicalIdGetValue"]);
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditMedicalPressed"];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"TapFlagVriable"];
+    
+   [[NSUserDefaults standardUserDefaults] setValue:[temp_aaray_Medical_Name objectAtIndex:[sender tag]] forKey:kMedicalRecordeNameString];
+    
+//                    [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"medicalname"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameString];
+    
+                   // [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"consultantname"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameConsultantString];
+                    
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Medical_Consultant objectAtIndex:[sender tag]] forKey:kMedicalRecordeNameConsultantString];
+    
+                    
+                    NSArray *dateSplitArray = [[temp_Medical_Time objectAtIndex:[sender tag]] componentsSeparatedByString:@"T"];
+                    NSString *date=[dateSplitArray objectAtIndex:0];
+                    NSString *dateTime=[dateSplitArray objectAtIndex:1];
+                    
+                    
+                    NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+                    NSString *date2=[dateSplitArray2 objectAtIndex:1];
+                    NSString *date3=[dateSplitArray2 objectAtIndex:2];
+                    NSString *date4=[dateSplitArray2 objectAtIndex:0];
+                    
+                    NSLog(@"date2=%@",date2);
+                    NSLog(@"date3=%@",date3);
+                    NSLog(@"date4=%@",date4);
+                    
+                    if([date2 isEqualToString:@"01"]) date2=@"Jan";
+                    if([date2 isEqualToString:@"02"]) date2=@"Feb";
+                    if([date2 isEqualToString:@"03"]) date2=@"Mar";
+                    if([date2 isEqualToString:@"04"]) date2=@"Apr";
+                    if([date2 isEqualToString:@"05"]) date2=@"May";
+                    if([date2 isEqualToString:@"06"]) date2=@"Jun";
+                    if([date2 isEqualToString:@"07"]) date2=@"Jul";
+                    if([date2 isEqualToString:@"08"]) date2=@"Aug";
+                    if([date2 isEqualToString:@"09"]) date2=@"Sep";
+                    if([date2 isEqualToString:@"10"]) date2=@"Oct";
+                    if([date2 isEqualToString:@"11"]) date2=@"Nov";
+                    if([date2 isEqualToString:@"12"]) date2=@"Dec";
+                    
+                    NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+                    NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+                    
+                    
+                    [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kMedicalRecordeNameDate];
+                    
+            //[[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"hospital"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameHospital];
+    
+    
+     [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Medical_HospitalName objectAtIndex:[sender tag]] forKey:kMedicalRecordeNameHospital];
+    
+      [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Medical_Type objectAtIndex:[sender tag]] forKey:kMedicalRecordeNameTypeName];
+    
+    
+     [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Medical_Provider objectAtIndex:[sender tag]] forKey:kMedicalRecordeNameProviderName];
+    
+    
+     [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Medical_Notes objectAtIndex:[sender tag]] forKey:kMedicalRecordsNotes];
+    
+                    
+                  //  [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kMedicalRecordeNameProviderName];
+                    
+                 //   [[NSUserDefaults standardUserDefaults]setValue:[[[medicalrecordsDictionary valueForKey:keysV] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kMedicalRecordsNotes];
+                    
+                    
+                    
+                    
+                    EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
+                    [self.navigationController pushViewController:createnewAppointment animated:YES];
+    
+
+    
+}
 -(IBAction)setIdJaaliViewFromServer:(id)sender{
     
 
@@ -4997,7 +6438,22 @@ return anObject;
     NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
     
     
+     [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Provider objectAtIndex:[sender tag]] forKey:kAppointmentmentNameProviderName];
+    
+    
     [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+    
+    
+    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Notes objectAtIndex:[sender tag]] forKey:kAppointmentmentNotes];
+    
+    
+    
+    
+//    [[NSUserDefaults standardUserDefaults] setValue:[temp_array_Provider objectAtIndex:[sender tag]] forKey:kAppointmentmentNameProviderName];
+//    
+//    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kAppointmentmentNotes];
+//    
+//    [[NSUserDefaults standardUserDefaults]setValue:[[[appointmentsDictionary valueForKey:keysV] valueForKey:@"attachment"] objectAtIndex:k] forKeyPath:kAppointmentmentAttachmentString];
     
     
     EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
@@ -5059,7 +6515,7 @@ return anObject;
                      [self NewRecentUpdateView :0];
                  }
                  else
-                     if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"upcomingappointments"] count]>=2)
+                     if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"recentupdates"] count]>=2)
                      {
                          [self NewRecentUpdateView :0];
                          [self SecondRecentUpdateFunciton :1];
@@ -5079,4 +6535,510 @@ return anObject;
         
     }
 }
+
+- (void) searchBarTextDidBeginEditing: (UISearchBar*) searchBar
+
+
+
+{
+    
+    if(searchBar.tag==12345)
+        
+    {
+        
+        [SearchBar setShowsCancelButton:YES animated:YES];
+        
+        
+        
+        
+        
+        tableViewForMainTable.hidden = YES;
+        
+        [self searchViewForTable];
+        
+    }
+    
+    else if (searchBar.tag == 777)
+        
+    {
+        
+        [MedicalSearchBar setShowsCancelButton:YES animated:YES];
+        
+        tableViewForMainTableofMedicalRecords.hidden = YES;
+        
+        [self searchViewForMedicalTable];
+        
+    }
+    
+    else
+        
+    {
+        
+        [MedicalSearchBar setShowsCancelButton:YES animated:YES];
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+}
+-(void) searchViewForMedicalTable
+{
+    ViewForSearchingofMedicalRecords.hidden = NO;
+    
+}
+
+
+
+
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+
+
+
+{
+    
+    if(searchBar.tag==12345)
+        
+    {
+        
+        [SearchBar resignFirstResponder];
+        
+        SearchBar.showsCancelButton = NO;
+        
+        tableViewForMainTable.hidden = NO;
+        
+        ViewForSearching.hidden = YES;
+        
+    }
+    
+    else if (searchBar.tag == 777)
+        
+    {
+        
+        [MedicalSearchBar resignFirstResponder];
+        
+        MedicalSearchBar.showsCancelButton = NO;
+        
+        tableViewForMainTableofMedicalRecords.hidden = NO;
+        
+        ViewForSearchingofMedicalRecords.hidden = YES;
+        
+    }
+    
+    else
+        
+    {
+        
+        [MedicalSearchBar resignFirstResponder];
+        
+        MedicalSearchBar.showsCancelButton = NO;
+        
+    }
+    
+}
+
+
+
+
+
+
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+
+{
+    
+    [searchBar resignFirstResponder];
+    
+}
+
+
+
+
+
+
+
+
+-(void)searchBar:(UISearchBar *)searchBar1 textDidChange:(NSString *)searchText
+
+
+
+{
+    
+    if(searchBar1.tag==12345)
+        
+    {
+        
+        if ([searchText length]==0)
+            
+            
+            
+        {
+            
+            
+            
+            tableViewForMainTable.hidden = NO;
+            
+            
+            
+            ViewForSearching.hidden = YES;
+            
+            
+            
+            
+            
+            
+            
+            temp_array_AppointmentName =[array_AppointmentNam_Main mutableCopy];
+            
+            
+            
+            temp_array_AppointmentID = [array_AppointmentID_Main mutableCopy];
+            
+            
+            
+            temp_array_AppointmentTime = [array_AppointmentTime_Main mutableCopy];
+            
+            
+            
+            temp_array_AppointmentType = [array_AppointmentType_Main mutableCopy];
+            
+            
+            
+            temp_array_ConsultantName = [array_ConsultantName_Main mutableCopy];
+            
+            
+            
+            temp_array_Hospital = [array_Hospital_Main mutableCopy];
+            
+            
+            
+            temp_array_Notes = [array_Notes_Main mutableCopy];
+            
+            
+            
+            temp_array_Provider = [array_Provider_Main mutableCopy];
+            
+            
+            
+            temp_array_TimeStamp = [array_TimeStamp_Main mutableCopy];
+            
+            
+            
+        }
+        
+        
+        
+        else
+            
+            
+            
+        {
+            
+            
+            
+            tableViewForMainTable.hidden = YES;
+            
+            
+            
+            [self searchViewForTable];
+            
+            
+            
+            
+            
+            
+            
+            [temp_array_AppointmentName removeAllObjects];
+            
+            
+            
+            [temp_array_AppointmentID removeAllObjects];
+            
+            
+            
+            [temp_array_AppointmentTime removeAllObjects];
+            
+            
+            
+            [temp_array_AppointmentType removeAllObjects];
+            
+            
+            
+            [temp_array_ConsultantName removeAllObjects];
+            
+            
+            
+            [temp_array_Hospital removeAllObjects];
+            
+            
+            
+            [temp_array_Notes removeAllObjects];
+            
+            
+            
+            [temp_array_Provider removeAllObjects];
+            
+            
+            
+            [temp_array_TimeStamp removeAllObjects];
+            
+            
+            
+            
+            
+            
+            
+            int g = 0;
+            
+            
+            
+            
+            
+            //            NSDictionary * book = NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+            
+            //                                                        array_AppointmentType_Main, @"appointmentType", array_AppointmentNam_Main, @"appointmentName", nil];
+            
+            //            [array_AppointmentNam_Main addObject:book];
+            
+            
+            
+            
+            
+            NSLog(@"array_AppointmentName is %@",array_AppointmentNam_Main);
+            
+            
+            
+            for (NSString *string in array_AppointmentNam_Main)
+                
+                
+                
+            {
+                
+                
+                
+                NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+                
+                
+                
+                if (r.location != NSNotFound)
+                    
+                    
+                    
+                {
+                    
+                    
+                    
+                    [temp_array_AppointmentName addObject:[array_AppointmentNam_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_AppointmentID addObject:[array_AppointmentID_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_AppointmentTime addObject:[array_AppointmentTime_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_AppointmentType addObject:[array_AppointmentType_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_ConsultantName addObject:[array_ConsultantName_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_Hospital addObject:[array_Hospital_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_Notes addObject:[array_Notes_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_Provider addObject:[array_Provider_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    [temp_array_TimeStamp addObject:[array_TimeStamp_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                }
+                
+                
+                
+                g++;
+                
+                
+                
+            }
+            
+            
+            
+        }
+        
+        
+        
+        [SearchTableView reloadData];
+        
+    }
+    
+    
+    
+    else if (searchBar1.tag == 777)
+        
+    {
+        
+        if ([searchText length]==0)
+            
+            
+            
+        {
+            
+            tableViewForMainTableofMedicalRecords.hidden = NO;
+            
+            ViewForSearchingofMedicalRecords.hidden = YES;
+            
+            
+            
+            temp_Medical_Time =[array_Medical_Time_Main mutableCopy];
+            
+            temp_aaray_Medical_Name = [aaray_Medical_Name_Main mutableCopy];
+            
+            temp_array_Medical_Type = [array_Medical_Type_Main mutableCopy];
+            
+            temp_array_Medical_Provider = [array_Medical_Provider_Main mutableCopy];
+            
+           temp_array_Medical_HospitalName= [array_Medical_HospitalName_Main mutableCopy];
+            
+          
+            
+            
+            
+            
+            
+        }
+        
+        else
+            
+        {
+            
+            tableViewForMainTableofMedicalRecords.hidden = YES;
+            
+            
+            
+            [self searchViewForMedicalTable];
+            
+            
+            
+            
+            
+            
+            
+            [temp_Medical_Time removeAllObjects];
+            
+            [temp_aaray_Medical_Name removeAllObjects];
+            
+            [temp_array_Medical_Type removeAllObjects];
+            
+            [temp_array_Medical_Provider removeAllObjects];
+            
+            [temp_array_Medical_HospitalName removeAllObjects];
+            
+            [temp_array_Medical_Notes removeAllObjects];
+            
+            [temp_array_Medical_Consultant removeAllObjects];
+            
+            
+            int g = 0;
+            
+            
+            
+            
+            
+            
+            
+            NSLog(@"array_AppointmentName is %@",aaray_Medical_Name_Main);
+            
+            
+            
+            for (NSString *string in aaray_Medical_Name_Main)
+                
+            {
+                
+                
+                
+                NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+                
+                
+                
+                if (r.location != NSNotFound)
+                    
+                {
+                    
+                    
+                    
+                    [temp_Medical_Time addObject:[array_AppointmentTime_Main objectAtIndex:g]];
+                    
+                    [temp_aaray_Medical_Name addObject:[aaray_Medical_Name_Main objectAtIndex:g]];
+                    
+                    [temp_array_Medical_Type addObject:[array_Medical_Type_Main objectAtIndex:g]];
+                    
+                    [temp_array_Medical_Provider addObject:[array_Medical_Provider_Main objectAtIndex:g]];
+                    
+                    [temp_array_Medical_HospitalName addObject:[array_Medical_HospitalName_Main objectAtIndex:g]];
+                    
+                    
+                    [temp_array_Medical_Notes addObject:[array_Medical_Notes_Main objectAtIndex:g]];
+                    
+                    
+                    [temp_array_Medical_Consultant addObject:[array_Medical_Consultant_Main objectAtIndex:g]];
+                    
+                    
+                    
+                    
+                  
+
+                   
+                }
+                
+                g++;
+                
+            }
+            
+            
+            
+        }
+        
+        
+        [SearchTableViewForMedicalRecords reloadData];
+    }
+    
+    
+    
+    
+    
+    else
+        
+    {
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+}
+
 @end

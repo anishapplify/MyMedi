@@ -20,6 +20,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     UIButton *Backbutton;
     UIButton *bylistButton;
     UIButton*byCalButton;
+    UIButton *ChronolistButton;
+    UIButton *AphaBetlistButto;
+    
     CGSize   screenSize;
     CGRect screenBounds;
     NSDateFormatter *getdateFormatter;
@@ -65,8 +68,14 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
      UIDatePicker *DateDatePicker;
      UIDatePicker *EndDateDatePicker;
     UIToolbar *toolba;
+    
+    
     UIImageView *DropImageButtonImageView;
-     UIImageView *CancelDropImageButtonImageView;
+    UIImageView *CancelDropImageButtonImageView;
+    
+     UIImageView *DropImageButtonArrow;
+     UIImageView *DropImageButtonArrow2;
+    
     UIView *BottomUpView;
     
     UITableView *TypeTableView;
@@ -111,6 +120,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     NSString  *SearhProvider;
     NSString   *searchDate;
     NSString *finalString;
+    UIButton *DoneButton;
+    
+    int FlagVriableViewType;
+    int SubVariableViewType;
 
 }
 
@@ -137,6 +150,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     SearhProvider=@"0";
     searchDate=@"0";
     finalString=@"0";
+    FlagVriableViewType=1;
+    SubVariableViewType=1;
     
      finalString=@"000";
     self.view.backgroundColor=[UIColor whiteColor];
@@ -147,32 +162,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     TopBarView.userInteractionEnabled=TRUE;
     
-    
-    
-//    EdiButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 20, [UIImage imageNamed:@"editButton.png"].size.width ,[UIImage imageNamed:@"editButton.png"].size.height)];
-//    
-//    EdiButton.backgroundColor=[UIColor clearColor];
-//    
-//    [EdiButton setImage:[UIImage imageNamed:@"editButton.png"] forState:UIControlStateNormal];
-//    
-//    [EdiButton addTarget:self action:@selector(EditAppointments) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    [TopBarView addSubview:EdiButton];
-    
-    
-//    EditAppointmentLable=[[UILabel alloc]initWithFrame:CGRectMake(80, 25, 150, 30)];
-//    
-//    
-//    
-//    EditAppointmentLable.font=[UIFont fontWithName:helveticaRegular size:15];
-//    
-//    EditAppointmentLable.textColor=[UIColor blackColor];
-//    
-//    EditAppointmentLable.textAlignment=NSTextAlignmentCenter;
-//    
-//    [TopBarView addSubview:EditAppointmentLable];
-    
-    
+    [Backbutton removeFromSuperview];
     Backbutton = [UIButton buttonWithType:UIButtonTypeCustom];
     Backbutton.frame = CGRectMake(5,20,[UIImage imageNamed:@"backButtonNew.png"].size.width ,[UIImage imageNamed:@"backButtonNew.png"].size.height);
     
@@ -184,9 +174,8 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [TopBarView addSubview:Backbutton];
     
-    
-    
-  UIButton *DoneButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 35, 50, 25)];
+    [DoneButton removeFromSuperview];
+    DoneButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 35, 50, 25)];
     
     DoneButton.backgroundColor=[UIColor clearColor];
     
@@ -198,7 +187,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     DoneButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 15];
     
-    [DoneButton addTarget:self action:@selector(DoneButtonFuction) forControlEvents:UIControlEventTouchUpInside];
+    [DoneButton addTarget:self action:@selector(ViewByDoneAction) forControlEvents:UIControlEventTouchUpInside];
     
     [TopBarView addSubview:DoneButton];
     
@@ -208,46 +197,60 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [self.view addSubview:TopBarView];
     
+    //seemoreArrow.png
     
-    DropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"dropdown_btn.png"].size.width, [UIImage imageNamed:@"dropdown_btn.png"].size.height)];
     
-    DropImageButtonImageView.image=[UIImage imageNamed:@"dropdown_btn.png"];
+    DropImageButtonArrow=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"seemoreArrow.png"].size.width, [UIImage imageNamed:@"seemoreArrow.png"].size.height)];
+    DropImageButtonArrow.image=[UIImage imageNamed:@"seemoreArrow.png"];
+    
+    DropImageButtonArrow2=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"seemoreArrow.png"].size.width, [UIImage imageNamed:@"seemoreArrow.png"].size.height)];
+    DropImageButtonArrow2.image=[UIImage imageNamed:@"seemoreArrow.png"];
+
+    //
+    
+    DropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"openup.png"].size.width, [UIImage imageNamed:@"openup.png"].size.height)];
+    
+    DropImageButtonImageView.image=[UIImage imageNamed:@"openup.png"];
     
    ViewByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45)];
-    ViewByButton.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
+    //ViewByButton.backgroundColor=[UIColor colorWithRed:138/255.0 green:140/255.0 blue:143/255.0 alpha:1.0];
+   
+    ViewByButton.backgroundColor=[UIColor lightGrayColor];
     ViewByButton.tag=100;
     [ViewByButton setTitle:@"View By" forState:UIControlStateNormal];
-    [ViewByButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [ViewByButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     ViewByButton.layer.borderColor=[UIColor darkGrayColor].CGColor;
     ViewByButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     ViewByButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
     [ViewByButton addTarget:self action:@selector(listByListAction:) forControlEvents:UIControlEventTouchUpInside];
     ViewByButton.exclusiveTouch=YES;
     DropImageButtonImageView.hidden=YES;
+    [ViewByButton addSubview:DropImageButtonArrow];
     [ViewByButton addSubview:DropImageButtonImageView];
     [self.view addSubview:ViewByButton];
     
     
-    CancelDropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"dropdown_btn.png"].size.width, [UIImage imageNamed:@"dropdown_btn.png"].size.height)];
+    CancelDropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"openup.png"].size.width, [UIImage imageNamed:@"openup.png"].size.height)];
     
-    CancelDropImageButtonImageView.image=[UIImage imageNamed:@"dropdown_btn.png"];
+    CancelDropImageButtonImageView.image=[UIImage imageNamed:@"openup.png"];
     
     SortByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, ViewByButton.frame.size.height+ViewByButton.frame.origin.y+10, 320 , 45)];
-    SortByButton.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
+   // SortByButton.backgroundColor=[UIColor colorWithRed:138/255.0 green:140/255.0 blue:143/255.0 alpha:1.0];
+     SortByButton.backgroundColor=[UIColor lightGrayColor];
+    
     SortByButton.tag=100;
     [SortByButton setTitle:@"Sort By" forState:UIControlStateNormal];
-    [SortByButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [SortByButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     SortByButton.layer.borderColor=[UIColor darkGrayColor].CGColor;
      SortByButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     SortByButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
     [SortByButton addTarget:self action:@selector(listBySortAction:) forControlEvents:UIControlEventTouchUpInside];
     SortByButton.exclusiveTouch=YES;
       CancelDropImageButtonImageView.hidden=YES;
+    [SortByButton addSubview:DropImageButtonArrow2];
      [SortByButton addSubview:CancelDropImageButtonImageView];
     
-    
-   
-    
+
     
     [self.view addSubview:SortByButton];
     
@@ -260,9 +263,38 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
     
 }
-
--(void) listByActionView
+-(void)ViewByDoneAction{
+    
+    
+    NSLog(@"view by=%d",FlagVriableViewType);
+     NSLog(@"view by=%d",SubVariableViewType);
+    
+}
+-(void)listByActionView
 {
+    
+    
+    [DoneButton removeFromSuperview];
+    DoneButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 35, 50, 25)];
+    
+    DoneButton.backgroundColor=[UIColor clearColor];
+    
+    [DoneButton setTitle:@"Done" forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    
+    DoneButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 15];
+    
+    [DoneButton addTarget:self action:@selector(ViewByDoneAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [TopBarView addSubview:DoneButton];
+    
+    DoneButton.exclusiveTouch=YES;
+    
+    [TopBarView addSubview:DoneButton];
+    
     meraApnaView = [[UIView alloc]init];
     meraApnaView.backgroundColor=[UIColor whiteColor];
     meraApnaView.frame = CGRectMake(0, ViewByButton.frame.size.height+ViewByButton.frame.origin.y+10, 320, 568);
@@ -348,10 +380,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [BottomUpView addSubview:ChronoLogicalByLable];
     
     
-   
-  
-    
-  UIButton *ChronolistButton=[[UIButton  alloc]initWithFrame:CGRectMake(270, 10, [UIImage imageNamed:@"checked.png"].size.width, [UIImage imageNamed:@"checked.png"].size.height)];
+   ChronolistButton=[[UIButton  alloc]initWithFrame:CGRectMake(270, 10, [UIImage imageNamed:@"checked.png"].size.width, [UIImage imageNamed:@"checked.png"].size.height)];
     ChronolistButton.backgroundColor=[UIColor whiteColor];
     ChronolistButton.layer.masksToBounds = YES;
     ChronolistButton.layer.borderWidth = 0.5;
@@ -360,7 +389,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [ChronolistButton setBackgroundImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
     [ChronolistButton setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateSelected];
     ChronolistButton.layer.borderColor=[UIColor darkGrayColor].CGColor;
-    //[ChronolistButton addTarget:self action:@selector(listByListAction) forControlEvents:UIControlEventTouchUpInside];
+    [ChronolistButton addTarget:self action:@selector(ChronolistButtonByListAction) forControlEvents:UIControlEventTouchUpInside];
     [[ChronolistButton layer]setCornerRadius:10];
     ChronolistButton.exclusiveTouch=YES;
     [ChronoLogicalByLable addSubview:ChronolistButton];
@@ -381,21 +410,18 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
      [BottomUpView addSubview:AlphbetButon];
    
-    
-    
-    UIButton *AphaBetlistButton=[[UIButton  alloc]initWithFrame:CGRectMake(270, 10, [UIImage imageNamed:@"checked.png"].size.width, [UIImage imageNamed:@"checked.png"].size.height)];
-    AphaBetlistButton.backgroundColor=[UIColor whiteColor];
-    AphaBetlistButton.layer.masksToBounds = YES;
-    AphaBetlistButton.layer.borderWidth = 0.5;
-    AphaBetlistButton.tag=100;
-    AphaBetlistButton.userInteractionEnabled=FALSE;
-    [AphaBetlistButton setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
-    [AphaBetlistButton setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateSelected];
-    AphaBetlistButton.layer.borderColor=[UIColor darkGrayColor].CGColor;
-   // [AphaBetlistButton addTarget:self action:@selector(listByListAction) forControlEvents:UIControlEventTouchUpInside];
-    [[AphaBetlistButton layer]setCornerRadius:10];
-    AphaBetlistButton.exclusiveTouch=YES;
-    [AlphbetButon addSubview:AphaBetlistButton];
+    AphaBetlistButto=[[UIButton  alloc]initWithFrame:CGRectMake(270, 10, [UIImage imageNamed:@"checked.png"].size.width, [UIImage imageNamed:@"checked.png"].size.height)];
+    AphaBetlistButto.backgroundColor=[UIColor whiteColor];
+    AphaBetlistButto.layer.masksToBounds = YES;
+    AphaBetlistButto.layer.borderWidth = 0.5;
+    AphaBetlistButto.tag=100;
+    [AphaBetlistButto setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+    [AphaBetlistButto setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateSelected];
+    AphaBetlistButto.layer.borderColor=[UIColor darkGrayColor].CGColor;
+    [AphaBetlistButto addTarget:self action:@selector(AphaBetlistButtoListAction) forControlEvents:UIControlEventTouchUpInside];
+    [[AphaBetlistButto layer]setCornerRadius:10];
+    AphaBetlistButto.exclusiveTouch=YES;
+    [AlphbetButon addSubview:AphaBetlistButto];
 
     
     
@@ -405,16 +431,33 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [meraApnaView addSubview:BottomUpView];
     
 [self.view addSubview:meraApnaView];
-    
-    
-    
 
+}
+-(void)ChronolistButtonByListAction{
+    
+    SubVariableViewType=1;
+  //  ChronolistButton.userInteractionEnabled=FALSE;
+    [ChronolistButton setBackgroundImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
+    [AphaBetlistButto setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+}
+-(void)AphaBetlistButtoListAction{
+    
+    SubVariableViewType=2;
+     ChronolistButton.userInteractionEnabled=TRUE;
+    [AphaBetlistButto setBackgroundImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
+    [ChronolistButton setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
 }
 -(void)listBySortAction :(UIButton*) sender
 {
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
     if(!(sender.selected))
     {
         sender.selected=YES;
+        
+        DropImageButtonArrow2.hidden=YES;
         CancelDropImageButtonImageView.hidden=NO;
         [self listBySortActionView];
         [TypeTableView removeFromSuperview];
@@ -425,7 +468,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     {
         CancelDropImageButtonImageView.hidden=YES;
         sender.selected=NO;
-        
+         DropImageButtonArrow2.hidden=NO;
         [ProviderImageView removeFromSuperview];
         [TypeTableView removeFromSuperview];
         
@@ -439,6 +482,28 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void) listBySortActionView
 {
 
+    [DoneButton removeFromSuperview];
+    DoneButton=[[UIButton alloc]initWithFrame:CGRectMake(270, 35, 50, 25)];
+    
+    DoneButton.backgroundColor=[UIColor clearColor];
+    
+    [DoneButton setTitle:@"Done" forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    
+    [DoneButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    
+    DoneButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 15];
+    
+    [DoneButton addTarget:self action:@selector(ViewBySortDoneButtonFuction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [TopBarView addSubview:DoneButton];
+    
+    DoneButton.exclusiveTouch=YES;
+    
+    [TopBarView addSubview:DoneButton];
+    
+    
     [TypeImageView removeFromSuperview];
   TypeImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 10, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
@@ -446,7 +511,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
     [TypeButton removeFromSuperview];
-  TypeButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 433, 320, 45)];
+    TypeButton=[[UIButton alloc]initWithFrame:CGRectMake(0, 433, 320, 45)];
     
     [TypeButton addTarget:self action:@selector(typeAction)
      
@@ -454,7 +519,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [TypeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    TypeButton.backgroundColor=[UIColor colorWithRed:97/255.0 green:186/255.0 blue:217/255.0 alpha:1.0];
+    TypeButton.backgroundColor=[UIColor colorWithRed:52/255.0 green:174/255.0 blue:216/255.0 alpha:1.0];
     
     TypeButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 18];
     
@@ -485,7 +550,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [ProviderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    ProviderButton.backgroundColor=[UIColor colorWithRed:52/255.0 green:174/255.0 blue:216/255.0 alpha:1.0];
+    ProviderButton.backgroundColor=[UIColor colorWithRed:20/255.0 green:161/255.0 blue:211/255.0 alpha:1.0];
     
     ProviderButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 18];
     
@@ -517,7 +582,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     [StartDateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    StartDateButton.backgroundColor=[UIColor colorWithRed:97/255.0 green:186/255.0 blue:217/255.0 alpha:1.0];
+    StartDateButton.backgroundColor=[UIColor colorWithRed:2/255.0 green:145/255.0 blue:195/255.0 alpha:1.0];
     
     StartDateButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeueLTCom-Lt" size: 18];
     
@@ -556,15 +621,21 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 }
 
 -(void)listByListAction{
+    FlagVriableViewType=1;
+    
     BottomUpView.hidden=NO;
       [bylistButton setBackgroundImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateNormal];
      [byCalButton setBackgroundImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
 }
 -(void)listByListAction :(UIButton*) sender
 {
-    
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
     if(!(sender.selected))
        {
+        DropImageButtonArrow.hidden=YES;
     DropImageButtonImageView.hidden=NO;
     SortByButton.hidden=YES;
            sender.selected=YES;
@@ -575,7 +646,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
            }
 
     else
-    {SortByButton.hidden=NO;
+        
+    {
+        DropImageButtonArrow.hidden=NO;
+        SortByButton.hidden=NO;
         sender.selected=NO;
         meraApnaView.hidden = YES;
          DropImageButtonImageView.hidden=YES;
@@ -585,7 +659,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
  
 }
 -(void)listByCalenderAction{
-    
+    FlagVriableViewType=2;
     BottomUpView.hidden=YES;
     bylistButton.userInteractionEnabled=TRUE;
     //[self calender];
@@ -1615,6 +1689,12 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)typeAction
 
 {
+ 
+    
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
     
     ProviderImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     StartDateImageView.image=[UIImage imageNamed:@"PlusImage.png"];
@@ -1700,7 +1780,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
     }
     TypeTableView.frame=CGRectMake(0, TypeButton.frame.size.height+TypeButton.frame.origin.y,320 , heightY);
-    TypeTableView.backgroundColor=[UIColor yellowColor];
+    TypeTableView.backgroundColor=[UIColor clearColor];
     
     TypeTableView.delegate=self;
     
@@ -1717,6 +1797,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)ProviderAction{
     
     typeStatus=0;
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
+    
     ViewByButton.hidden=YES;
     SortByButton.frame=CGRectMake(0,TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45);
 
@@ -1742,7 +1827,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
             int heightY=0;
             if(343-heightProvider<90)
             {
-                heightY=SortByButton.frame.origin.y+SortByButton.frame.size.height;
+                heightY=SortByButton.frame.origin.y+SortByButton.frame.size.height+45;
             }
             else
             {
@@ -1818,6 +1903,11 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     typeStatus=0;
     purposeStatus=0;
+    
+    StartdateTextField.hidden=YES;
+    EnddateTextField.hidden=YES;
+    StartDateLable.hidden=YES;
+    EndDateLable.hidden=YES;
     
     
     [TypeTableView removeFromSuperview];
@@ -1920,13 +2010,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     toolba.items = [NSArray arrayWithObjects:flexibleSpaceBarButton, doneButton,nil];
     
 
-   StartdateTextField = [[UITextField alloc] initWithFrame:CGRectMake(135, 350, 150, 40)];
+   StartdateTextField = [[UITextField alloc] initWithFrame:CGRectMake(135, 330, 150, 40)];
     
     StartdateTextField.delegate = self;
     
     StartdateTextField.textColor=[UIColor blackColor];
     
-    StartdateTextField.backgroundColor = [UIColor grayColor];
+    StartdateTextField.backgroundColor = [UIColor lightGrayColor];
     
     StartdateTextField.tag=108;
     
@@ -1959,7 +2049,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.view addSubview:StartdateTextField];
     
 
-    StartDateLable=[[UILabel alloc]initWithFrame:CGRectMake(20, 350, 100, 40) ];
+    StartDateLable=[[UILabel alloc]initWithFrame:CGRectMake(20, 330, 100, 40) ];
     
     StartDateLable.text= [NSString stringWithFormat:@"   %@",@"Start Date"];
     
@@ -1980,7 +2070,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     EnddateTextField.textColor=[UIColor blackColor];
     
-    EnddateTextField.backgroundColor = [UIColor grayColor];
+    EnddateTextField.backgroundColor = [UIColor lightGrayColor];
     
     EnddateTextField.tag=109;
     
@@ -2142,7 +2232,9 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     
 }
--(void)DoneButtonFuction{
+-(void)ViewBySortDoneButtonFuction{
+    
+    NSLog(@"ViewBySortDoneButtonFuction");
     
     
    if(TypeTitleLable.text.length<1 && ProviderTitleLable.text.length<1 && StartdateTextField.text.length<1 && EnddateTextField.text.length<1)
