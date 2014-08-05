@@ -156,7 +156,6 @@
 }
 -(void)nextviewController{
     
-    [[soundManager shared]buttonSound];
    UserHomeScreenViewController *UserHome=[[UserHomeScreenViewController alloc]init];
     [self.navigationController pushViewController:UserHome animated:YES];
 }

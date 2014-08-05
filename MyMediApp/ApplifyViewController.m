@@ -175,12 +175,12 @@
 }
 -(void)createButtonAction
 {
-     [[soundManager shared] buttonSound];
+    
      CreateAccountViewController *CreateAccount=[[CreateAccountViewController alloc]init];
     [self.navigationController pushViewController:CreateAccount animated:YES];
 }
 -(void)SignInButtonAction{
-    [[soundManager shared] buttonSound];
+    
     LoginViewController *LoginViewControllerPass=[[LoginViewController alloc]init];
     [self.navigationController pushViewController:LoginViewControllerPass animated:YES];
 }

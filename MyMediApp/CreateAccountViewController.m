@@ -39,6 +39,7 @@
     UIImageView *BackGroundImageView;
     
     UIScrollView *CreateAcountScrollView;
+    UIView *CenterView;
     UITextField*emailtextField;
     UITextField *PassWordTextField;
     UITextField *ConfirmPasswordTextFeild;
@@ -69,6 +70,8 @@
     
     UIButton *HiddenBackButton;
     UIView *lineView1;
+    UIView *BottomAccountView;
+    UIButton *LogInButton;
     
     UIButton *HiddenButton;
     UIButton *CrossButton;
@@ -116,8 +119,6 @@
     CTCarrier *carrier = network_Info.subscriberCellularProvider;
     NSString *isdCode = [carrier.isoCountryCode uppercaseString];
     NSLog(@"isd code is %@",isdCode);
-    
-    
     
     
     NSDictionary *dictCodes = [NSDictionary dictionaryWithObjectsAndKeys:@"972", @"IL",
@@ -217,12 +218,12 @@
     [TopBarView addSubview:CreateAccountLable];
     [self.view addSubview:TopBarView];
     
-    GenderPickerViewArray=[[NSMutableArray alloc]initWithObjects:@"Male",@"Female", nil];
+    GenderPickerViewArray=[[NSMutableArray alloc]initWithObjects:@"Select Gender",@"Male",@"Female", nil];
     tearmButtonFlag=2;
     [self AddAccountScrollView];
     
-    HeightPickerArray = [[NSMutableArray alloc]initWithObjects:@"Centimetres",@"Feet-Inches", nil];
-    WeightPickerArray = [[NSMutableArray alloc]initWithObjects:@"Lbs",@"Kgs", nil];
+    HeightPickerArray = [[NSMutableArray alloc]initWithObjects:@"Select Units",@"Centimetres",@"Feet-Inches", nil];
+    WeightPickerArray = [[NSMutableArray alloc]initWithObjects:@"Select Units",@"Lbs",@"Kgs", nil];
     
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDidTapped)] ;
     tapRecognizer.numberOfTapsRequired = 1;
@@ -232,7 +233,7 @@
     // Do any additional setup after loading the view.
 }
 -(void)BackVeiwController{
-    [[soundManager shared]buttonSound];
+   
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)setMaskTo:(UIView*)view byRoundingCorners:(UIRectCorner)corners
@@ -274,24 +275,27 @@
 #pragma mark Add Account ScrollView
 -(void)AddAccountScrollView
 {
+    [CreateAcountScrollView removeFromSuperview];
     CreateAcountScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+30, 320,400)];
     CreateAcountScrollView.backgroundColor=[UIColor clearColor];
     CreateAcountScrollView.showsVerticalScrollIndicator=NO;
-    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditProfileButtonPressed"]==true) {
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditProfileButtonPressed"]==true)
+    {
         CreateAcountScrollView.contentSize=CGSizeMake(300, 460);
     }
-    else{
+    else
+    {
         CreateAcountScrollView.contentSize=CGSizeMake(300, 600);
     }
     CreateAcountScrollView.userInteractionEnabled=true;
     
-    
-    UIView *CenterView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,120)];
+    [CenterView removeFromSuperview];
+    CenterView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,120)];
     CenterView.backgroundColor=[UIColor colorWithRed:211/255.0 green:214/255.0 blue:219/255.0 alpha:1.0];
     CenterView.userInteractionEnabled=TRUE;
     [CreateAcountScrollView addSubview:CenterView];
     
-    
+    [EditChangeImage removeFromSuperview];
     EditChangeImage = [[AsyncImageView alloc] initWithFrame:CGRectMake(5, 10, 100, 100)];
     //urlString2 = [[NSUserDefaults standardUserDefaults] valueForKey:@"image_url"];
     EditChangeImage.imageURL = [NSURL URLWithString:urlString2];
@@ -310,7 +314,7 @@
     [EditChangeImage addGestureRecognizer:tap];
     [CenterView addSubview:EditChangeImage];
     
-    
+    [FirstNameTextField removeFromSuperview];
     FirstNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(EditChangeImage.frame.size.width+EditChangeImage.frame.origin.x+10, 20, 205, 40)];
     FirstNameTextField.delegate = self;
     FirstNameTextField.backgroundColor=[UIColor whiteColor];
@@ -323,11 +327,12 @@
     FirstNameTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     FirstNameTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     [FirstNameTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-    FirstNameTextField.returnKeyType=UIReturnKeyNext;
+   
     FirstNameTextField.autocapitalizationType = NO;
     [FirstNameTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     [CenterView addSubview:FirstNameTextField];
     
+    [LastNameTextField removeFromSuperview];
     LastNameTextField = [[UITextField alloc] initWithFrame:CGRectMake(EditChangeImage.frame.size.width+EditChangeImage.frame.origin.x+10, FirstNameTextField.frame.size.height+FirstNameTextField.frame.origin.y+3, 205, 40)];
     LastNameTextField.delegate = self;
     LastNameTextField.backgroundColor=[UIColor whiteColor];
@@ -340,11 +345,12 @@
     LastNameTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     LastNameTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     [LastNameTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-    LastNameTextField.returnKeyType=UIReturnKeyNext;
+
     LastNameTextField.autocapitalizationType = NO;
     [LastNameTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     [CenterView addSubview:LastNameTextField];
     
+    [emailtextField removeFromSuperview];
     emailtextField = [[UITextField alloc] initWithFrame:CGRectMake(0, CenterView.frame.size.height+CenterView.frame.origin.y+25, 320, 40)];
     emailtextField.delegate = self;
     emailtextField.textAlignment = NSTextAlignmentLeft;
@@ -357,7 +363,7 @@
     emailtextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     emailtextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     [emailtextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-    emailtextField.returnKeyType=UIReturnKeyNext;
+  
     emailtextField.backgroundColor=[UIColor whiteColor];
     emailtextField.autocapitalizationType = NO;
     [emailtextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
@@ -365,6 +371,10 @@
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditProfileButtonPressed"] == true)
     {
+        
+         FirstNameTextField.returnKeyType=UIReturnKeyDone;
+         LastNameTextField.returnKeyType=UIReturnKeyDone;
+         emailtextField.returnKeyType=UIReturnKeyDone;
         
         UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame: CGRectMake(0,477 ,320,45)];
         toolbar.barStyle = UIBarStyleBlackOpaque;
@@ -378,7 +388,7 @@
         doneButton.width = 50;
         toolbar.items = [NSArray arrayWithObjects:flexibleSpaceBarButton, doneButton,nil];
         
-        
+        [StdCodeTextField removeFromSuperview];
         StdCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, emailtextField.frame.size.height+emailtextField.frame.origin.y+3, 100, 40)];
         paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
         StdCodeTextField.leftView = paddingView;
@@ -390,14 +400,14 @@
         StdCodeTextField.backgroundColor=[UIColor whiteColor];
         StdCodeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
         StdCodeTextField.keyboardType = UIKeyboardTypePhonePad;
-        StdCodeTextField.returnKeyType = UIReturnKeyNext;
+        StdCodeTextField.returnKeyType = UIReturnKeyDone;
         StdCodeTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         StdCodeTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         StdCodeTextField.delegate = self;
         StdCodeTextField.leftView = paddingView;
         StdCodeTextField.autocapitalizationType = NO;
         [StdCodeTextField setInputAccessoryView:toolbar];
-        StdCodeTextField.userInteractionEnabled = false;
+        StdCodeTextField.userInteractionEnabled = true;
         
         StdCodeTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         StdCodeTextField.layer.borderWidth = 0.5f;
@@ -405,6 +415,7 @@
         
         [CreateAcountScrollView addSubview:StdCodeTextField];
         
+        [PhoneTextField removeFromSuperview];
         PhoneTextField = [[UITextField alloc] initWithFrame:CGRectMake(StdCodeTextField.frame.size.width+StdCodeTextField.frame.origin.x, emailtextField.frame.size.height+emailtextField.frame.origin.y+3, 280, 40)];
         paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
         PhoneTextField.leftView = paddingView;
@@ -416,7 +427,7 @@
         PhoneTextField.backgroundColor=[UIColor whiteColor];
         PhoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
         PhoneTextField.keyboardType = UIKeyboardTypePhonePad;
-        PhoneTextField.returnKeyType = UIReturnKeyNext;
+        PhoneTextField.returnKeyType = UIReturnKeyDone;
         PhoneTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         PhoneTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         PhoneTextField.delegate = self;
@@ -428,6 +439,7 @@
         [PhoneTextField setInputAccessoryView:toolbar];
         [CreateAcountScrollView addSubview:PhoneTextField];
         
+        [AddressTextField removeFromSuperview];
         AddressTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, PhoneTextField.frame.size.height+PhoneTextField.frame.origin.y+3, 320, 40)];
         AddressTextField.delegate = self;
         AddressTextField.textColor=[UIColor blackColor];
@@ -440,11 +452,12 @@
         AddressTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [AddressTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
         AddressTextField.backgroundColor=[UIColor whiteColor];
-        AddressTextField.returnKeyType=UIReturnKeyNext;
+        AddressTextField.returnKeyType=UIReturnKeyDone;
         AddressTextField.autocapitalizationType = NO;
         [AddressTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:AddressTextField];
         
+        [ZipCodeTextFeild removeFromSuperview];
         ZipCodeTextFeild = [[UITextField alloc] initWithFrame:CGRectMake(0, AddressTextField.frame.size.height+AddressTextField.frame.origin.y+3, 320, 40)];
         ZipCodeTextFeild.delegate = self;
         ZipCodeTextFeild.textColor=[UIColor blackColor];
@@ -457,7 +470,7 @@
         ZipCodeTextFeild.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         ZipCodeTextFeild.autocorrectionType = UITextAutocorrectionTypeNo;
         [ZipCodeTextFeild setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        ZipCodeTextFeild.returnKeyType=UIReturnKeyNext;
+        ZipCodeTextFeild.returnKeyType=UIReturnKeyDone;
         ZipCodeTextFeild.keyboardType=UIKeyboardTypeAlphabet;
         ZipCodeTextFeild.backgroundColor=[UIColor whiteColor];
         ZipCodeTextFeild.autocapitalizationType = NO;
@@ -465,6 +478,7 @@
         [CreateAcountScrollView addSubview:ZipCodeTextFeild];
         
         
+        [GenderTextField removeFromSuperview];
         GenderTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 157, 40)];
         GenderTextField.delegate = self;
         GenderTextField.tag=108;
@@ -477,7 +491,7 @@
         GenderTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         GenderTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [GenderTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        GenderTextField.returnKeyType=UIReturnKeyNext;
+        GenderTextField.returnKeyType=UIReturnKeyDone;
         GenderTextField.backgroundColor=[UIColor whiteColor];
         GenderTextField.inputView=self.chooseServicePicker;
         [GenderTextField setInputAccessoryView:toolbar];
@@ -485,12 +499,14 @@
         [GenderTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:GenderTextField];
         
+        [dateTimePicker removeFromSuperview];
         dateTimePicker=[[UIDatePicker alloc]init];
         [dateTimePicker setFrame:CGRectMake(0, 518, 320, 100)];
         dateTimePicker.datePickerMode = UIDatePickerModeDate;
         [dateTimePicker setMaximumDate:[NSDate  date]];
         [dateTimePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
         
+        [AgeTextField removeFromSuperview];
         AgeTextField = [[UITextField alloc] initWithFrame:CGRectMake(GenderTextField.frame.size.width+GenderTextField.frame.origin.x+3, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 160, 40)];
         AgeTextField.delegate = self;
         AgeTextField.tag=109;
@@ -510,7 +526,7 @@
         [AgeTextField setInputAccessoryView:toolbar];
         [CreateAcountScrollView addSubview:AgeTextField];
         
-        
+        [HeightTextField removeFromSuperview];
         HeightTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, GenderTextField.frame.size.height+GenderTextField.frame.origin.y+3, 157, 40)];
         HeightTextField.delegate = self;
         HeightTextField.tag=110;
@@ -523,7 +539,7 @@
         HeightTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         HeightTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [HeightTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        HeightTextField.returnKeyType=UIReturnKeyNext;
+        HeightTextField.returnKeyType=UIReturnKeyDone;
         HeightTextField.backgroundColor=[UIColor whiteColor];
         HeightTextField.inputView=self.chooseHeightPicker;
         [HeightTextField setInputAccessoryView:toolbar];
@@ -536,6 +552,7 @@
         
         [CreateAcountScrollView addSubview:HeightTextField];
         
+        [Height2TextField removeFromSuperview];
         Height2TextField = [[UITextField alloc] initWithFrame:CGRectMake(HeightTextField.frame.size.width+HeightTextField.frame.origin.x, GenderTextField.frame.size.height+GenderTextField.frame.origin.y+3, 163, 40)];
         Height2TextField.delegate = self;
         Height2TextField.textColor=[UIColor blackColor];
@@ -548,20 +565,20 @@
         Height2TextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         Height2TextField.autocorrectionType = UITextAutocorrectionTypeNo;
         [Height2TextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        Height2TextField.returnKeyType=UIReturnKeyNext;
+        Height2TextField.returnKeyType=UIReturnKeyDone;
         Height2TextField.keyboardType=UIKeyboardTypeDecimalPad;
         Height2TextField.backgroundColor=[UIColor whiteColor];
         Height2TextField.autocapitalizationType = NO;
         [Height2TextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-        
         Height2TextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         Height2TextField.layer.borderWidth = 0.5f;
+         [Height2TextField setInputAccessoryView:toolbar];
         Height2TextField.backgroundColor = [UIColor whiteColor];
-        
-        
         [CreateAcountScrollView addSubview:Height2TextField];
         
         
+        
+        [WeightTextField removeFromSuperview];
         WeightTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, Height2TextField.frame.size.height+Height2TextField.frame.origin.y+3, 157, 40)];
         WeightTextField.delegate = self;
         WeightTextField.tag=111;
@@ -574,20 +591,20 @@
         WeightTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         WeightTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [WeightTextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        WeightTextField.returnKeyType=UIReturnKeyNext;
+        WeightTextField.returnKeyType=UIReturnKeyDone;
         WeightTextField.backgroundColor=[UIColor whiteColor];
         WeightTextField.inputView=self.chooseWeightPicker;
         [WeightTextField setInputAccessoryView:toolbar];
         WeightTextField.autocapitalizationType = NO;
         [WeightTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-        
         WeightTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         WeightTextField.layer.borderWidth = 0.5f;
         WeightTextField.backgroundColor = [UIColor whiteColor];
-        
-        
         [CreateAcountScrollView addSubview:WeightTextField];
         
+        
+        
+        [Weight2TextField removeFromSuperview];
         Weight2TextField= [[UITextField alloc] initWithFrame:CGRectMake(WeightTextField.frame.size.width+WeightTextField.frame.origin.x, Height2TextField.frame.size.height+Height2TextField.frame.origin.y+3, 163, 40)];
         Weight2TextField.delegate = self;
         Weight2TextField.textColor=[UIColor blackColor];
@@ -600,25 +617,39 @@
         Weight2TextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         Weight2TextField.autocorrectionType = UITextAutocorrectionTypeNo;
         [Weight2TextField setFont:[UIFont fontWithName:helveticaRegular size:18]];
-        Weight2TextField.returnKeyType=UIReturnKeyNext;
+        Weight2TextField.returnKeyType=UIReturnKeyDone;
         Weight2TextField.keyboardType=UIKeyboardTypeDecimalPad;
         Weight2TextField.backgroundColor=[UIColor whiteColor];
         Weight2TextField.autocapitalizationType = NO;
+        [Weight2TextField setInputAccessoryView:toolbar];
         [Weight2TextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         
         Weight2TextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         Weight2TextField.layer.borderWidth = 0.5f;
         Weight2TextField.backgroundColor = [UIColor whiteColor];
-        
-        
         [CreateAcountScrollView addSubview:Weight2TextField];
         
         
     }
-    else{
+    else
+    {
+        FirstNameTextField.returnKeyType=UIReturnKeyNext;
+        LastNameTextField.returnKeyType=UIReturnKeyNext;
+        emailtextField.returnKeyType=UIReturnKeyNext;
+        StdCodeTextField.returnKeyType = UIReturnKeyNext;
+        PhoneTextField.returnKeyType = UIReturnKeyNext;
+        AddressTextField.returnKeyType=UIReturnKeyNext;
+        ZipCodeTextFeild.returnKeyType=UIReturnKeyNext;
+        GenderTextField.returnKeyType=UIReturnKeyNext;
+        HeightTextField.returnKeyType=UIReturnKeyNext;
+        Height2TextField.returnKeyType=UIReturnKeyNext;
+        WeightTextField.returnKeyType=UIReturnKeyNext;
+        Weight2TextField.returnKeyType=UIReturnKeyNext;
         
+        [PassWordTextField removeFromSuperview];
         PassWordTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, emailtextField.frame.size.height+emailtextField.frame.origin.y+3, 320, 40)];
         PassWordTextField.delegate = self;
+        
         [PassWordTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
         PassWordTextField.textColor=[UIColor blackColor];
         PassWordTextField.textAlignment = NSTextAlignmentLeft;
@@ -635,6 +666,7 @@
         [PassWordTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:PassWordTextField];
         
+        [ConfirmPasswordTextFeild removeFromSuperview];
         ConfirmPasswordTextFeild = [[UITextField alloc] initWithFrame:CGRectMake(0, PassWordTextField.frame.size.height+PassWordTextField.frame.origin.y+3, 320, 40)];
         ConfirmPasswordTextFeild.delegate = self;
         ConfirmPasswordTextFeild.textColor=[UIColor blackColor];
@@ -665,6 +697,7 @@
         doneButton.width = 50;
         toolbar.items = [NSArray arrayWithObjects:flexibleSpaceBarButton, doneButton,nil];
         
+         [StdCodeTextField removeFromSuperview];
         StdCodeTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, ConfirmPasswordTextFeild.frame.size.height+ConfirmPasswordTextFeild.frame.origin.y+3, 70, 40)];
         paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
         StdCodeTextField.leftView = paddingView;
@@ -683,14 +716,14 @@
         StdCodeTextField.leftView = paddingView;
         StdCodeTextField.autocapitalizationType = NO;
         [StdCodeTextField setInputAccessoryView:toolbar];
-        StdCodeTextField.userInteractionEnabled = false;
-        StdCodeTextField.userInteractionEnabled = false;
+       // StdCodeTextField.userInteractionEnabled = false;
+       // StdCodeTextField.userInteractionEnabled = false;
         StdCodeTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         StdCodeTextField.layer.borderWidth = 0.5f;
         StdCodeTextField.backgroundColor = [UIColor whiteColor];
         [CreateAcountScrollView addSubview:StdCodeTextField];
         
-        
+        [PhoneTextField removeFromSuperview];
         PhoneTextField = [[UITextField alloc] initWithFrame:CGRectMake(StdCodeTextField.frame.size.width+StdCodeTextField.frame.origin.x, ConfirmPasswordTextFeild.frame.size.height+ConfirmPasswordTextFeild.frame.origin.y+3, 280, 40)];
         paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 20)];
         PhoneTextField.leftView = paddingView;
@@ -714,6 +747,7 @@
         PhoneTextField.backgroundColor = [UIColor whiteColor];
         [CreateAcountScrollView addSubview:PhoneTextField];
         
+        [AddressTextField removeFromSuperview];
         AddressTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, PhoneTextField.frame.size.height+PhoneTextField.frame.origin.y+3, 320, 40)];
         AddressTextField.delegate = self;
         AddressTextField.textColor=[UIColor blackColor];
@@ -731,6 +765,7 @@
         [AddressTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:AddressTextField];
         
+        [ZipCodeTextFeild removeFromSuperview];
         ZipCodeTextFeild = [[UITextField alloc] initWithFrame:CGRectMake(0, AddressTextField.frame.size.height+AddressTextField.frame.origin.y+3, 320, 40)];
         ZipCodeTextFeild.delegate = self;
         ZipCodeTextFeild.textColor=[UIColor blackColor];
@@ -750,7 +785,7 @@
         [ZipCodeTextFeild addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:ZipCodeTextFeild];
         
-        
+         [GenderTextField removeFromSuperview];
         GenderTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 157, 40)];
         GenderTextField.delegate = self;
         GenderTextField.tag=108;
@@ -771,12 +806,14 @@
         [GenderTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [CreateAcountScrollView addSubview:GenderTextField];
         
+        [dateTimePicker removeFromSuperview];
         dateTimePicker=[[UIDatePicker alloc]init];
         [dateTimePicker setFrame:CGRectMake(0, 518, 320, 100)];
         dateTimePicker.datePickerMode = UIDatePickerModeDate;
          [dateTimePicker setMaximumDate:[NSDate  date]];
         [dateTimePicker addTarget:self action:@selector(updateDateField) forControlEvents:UIControlEventValueChanged];
         
+        [AgeTextField removeFromSuperview];
         AgeTextField = [[UITextField alloc] initWithFrame:CGRectMake(GenderTextField.frame.size.width+GenderTextField.frame.origin.x+3, ZipCodeTextFeild.frame.size.height+ZipCodeTextFeild.frame.origin.y+3, 160, 40)];
         AgeTextField.delegate = self;
         AgeTextField.tag=109;
@@ -796,7 +833,7 @@
         [AgeTextField setInputAccessoryView:toolbar];
         [CreateAcountScrollView addSubview:AgeTextField];
         
-        
+        [HeightTextField removeFromSuperview];
         HeightTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, GenderTextField.frame.size.height+GenderTextField.frame.origin.y+3, 157, 40)];
         HeightTextField.delegate = self;
         HeightTextField.tag=110;
@@ -819,10 +856,10 @@
         HeightTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         HeightTextField.layer.borderWidth = 0.5f;
         HeightTextField.backgroundColor = [UIColor whiteColor];
-        
-        
         [CreateAcountScrollView addSubview:HeightTextField];
         
+        
+        [Height2TextField removeFromSuperview];
         Height2TextField = [[UITextField alloc] initWithFrame:CGRectMake(HeightTextField.frame.size.width+HeightTextField.frame.origin.x, GenderTextField.frame.size.height+GenderTextField.frame.origin.y+3, 163, 40)];
         Height2TextField.delegate = self;
         Height2TextField.textColor=[UIColor blackColor];
@@ -840,14 +877,13 @@
         Height2TextField.backgroundColor=[UIColor whiteColor];
         Height2TextField.autocapitalizationType = NO;
         [Height2TextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-        
         Height2TextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         Height2TextField.layer.borderWidth = 0.5f;
+        [Height2TextField setInputAccessoryView:toolbar];
         Height2TextField.backgroundColor = [UIColor whiteColor];
-        
         [CreateAcountScrollView addSubview:Height2TextField];
         
-        
+         [WeightTextField removeFromSuperview];
         WeightTextField = [[UITextField alloc] initWithFrame:CGRectMake(0, Height2TextField.frame.size.height+Height2TextField.frame.origin.y+3, 157, 40)];
         WeightTextField.delegate = self;
         WeightTextField.tag=111;
@@ -866,14 +902,13 @@
         [WeightTextField setInputAccessoryView:toolbar];
         WeightTextField.autocapitalizationType = NO;
         [WeightTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-        
         WeightTextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         WeightTextField.layer.borderWidth = 0.5f;
         WeightTextField.backgroundColor = [UIColor whiteColor];
-        
-        
         [CreateAcountScrollView addSubview:WeightTextField];
         
+        
+        [Weight2TextField removeFromSuperview];
         Weight2TextField= [[UITextField alloc] initWithFrame:CGRectMake(WeightTextField.frame.size.width+WeightTextField.frame.origin.x, Height2TextField.frame.size.height+Height2TextField.frame.origin.y+3, 163, 40)];
         Weight2TextField.delegate = self;
         Weight2TextField.textColor=[UIColor blackColor];
@@ -891,14 +926,15 @@
         Weight2TextField.backgroundColor=[UIColor whiteColor];
         Weight2TextField.autocapitalizationType = NO;
         [Weight2TextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-        
         Weight2TextField.layer.borderColor = [UIColor colorWithRed:0.89453125 green:0.89453125 blue:0.89453125 alpha:1.0].CGColor;;
         Weight2TextField.layer.borderWidth = 0.5f;
+        [Weight2TextField setInputAccessoryView:toolbar];
         Weight2TextField.backgroundColor = [UIColor whiteColor];
         
         
         [CreateAcountScrollView addSubview:Weight2TextField];
         
+        [labelRegister removeFromSuperview];
         labelRegister = [[NMCustomLabel alloc]initWithFrame:CGRectMake(10, WeightTextField.frame.size.height+WeightTextField.frame.origin.y+20, 260, 45)];
         labelRegister.backgroundColor = [UIColor clearColor];
         labelRegister.numberOfLines=3;
@@ -909,42 +945,41 @@
         [CreateAcountScrollView addSubview:labelRegister];
         
         
-        
+        [TermClickButton removeFromSuperview];
         TermClickButton=[[UIButton alloc]initWithFrame:CGRectMake(5, WeightTextField.frame.size.height+WeightTextField.frame.origin.y+42, 180, 20)];
         [TermClickButton addTarget:self action:@selector(TermConditonAction)forControlEvents:UIControlEventTouchUpInside];
         TermClickButton.backgroundColor=[UIColor clearColor];
         [CreateAcountScrollView addSubview:TermClickButton];
         
+        
+         [HiddenButton removeFromSuperview];
         HiddenButton=[[UIButton alloc]initWithFrame:CGRectMake(235, WeightTextField.frame.size.height+WeightTextField.frame.origin.y+10, 50, 50)];
         HiddenButton.backgroundColor=[UIColor clearColor];
         [HiddenButton addTarget:self action:@selector(termbuttonMark) forControlEvents:UIControlEventTouchUpInside];
         [CreateAcountScrollView addSubview:HiddenButton];
         
-        
+        [CheckTermAndConditonButton removeFromSuperview];
         CheckTermAndConditonButton=[[UIButton alloc]initWithFrame:CGRectMake(250,WeightTextField.frame.size.height+WeightTextField.frame.origin.y+35, [UIImage imageNamed:@"check_mark_on.png"].size.width, [UIImage imageNamed:@"check_mark_on.png"].size.height)];
         [CheckTermAndConditonButton setBackgroundImage:[UIImage imageNamed:@"check_mark_off.png"] forState:UIControlStateNormal];
         CheckTermAndConditonButton.backgroundColor=[UIColor clearColor];
         [CheckTermAndConditonButton addTarget:self action:@selector(termbuttonMark) forControlEvents:UIControlEventTouchUpInside];
         [CreateAcountScrollView addSubview:CheckTermAndConditonButton];
         
+        
+        [lineView1 removeFromSuperview];
         lineView1=[[UIView alloc]initWithFrame:CGRectMake(43,labelRegister.frame.origin.y+labelRegister.frame.size.height-15,155,1)];
         lineView1.layer.borderColor = [UIColor blackColor].CGColor;
         lineView1.backgroundColor=[UIColor clearColor];
         lineView1.layer.borderWidth = 1.0f;
         [CreateAcountScrollView addSubview:lineView1];
-        
-        
-        
+    
     }
     
-    
-    
-    
-    UIView *BottomAccountView=[[UIView alloc]initWithFrame:CGRectMake(0, 503, self.view.frame.size.width,65)];
+    BottomAccountView=[[UIView alloc]initWithFrame:CGRectMake(0, 503, self.view.frame.size.width,65)];
     BottomAccountView.backgroundColor=[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0];
     BottomAccountView.userInteractionEnabled=TRUE;
     
-    UIButton *LogInButton=[[UIButton alloc]initWithFrame:CGRectMake(35, 13, 250, 40)];
+    LogInButton=[[UIButton alloc]initWithFrame:CGRectMake(35, 13, 250, 40)];
     LogInButton.backgroundColor=[UIColor colorWithRed:31/255.0 green:185/255.0 blue:242/255.0 alpha:1.0];
     [LogInButton addTarget:self action:@selector(SubmitButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [LogInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -954,25 +989,34 @@
     LogInButton.clipsToBounds = YES;
     LogInButton.layer.cornerRadius = 5;
     [BottomAccountView addSubview:LogInButton];
-    
     [self.view addSubview:BottomAccountView];
-    
     [self.view addSubview:CreateAcountScrollView];
-    
     
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditProfileButtonPressed"] == true)
     {
         CreateAccountLable.text=@"Edit Account";
-        [LogInButton setTitle:@"Done" forState:UIControlStateNormal];
+        [LogInButton setTitle:@"Save" forState:UIControlStateNormal];
         
-        NSLog(@"firstname is=%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"firstname"]);
-        NSLog(@"zip is=%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"zip"]);
+//        NSLog(@"firstname is=%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"firstname"]);
+//        NSLog(@"zip is=%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"zip"]);
         
         FirstNameTextField.text=[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"firstname"];
         emailtextField.text=[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"email"];
+        FirstNameTextField.placeholder = @"First Name*";
+        LastNameTextField.placeholder = @"Last Name";
+        emailtextField.placeholder=@"Email*";
         PassWordTextField.placeholder = @"Password*";
         ConfirmPasswordTextFeild.placeholder = @"Confirm Password*";
+        PhoneTextField.placeholder= @"Phone*";
+        AddressTextField.placeholder = @"Address";
+        ZipCodeTextFeild.placeholder = @"Zip Code";
+        GenderTextField.placeholder = @"Gender";
+        AgeTextField.placeholder = @"DOB";
+        HeightTextField.placeholder = @"Select";
+        Height2TextField.placeholder = @"Height";
+        WeightTextField.placeholder = @"Select";
+        Weight2TextField.placeholder = @"Weight";
         
         if([[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] valueForKey:@"lastname"] length]==0)
         {
@@ -1102,7 +1146,6 @@
         Weight2TextField.placeholder = @"Weight";
         [LogInButton setTitle:@"Create Account" forState:UIControlStateNormal];
     }
-    
 }
 -(void)dismissKeyboard
 {
@@ -1203,23 +1246,47 @@
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component
 {
-    if (pickerView.tag == 1) {
-        GenderTextField.text=[GenderPickerViewArray objectAtIndex:row];
-        [GenderTextField resignFirstResponder];
+    if (pickerView.tag == 1)
+    {
+        NSLog(@"%@",[GenderPickerViewArray objectAtIndex:row]);
+        if([[GenderPickerViewArray objectAtIndex:row]isEqualToString:@"Select Gender"])
+        {
+           // GenderTextField.placeholder=@"Gender";
+        }
+        else
+        {
+            GenderTextField.text=[GenderPickerViewArray objectAtIndex:row];
+        
+        }
+        
+       
     }
-    else if (pickerView.tag == 2){
-        HeightTextField.text=[HeightPickerArray objectAtIndex:row];
-        [HeightTextField resignFirstResponder];
+    else
+        if (pickerView.tag == 2){
+             if([[HeightPickerArray objectAtIndex:row]isEqualToString:@"Select Units"])
+             {
+                 
+             }
+             else{
+                 HeightTextField.text=[HeightPickerArray objectAtIndex:row];
+             }
     }
     else
     {
-        WeightTextField.text = [WeightPickerArray objectAtIndex:row];
-        [WeightTextField resignFirstResponder];
+        if([[WeightPickerArray objectAtIndex:row]isEqualToString:@"Select Units"])
+        {
+            
+        }else{
+            
+            WeightTextField.text = [WeightPickerArray objectAtIndex:row];
+            
+        }
+       
     }
     
 }
 -(void)cancel{
-    [[soundManager shared] buttonSound];
+    
 }
 - (void)onBloodGroupSelection
 {
@@ -1332,7 +1399,6 @@
 -(void)TermConditonAction{
     
     [self scrollViewDidTapped];
-    [[soundManager shared] buttonSound];
     TearmBackGroundView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     TearmBackGroundView.backgroundColor=[UIColor blackColor];
     TearmBackGroundView.alpha=0.8;
@@ -1358,13 +1424,12 @@
     [self attachPopUpAnimationToView:TearmScrollVeiw];
 }
 -(void)removeTearmScrollView{
-    [[soundManager shared] buttonSound];
+
     [TearmBackGroundView removeFromSuperview];
     [TearmScrollVeiw removeFromSuperview];
 }
 -(void)termbuttonMark
 {
-    [[soundManager shared] buttonSound];
     if(tearmButtonFlag==2)
     {
         tearmButtonFlag=1;//check_mark_on.png
@@ -1387,7 +1452,6 @@
 -(void)SubmitButtonAction
 {
     SubmitButton.backgroundColor=[UIColor whiteColor];
-    [[soundManager shared] buttonSound];
     [self scrollViewDidTapped];
     if (([HeightTextField.text isEqualToString:@""]) && (Height2TextField.text.length>0)) {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:@"Please select the height" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
@@ -1473,11 +1537,14 @@
                                         if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditProfileButtonPressed"] == true)
                                         {
                                             NSLog(@"API HIT OF EDIT PROFILE");
+                                            [self ShowActivityIndicatorWithTitle:@"Loading..."];
+                                            [self performSelector:@selector(EditserverCall) withObject:nil afterDelay:0.1];
+                                            
                                         }
                                         else
                                         {
                                             [self ShowActivityIndicatorWithTitle:@"Loading..."];
-                                            [self performSelector:@selector(serverCallForRegistration) withObject:nil afterDelay:0.1];
+                                            [self performSelector:@selector(serverCall) withObject:nil afterDelay:0.1];
                                         }
                                     }
                                 }
@@ -1490,122 +1557,121 @@
                                 }
                                 
                             }
-                            }
+                }
 }
--(void)serverCallForRegistration
+//-(void)serverCallForRegistration
+//{
+//    Reachability *reach = [Reachability reachabilityForInternetConnection];
+//    NetworkStatus netStatus = [reach currentReachabilityStatus];
+//    if (netStatus == NotReachable)
+//    {
+//        [self HideActivityIndicator];
+//        
+//        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        [unable show];
+//    }
+//    else
+//    {
+//        NSString *phoneNumber;
+//        NSString *height;
+//        NSString *weight;
+//        if (StdCodeTextField.text.length>0)
+//        {
+//            phoneNumber = [[StdCodeTextField.text stringByAppendingString:@"-"]stringByAppendingString:PhoneTextField.text];
+//        }
+//        else
+//        {
+//            phoneNumber = PhoneTextField.text;
+//        }
+//        
+//        if (Height2TextField.text.length>0 && HeightTextField.text.length>0) {
+//            height = [[Height2TextField.text stringByAppendingString:@" "]stringByAppendingString:HeightTextField.text];
+//        }
+//        else
+//        {
+//            height = @"";
+//        }
+//        if (Weight2TextField.text.length>0 && WeightTextField.text.length>0) {
+//            weight = [[Weight2TextField.text stringByAppendingString:@" "]stringByAppendingString:WeightTextField.text];
+//        }
+//        else
+//        {
+//            weight= @"";
+//        }
+//
+//        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//        NSDictionary *params = @{
+//                                 @"firstname":FirstNameTextField.text,
+//                                 @"lastname":LastNameTextField.text,
+//                                 @"email": emailtextField.text,
+//                                 @"password":PassWordTextField.text,
+//                                 @"address":AddressTextField.text,
+//                                 @"zip": ZipCodeTextFeild.text,
+//                                 @"dob":AgeTextField.text,
+//                                 @"height":height,
+//                                 @"weight":weight,
+//                                 @"phone": phoneNumber,
+//                                 @"gender":GenderTextField.text,
+//                                 @"devicetoken":@"1",
+//                                 @"login":@"0"
+//                                 };
+//        
+//        NSLog(@"Parameter=>%@",params);
+//        [manager POST:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+//         {
+//            NSLog(@"JSON--->%@",json);
+//            if([json objectForKey:@"error"])
+//            {
+//                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                [myAlertView show];
+//            }
+//            else
+//            {
+//                
+//                
+//                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+//                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_data"] objectForKey:@"id"]] forKey:kIDForLogout];
+//                
+//                NSLog(@"login data=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]);
+//                
+//                userId = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"userid"]];
+//                firstName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"firstname"]];
+//                lastName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"lastname"]];
+//                Email  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"email"]];
+//                //image  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"image"]];
+//                image = @"";
+//                Address  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"address"]];
+//                Zip  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"zip"]];
+//                DOB  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"dob"]];
+//                Height  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"height"]];
+//                Weight  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"weight"]];
+//                PhoneNumber  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"phone"]];
+//                Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
+//                
+//                
+//               /// [self createDataBaseFunction];
+//              //  [self InsertIntoDataBase];
+//                
+//                [[NSUserDefaults standardUserDefaults] synchronize];
+//                
+//                CreateVerificationViewController *veri=[[CreateVerificationViewController  alloc]init];
+//                [self.navigationController pushViewController:veri animated:YES];
+//            }
+//            
+//            [self HideActivityIndicator];
+//            NSLog(@"JSON: %@", json);
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+//         {
+//             NSLog(@"Error: %@", error.description);
+//             [self HideActivityIndicator];
+//             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//             [unable show];
+//         }];
+//        
+//    }
+//}
+-(void)serverCall
 {
-    Reachability *reach = [Reachability reachabilityForInternetConnection];
-    NetworkStatus netStatus = [reach currentReachabilityStatus];
-    if (netStatus == NotReachable)
-    {
-        [self HideActivityIndicator];
-        
-        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [unable show];
-    }
-    else
-    {
-        NSString *phoneNumber;
-        NSString *height;
-        NSString *weight;
-        if (StdCodeTextField.text.length>0)
-        {
-            phoneNumber = [[StdCodeTextField.text stringByAppendingString:@"-"]stringByAppendingString:PhoneTextField.text];
-        }
-        else
-        {
-            phoneNumber = PhoneTextField.text;
-        }
-        
-        if (Height2TextField.text.length>0 && HeightTextField.text.length>0) {
-            height = [[Height2TextField.text stringByAppendingString:@" "]stringByAppendingString:HeightTextField.text];
-        }
-        else
-        {
-            height = @"";
-        }
-        if (Weight2TextField.text.length>0 && WeightTextField.text.length>0) {
-            weight = [[Weight2TextField.text stringByAppendingString:@" "]stringByAppendingString:WeightTextField.text];
-        }
-        else
-        {
-            weight= @"";
-        }
-        
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        NSDictionary *params = @{
-                                 @"firstname":FirstNameTextField.text,
-                                 @"lastname":LastNameTextField.text,
-                                 @"email": emailtextField.text,
-                                 @"password":PassWordTextField.text,
-                                 @"address":AddressTextField.text,
-                                 @"zip": ZipCodeTextFeild.text,
-                                 @"dob":AgeTextField.text,
-                                 @"height":height,
-                                 @"weight":weight,
-                                 @"phone": phoneNumber,
-                                 @"gender":GenderTextField.text,
-                                 @"devicetoken":@"1",
-                                 @"login":@"0"
-                                 
-                                 };
-        NSLog(@"Parameter=>%@",params);
-        
-        [manager POST:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
-         {
-            NSLog(@"JSON--->%@",json);
-            if([json objectForKey:@"error"])
-            {
-                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [myAlertView show];
-            }
-            else
-            {
-                
-                
-                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
-                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_data"] objectForKey:@"id"]] forKey:kIDForLogout];
-                
-                NSLog(@"login data=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]);
-                
-                userId = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"userid"]];
-                firstName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"firstname"]];
-                lastName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"lastname"]];
-                Email  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"email"]];
-                //image  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"image"]];
-                image = @"";
-                Address  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"address"]];
-                Zip  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"zip"]];
-                DOB  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"dob"]];
-                Height  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"height"]];
-                Weight  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"weight"]];
-                PhoneNumber  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"phone"]];
-                Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
-                
-                
-                [self createDataBaseFunction];
-                [self InsertIntoDataBase];
-                
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
-                CreateVerificationViewController *veri=[[CreateVerificationViewController  alloc]init];
-                [self.navigationController pushViewController:veri animated:YES];
-            }
-            
-            [self HideActivityIndicator];
-            NSLog(@"JSON: %@", json);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
-         {
-             NSLog(@"Error: %@", error.description);
-             [self HideActivityIndicator];
-             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-             [unable show];
-         }];
-        
-    }
-}
--(void)serverCall{
     
     NSString *phoneNumber;
     NSString *height;
@@ -1634,94 +1700,156 @@
         weight= @"";
     }
 
-    
-    
-    
     NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/register_or_login_through_email",kBaseUrl]];
     
-    
-    
     RequestForSync = [ASIFormDataRequest requestWithURL:url];
+    RequestForSync.tag = 20001;
+    [RequestForSync setTimeOutSeconds:30];
+    RequestForSync.delegate=self;
     
+    [RequestForSync setRequestMethod:@"POST"];
     
-     [RequestForSync setPostValue:FirstNameTextField.text forKey:@"firstname"];
+    [RequestForSync setPostValue:FirstNameTextField.text forKey:@"firstname"];
     
+    [RequestForSync setPostValue:LastNameTextField.text forKey:@"lastname"];
     
-     [RequestForSync setPostValue:LastNameTextField.text forKey:@"lastname"];
+    [RequestForSync setPostValue:emailtextField.text forKey:@"email"];
     
-    
-     [RequestForSync setPostValue:emailtextField.text forKey:@"email"];
-    
-    
-     [RequestForSync setPostValue:PassWordTextField.text forKey:@"password"];
-    
-    
-     [RequestForSync setPostValue:AddressTextField.text forKey:@"address"];
-    
+    [RequestForSync setPostValue:PassWordTextField.text forKey:@"password"];
+
+    [RequestForSync setPostValue:AddressTextField.text forKey:@"address"];
     
     [RequestForSync setPostValue:ZipCodeTextFeild.text forKey:@"zip"];
     
+    [RequestForSync setPostValue:AgeTextField.text forKey:@"dob"];
+
+    [RequestForSync setPostValue:height forKey:@"height"];
     
-      [RequestForSync setPostValue:AgeTextField.text forKey:@"dob"];
-    
-    
-    
-      [RequestForSync setPostValue:height forKey:@"height"];
-    
-    
-      [RequestForSync setPostValue:weight forKey:@"weight"];
-    
+    [RequestForSync setPostValue:weight forKey:@"weight"];
     
      [RequestForSync setPostValue:phoneNumber forKey:@"phone"];
-    
-    
+
      [RequestForSync setPostValue:GenderTextField.text forKey:@"gender"];
     
       [RequestForSync setPostValue:@"1" forKey:@"devicetoken"];
     
      [RequestForSync setPostValue:@"0" forKey:@"login"];
     
-    
-    
-    
-    if(PicClickYes==YES){
+    if(PicClickYes==YES)
+    {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
         path= [documentsDirectory stringByAppendingPathComponent:@"userprofile.png" ];
         
         [RequestForSync setFile:path forKey:@"userpic"];
+        [RequestForSync setPostValue:@"1" forKey:@"imagetype"];
     }
-    else{
-       // [RequestForSync setPostValue:@"" forKey:@"userpic"];
+    else
+    {
+        [RequestForSync setPostValue:@"0" forKey:@"imagetype"];
     }
    
+    [RequestForSync startAsynchronous];
     
-
-    RequestForSync.tag = 20001;
+}
+-(void)EditserverCall
+{
     
+    NSString *phoneNumber;
+    NSString *height;
+    NSString *weight;
+    if (StdCodeTextField.text.length>0)
+    {
+        phoneNumber = [[StdCodeTextField.text stringByAppendingString:@"-"]stringByAppendingString:PhoneTextField.text];
+    }
+    else
+    {
+        phoneNumber = PhoneTextField.text;
+    }
+    
+    if (Height2TextField.text.length>0 && HeightTextField.text.length>0) {
+        height = [[Height2TextField.text stringByAppendingString:@" "]stringByAppendingString:HeightTextField.text];
+    }
+    else
+    {
+        height = @"";
+    }
+    if (Weight2TextField.text.length>0 && WeightTextField.text.length>0) {
+        weight = [[Weight2TextField.text stringByAppendingString:@" "]stringByAppendingString:WeightTextField.text];
+    }
+    else
+    {
+        weight= @"";
+    }
+    
+    NSURL *url=[NSURL URLWithString:[NSString stringWithFormat:@"%@/edit_user_profile_from_accesstoken",kBaseUrl]];
+    
+    RequestForSync = [ASIFormDataRequest requestWithURL:url];
+    RequestForSync.tag = 20003;
     [RequestForSync setTimeOutSeconds:30];
-    
-    
-    
     RequestForSync.delegate=self;
     
-    
-    
     [RequestForSync setRequestMethod:@"POST"];
+    
+    [RequestForSync setPostValue:[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"] forKey:@"accesstoken"];
+    
+    [RequestForSync setPostValue:FirstNameTextField.text forKey:@"firstname"];
+    
+    [RequestForSync setPostValue:LastNameTextField.text forKey:@"lastname"];
+    
+    [RequestForSync setPostValue:emailtextField.text forKey:@"email"];
+    
+    [RequestForSync setPostValue:PassWordTextField.text forKey:@"password"];
+    
+    [RequestForSync setPostValue:AddressTextField.text forKey:@"address"];
+    
+    [RequestForSync setPostValue:ZipCodeTextFeild.text forKey:@"zip"];
+    
+    [RequestForSync setPostValue:AgeTextField.text forKey:@"dob"];
+    
+    [RequestForSync setPostValue:height forKey:@"height"];
+    
+    [RequestForSync setPostValue:weight forKey:@"weight"];
+    
+    [RequestForSync setPostValue:phoneNumber forKey:@"phone"];
+    
+    [RequestForSync setPostValue:GenderTextField.text forKey:@"gender"];
+    
+    [RequestForSync setPostValue:@"1" forKey:@"devicetoken"];
+    
+    [RequestForSync setPostValue:@"0" forKey:@"login"];
+    
+    if(PicClickYes==YES)
+    {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        path= [documentsDirectory stringByAppendingPathComponent:@"userprofile.png" ];
+        
+        [RequestForSync setFile:path forKey:@"userpic"];
+        [RequestForSync setPostValue:@"1" forKey:@"imagetype"];
+    }
+    else
+    {
+        [RequestForSync setPostValue:@"0" forKey:@"imagetype"];
+    }
     
     [RequestForSync startAsynchronous];
     
 }
-
-- (void)requestFinished:(ASIHTTPRequest *)reques
-
+- (void)requestFailed:(ASIHTTPRequest *)request
 {
-
+    NSError *error = [request error];
+    NSLog(@"%@",error);
+    
+}
+- (void)requestFinished:(ASIHTTPRequest *)reques
+{
+    if(reques.tag==20001)
+    {
     
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[RequestForSync responseData] options:kNilOptions error:nil];
-    
-    
     
     NSLog(@"json in app delegate ==>> %@",json);
     
@@ -1733,9 +1861,7 @@
     else
     {
         [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@",[[json objectForKey:@"user_data"] objectForKey:@"id"]] forKey:kIDForLogout];
-        
-        NSLog(@"login data=%@",[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]);
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
         userId = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"userid"]];
         firstName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"firstname"]];
@@ -1752,17 +1878,33 @@
         Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
         
         
-      //  [self createDataBaseFunction];
-       // [self InsertIntoDataBase];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
         
         CreateVerificationViewController *veri=[[CreateVerificationViewController  alloc]init];
         [self.navigationController pushViewController:veri animated:YES];
         
     }
     
-    
+}
+    if(reques.tag==20003)
+    {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:[RequestForSync responseData] options:kNilOptions error:nil];
+        
+        NSLog(@"Edit Profiles Json in app delegate ==>> %@",json);
+        
+        if([[json objectForKey:@"error"] isEqualToString:@"Invalid access token."] ||[[json objectForKey:@"error"] isEqualToString:@"Some parameter missing"])
+        {
+            UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [myAlertView show];
+        }
+        else
+        {
+            [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            NSLog(@"kLoginData=%@",[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]);
+        }
+        
+    }
     [self HideActivityIndicator];
     
 }
@@ -1842,7 +1984,7 @@
     }
     if(textField.tag==105)
     {
-        if (textField.text.length >=11 && range.length == 0)
+        if (textField.text.length >=15 && range.length == 0)
             return NO;
         // Only characters in the NSCharacterSet you choose will insertable.
         NSCharacterSet *invalidCharSet = [[NSCharacterSet characterSetWithCharactersInString:@"1234567890"] invertedSet];

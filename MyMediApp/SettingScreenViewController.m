@@ -187,26 +187,24 @@
 
 
 -(void)AccountTypeAction{
-    [[soundManager shared]buttonSound];
 }
 -(void)BackButtonAction{
-    [[soundManager shared]buttonSound];
     [self.navigationController popViewControllerAnimated:YES];
 }
 -(void)GoPremimuAction{
-    [[soundManager shared]buttonSound];
+
 }
 -(void)GeneralAction{
-    [[soundManager shared]buttonSound];
+    
 }
 -(void)SecurityAction{
-    [[soundManager shared]buttonSound];
+    
 }
 -(void)PrivacyAction{
-    [[soundManager shared]buttonSound];
+
 }
 -(void)NotificationAction{
-    [[soundManager shared]buttonSound];
+
 //    UIButton *abc=[[UIButton alloc]initWithFrame:CGRectMake(20, 50, 40, 40)];
 //    abc.backgroundColor=[UIColor clearColor];
 //    [abc setTitle:@"checking" forState:UIControlStateNormal];

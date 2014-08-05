@@ -769,18 +769,11 @@
 }
 
 -(void)EditEmergencyDetails
-
 {
-    
-    [[soundManager shared] buttonSound];
-    
-    
     
     [EdiButton setImage:[UIImage imageNamed:@"edit_button_selected.png"] forState:UIControlStateNormal];
     
     DoneButton.hidden=NO;
-    
-    
     
     EmergencyContactTextField.userInteractionEnabled=YES;
     
@@ -793,12 +786,6 @@
     AllergiesTextView.userInteractionEnabled=YES;
     
     CriticalProblemTextView.userInteractionEnabled=YES;
-    
-    
-    
-    
-
-    
     
 }
 
@@ -823,8 +810,6 @@
 -(void)BackButtonAction{
     
     [self scrollViewDidTapped];
-    
-    [[soundManager shared] buttonSound];
     
     [self.navigationController popViewControllerAnimated:YES];
     

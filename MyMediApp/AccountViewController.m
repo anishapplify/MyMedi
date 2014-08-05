@@ -18,7 +18,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 @interface AccountViewController (){
     
     
-    
+    UIAlertView * alertviewDeteteAccount;
     UIView *TopBarView;
     
     UILabel *AccountLable;
@@ -435,10 +435,185 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.navigationController pushViewController:create animated:NO];
 }
 -(void)DeleteButtonAction{
+    alertviewDeteteAccount = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Are you sure you want to delete account?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm",nil];
+    alertviewDeteteAccount.tag=14215;
     
+    [alertviewDeteteAccount show];
 }
--(void)ChangePasswordButtonAction{
+#pragma mark Alert view delegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
     
+    if(alertView.tag==14215)
+    {
+        if(buttonIndex ==1)
+        {
+            [self ShowActivityIndicatorWithTitle:@"Loading..."];
+            [self performSelector:@selector(deleteAccountAction) withObject:nil afterDelay:0.1];
+        }
+        if(buttonIndex ==0)
+        {
+            
+        }
+    }
+}
+-(void)deleteAccountAction
+{
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"]
+                                 };
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/remove_user_account",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+         
+         {
+             NSLog(@"JSON--->%@",json);
+             if([json objectForKey:@"error"])
+             {
+                 UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                 [myAlertView show];
+             }
+             else
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kLoginData];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kLoginData];
+                 
+                 NSLog(@"kLoginData=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kLoginData]);
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kEmergencyDetails];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kEmergencyDetails];
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kUpcomingAppointmentData];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kUpcomingAppointmentData];
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kRecentAppointmentData];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kRecentAppointmentData];
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentData];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentData];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameString];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameString];
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameConsultantString];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameConsultantString];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameDate];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameDate];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameHospital];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameHospital];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameTypeName];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameTypeName];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNameProviderName];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNameProviderName];
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kAppointmentmentNotes];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kAppointmentmentNotes];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameString];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameString];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameConsultantString];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameConsultantString];
+                 
+                 
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameDate];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameDate];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameHospital];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameHospital];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameTypeName];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameTypeName];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordeNameProviderName];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordeNameProviderName];
+                 
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:@"(null)" forKey:kMedicalRecordsNotes];
+                 [[NSUserDefaults standardUserDefaults]removeObjectForKey:kMedicalRecordsNotes];
+                 
+                
+                 
+                 NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+                 NSString *token = [[NSString alloc] init];
+                 token = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"device_token"]];
+                 [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+                 [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"device_token"];
+                 [[NSUserDefaults standardUserDefaults]synchronize];
+                 
+                 
+//                 UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Your account has been deleted" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//                 [complete show];
+            
+                 ApplifyViewController *veri=[[ApplifyViewController  alloc]init];
+                 [self.navigationController pushViewController:veri animated:YES];
+             }
+             
+             [self HideActivityIndicator];
+             NSLog(@"JSON: %@", json);
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Error: %@", error.description);
+             [self HideActivityIndicator];
+             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+             [unable show];
+         }];
+        
+    }
+}
+
+-(void)ChangePasswordButtonAction
+{
+    
+    ChangePasswordViewController *changePasswordScreen=[[ChangePasswordViewController alloc]init];
+    [self.navigationController pushViewController:changePasswordScreen animated:YES];
 }
 -(void)changeImage:(UITapGestureRecognizer*)recognizer
 {
@@ -516,7 +691,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     // Dispose of any resources that can be recreated.
 }
 -(void)BackButtonAction{
-    [[soundManager shared]buttonSound];
+   
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -608,7 +783,6 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [GenderTextField resignFirstResponder];
 }
 -(void)cancel{
-    [[soundManager shared] buttonSound];
 }
 - (void)onBloodGroupSelection
 {
@@ -700,7 +874,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 -(void)HeightKeyKeyboard{
     [HeightTextField becomeFirstResponder];
 }
-
+-(void)ShowActivityIndicatorWithTitle:(NSString *)Title
+{
+    [SVProgressHUD showWithStatus:Title maskType:SVProgressHUDMaskTypeGradient];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.01]];
+}
+-(void)HideActivityIndicator
+{
+    [SVProgressHUD dismiss];
+}
 /*
 #pragma mark - Navigation
 

@@ -1763,10 +1763,6 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 {
     
     
-    //NSLog(@"InformationButton=%f",InformationButton.frame.size.height+InformationButton.frame.origin.y);
-    
-    
-    
     informationScrollView=[[UIScrollView alloc]init];
     
     informationScrollView.hidden=NO;
@@ -1817,7 +1813,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     appointmentTextField.autocapitalizationType = NO;
     
-    appointmentTextField.returnKeyType=UIReturnKeyNext;
+   
     
     [appointmentTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -1873,7 +1869,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     consultantTextField.autocapitalizationType = NO;
     
-    consultantTextField.returnKeyType=UIReturnKeyNext;
+ 
     
     [consultantTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -1971,7 +1967,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     dateTextField.autocapitalizationType = NO;
     
-    dateTextField.returnKeyType=UIReturnKeyNext;
+  
     
     [dateTextField setInputView:AppointmentDatePicker];
     
@@ -1997,11 +1993,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     [informationScrollView addSubview:DateLable];
     
-    
-    
-    
-    
-    
+
     
     UILabel *TimeLable=[[UILabel alloc]initWithFrame:CGRectMake(0, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 125, 40) ];
     
@@ -2046,9 +2038,8 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     
     [hospitalTextField setFont:[UIFont fontWithName:helveticaRegular size:13]];
     
+    hospitalTextField.returnKeyType=UIReturnKeyDone;
     hospitalTextField.autocapitalizationType = NO;
-    
-  //  hospitalTextField.returnKeyType=UIReturnKeyNext;
     
     [hospitalTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -2073,6 +2064,18 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     HospitalLable.backgroundColor = [UIColor whiteColor];
     
     [informationScrollView addSubview:HospitalLable];
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditAppointmentPressed"]==true)
+    {
+        appointmentTextField.returnKeyType=UIReturnKeyDone;
+        consultantTextField.returnKeyType=UIReturnKeyDone;
+        dateTextField.returnKeyType=UIReturnKeyDone;
+    }
+    else {
+        appointmentTextField.returnKeyType=UIReturnKeyNext;
+        consultantTextField.returnKeyType=UIReturnKeyNext;
+        dateTextField.returnKeyType=UIReturnKeyNext;
+    }
     
     
 
@@ -2260,7 +2263,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 
 -(void)BackButtonAction{
     
-    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
+   // [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditAppointmentPressed"];
     [self scrollViewDidTapped];
     [self endAnimation];
     [self.navigationController popViewControllerAnimated:YES];
@@ -2277,6 +2280,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
 
 -(void)DoneButtonFuction{
     
+   
     
     if(appointmentTextField.text.length<1){
         
@@ -2318,6 +2322,8 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     }
     else
     {
+         [self beforeDoneButtonAPICall ];
+        
         [self ShowActivityIndicatorWithTitle:@"Loading..."];
         
         [self performSelector:@selector(serverCall) withObject:nil afterDelay:0.1];
@@ -2647,9 +2653,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     }
     
 }
--(void)serverCall{
-    
-    
+
+-(void)serverCall
+{
     NSLog(@"intTypeServerCall=%d",intTypeServerCall);
     NSLog(@"AppointmentIdGetValue=%@",[[NSUserDefaults standardUserDefaults] valueForKey:@"AppointmentIdGetValue"]);
     [self scrollViewDidTapped];
@@ -2679,6 +2685,9 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
    
     if(attachedFileTrue==true)
     {
+        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isAttachmentAddedByUserinAddAppointment"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+        
         if (attachedVideoFileTrue == true)
         {
             [RequestForSync setPostValue:@"2" forKey:@"attachmenttype"];
@@ -2701,7 +2710,7 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
         {
             NSLog(@"kAppointmentmentAttachmentString=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString]);
             //NSString *documentsDirectoryPath = [[NSUserDefaults standardUserDefaults]valueForKey:@"pathofUploadedFile"];
-            [RequestForSync setFile:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString] forKey:@"attachment"];
+           // [RequestForSync setFile:[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentAttachmentString] forKey:@"attachment"];
         }
         else{
             
@@ -2713,13 +2722,17 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
             NSString *documentsDirectoryPath = [[NSUserDefaults standardUserDefaults]valueForKey:@"pathofUploadedFile"];
             NSLog(@"path of image uploaded is %@",documentsDirectoryPath);
             
-            NSString *abc;
+            NSString *abc=@"";
             NSLog(@"abc=%@",abc);
-            [RequestForSync setFile:abc forKey:@"attachment"];
+            
+           
+//            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            NSString *documentsDirectory = [paths objectAtIndex:0];
+//            path= [documentsDirectory stringByAppendingPathComponent:@""];  // IT IS THE PATH OF CHOOSEN IMAGE
+            
+            //[RequestForSync setFile:@"null" forKey:@"attachment"];
+            //[RequestForSync setFile:abc forKey:@"attachment"];
         }
-        
-        
-       
         
     }
     
@@ -2808,6 +2821,15 @@ TypeTitleLable.text=[NSString stringWithFormat:@"(%@)",[[[[[[NSUserDefaults stan
     [self InformationAction];
 }
 
+-(void) beforeDoneButtonAPICall
+{
+    NSLog(@"beforeDoneButtonAPICall");
+    thumbImageViewForVideo.hidden=YES;
+    thumbImageView.hidden=YES;
+    thumbImageView1.hidden=YES;
+    informationStatus=1;
+    [self InformationAction];
+}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 

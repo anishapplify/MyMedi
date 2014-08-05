@@ -83,7 +83,7 @@
     
 }
 -(void)BackButtonAction{
-     [[soundManager shared] buttonSound];
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)didReceiveMemoryWarning

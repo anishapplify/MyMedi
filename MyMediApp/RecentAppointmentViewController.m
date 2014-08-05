@@ -80,7 +80,7 @@
 }
 -(void)BackButtonAction
 {
-    [[soundManager shared] buttonSound];
+
      [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)didReceiveMemoryWarning
@@ -140,7 +140,7 @@
     CellButtonClick.layer.masksToBounds = NO;
     CellButtonClick.exclusiveTouch=YES;
     CellButtonClick.tag=[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmentid"] objectAtIndex:indexPath.row] integerValue];
-    [CellButtonClick addTarget:self action:@selector(recentViewAction:) forControlEvents:UIControlEventTouchUpInside];
+    [CellButtonClick addTarget:self action:@selector(cellButtonClickUpcomingInfromation:) forControlEvents:UIControlEventTouchUpInside];
     [CellButtonClick setBackgroundImage:cellBackGrounImageView forState:UIControlStateNormal];
     [CellButtonClick setBackgroundImage:[UIImage imageNamed:@"afterClickCell.jpg"] forState:UIControlStateSelected];
     
@@ -249,6 +249,95 @@
     [cell.contentView addSubview:CellButtonClick];
     
     return cell;
+}
+-(IBAction)cellButtonClickUpcomingInfromation:(id)sender{
+    NSLog(@"tag=%d",[sender tag]);
+    
+    [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isEditAppointmentPressed"];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:2 forKey:@"TapFlagVriable"];
+    
+    if([[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] count]<1){
+        
+    }
+    else
+    {
+        for (int k=0; k<[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] count]; k++) {
+            
+            if([[[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmentid"] objectAtIndex:k] stringValue] isEqualToString:[NSString stringWithFormat:@"%d",[sender tag]]])
+            {
+                NSLog(@"tag=%d",[sender tag]);
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmentname"] objectAtIndex:k] forKeyPath:kAppointmentmentNameString];
+                
+                NSLog(@"appointments name=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameString]);
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"consultantname"] objectAtIndex:k] forKeyPath:kAppointmentmentNameConsultantString];
+                
+                
+                NSLog(@"consultantname=%@",[[NSUserDefaults standardUserDefaults] valueForKey:kAppointmentmentNameConsultantString]);
+                
+                NSArray *dateSplitArray = [[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttime"] objectAtIndex:k] componentsSeparatedByString:@"T"];
+                NSString *date=[dateSplitArray objectAtIndex:0];
+                NSString *dateTime=[dateSplitArray objectAtIndex:1];
+                
+                
+                NSArray *dateSplitArray2=[date componentsSeparatedByString:@"-"];
+                NSString *date2=[dateSplitArray2 objectAtIndex:1];
+                NSString *date3=[dateSplitArray2 objectAtIndex:2];
+                NSString *date4=[dateSplitArray2 objectAtIndex:0];
+                
+                NSLog(@"date2=%@",date2);
+                NSLog(@"date3=%@",date3);
+                NSLog(@"date4=%@",date4);
+                
+                if([date2 isEqualToString:@"01"]) date2=@"Jan";
+                if([date2 isEqualToString:@"02"]) date2=@"Feb";
+                if([date2 isEqualToString:@"03"]) date2=@"Mar";
+                if([date2 isEqualToString:@"04"]) date2=@"Apr";
+                if([date2 isEqualToString:@"05"]) date2=@"May";
+                if([date2 isEqualToString:@"06"]) date2=@"Jun";
+                if([date2 isEqualToString:@"07"]) date2=@"Jul";
+                if([date2 isEqualToString:@"08"]) date2=@"Aug";
+                if([date2 isEqualToString:@"09"]) date2=@"Sep";
+                if([date2 isEqualToString:@"10"]) date2=@"Oct";
+                if([date2 isEqualToString:@"11"]) date2=@"Nov";
+                if([date2 isEqualToString:@"12"]) date2=@"Dec";
+                
+                NSArray *TimeSplitArray2=[dateTime componentsSeparatedByString:@"."];
+                NSString *TimeString1=[TimeSplitArray2 objectAtIndex:0];
+                
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[NSString stringWithFormat:@"%@ %@",date,TimeString1] forKeyPath:kAppointmentmentNameDate];
+                
+                
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"hospital"] objectAtIndex:k] forKeyPath:kAppointmentmentNameHospital];
+                
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"appointmenttype"] objectAtIndex:k] forKeyPath:kAppointmentmentNameTypeName];
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"provider"] objectAtIndex:k] forKeyPath:kAppointmentmentNameProviderName];
+                
+                
+                [[NSUserDefaults standardUserDefaults]setValue:[[[[[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppointmentData] objectForKey:@"recentupdates"] valueForKey:@"notes"] objectAtIndex:k] forKeyPath:kAppointmentmentNotes];
+                
+                
+                EditAppointmentViewController *createnewAppointment=[[EditAppointmentViewController alloc]init];
+                [self.navigationController pushViewController:createnewAppointment animated:YES];
+                
+                
+                
+            }
+            
+        }
+        
+        
+    }
+    
+    
+    //[[[[NSUserDefaults standardUserDefaults] objectForKey:kUpcomingAppointmentData] objectForKey:@"upcomingappointments"]
+    
 }
 -(IBAction)recentViewAction:(id)sender{
     

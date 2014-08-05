@@ -15,7 +15,7 @@ static const CGFloat MINIMUM_SCROLL_FRACTION = 0.1;
 
 static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
 
-static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 80;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 170;
 
 static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
@@ -504,7 +504,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         
         intTypeServerCall=1;
         
-        
+        NotesTextView.text=[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] valueForKey:kMedicalRecordsNotes]];
         
         TypeTagValue=[[NSString stringWithFormat:@"%@",TypeSting] integerValue];
         ProiverTagValue=[[NSString stringWithFormat:@"%@",ProviderString] integerValue];
@@ -1396,7 +1396,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 {
     
-    plusButton=[[UIButton alloc]initWithFrame:CGRectMake(30, NotesButton.frame.size.height+NotesButton.frame.origin.y+80, 50, 40)];
+    plusButton=[[UIButton alloc]initWithFrame:CGRectMake(5, NotesButton.frame.size.height+NotesButton.frame.origin.y+60, 50, 40)];
     
     [plusButton addTarget:self action:@selector(AttachmentActionForPicker)
      
@@ -1787,9 +1787,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [informationScrollView addSubview:DateLable];
     
     
-    
-    
-    
+
     
     
     UILabel *TimeLable=[[UILabel alloc]initWithFrame:CGRectMake(0, dateTextField.frame.size.height+dateTextField.frame.origin.y+1, 125, 40) ];
@@ -1837,7 +1835,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     hospitalTextField.autocapitalizationType = NO;
     
-  //  hospitalTextField.returnKeyType=UIReturnKeyNext;
+    hospitalTextField.returnKeyType=UIReturnKeyDone;
     
     [hospitalTextField addTarget:self action:@selector(textFieldDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
     
@@ -1860,6 +1858,18 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     HospitalLable.backgroundColor = [UIColor whiteColor];
     
     [informationScrollView addSubview:HospitalLable];
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"isEditAppointmentPressed"]==true)
+    {
+        appointmentTextField.returnKeyType=UIReturnKeyDone;
+        consultantTextField.returnKeyType=UIReturnKeyDone;
+        dateTextField.returnKeyType=UIReturnKeyDone;
+    }
+    else {
+        appointmentTextField.returnKeyType=UIReturnKeyNext;
+        consultantTextField.returnKeyType=UIReturnKeyNext;
+        dateTextField.returnKeyType=UIReturnKeyNext;
+    }
     
 
 }
@@ -2051,7 +2061,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
 
 -(void)BackButtonAction{
     
-     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
+     //[[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isEditMedicalPressed"];
     
     informationStatus=1;
     [self InformationAction];
@@ -2112,7 +2122,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
         {
             [self ShowActivityIndicatorWithTitle:@"Loading..."];
             
-            [self performSelector:@selector(serverCall) withObject:nil afterDelay:0.1];
+            [self performSelector:@selector(serverCallForAddMedicalReport) withObject:nil afterDelay:0.1];
         }
     
     

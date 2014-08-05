@@ -19,7 +19,6 @@
     UIView *ForgetPasswordBackGroundView;
     UIView *ForgetPasswordView;
     UITextField*ForgetEmailTextField;
-    UIAlertView *AlertViewOK;
     UIView *paddingView;
     UIView *TopBarView;
     UIButton*ResetPasswordButton;
@@ -140,7 +139,7 @@
     [ForgetPasswordButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [ForgetPasswordButton setTitle:@"Forgot Password?" forState:UIControlStateNormal];
     ForgetPasswordButton.titleLabel.font = [UIFont fontWithName:helveticaRegular size: 15];
-    //[ForgetPasswordButton addTarget:self action:@selector(ForgetPasswordPopUp) forControlEvents:UIControlEventTouchUpInside];
+    [ForgetPasswordButton addTarget:self action:@selector(ForgetPasswordPopUp) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:ForgetPasswordButton];
     
     tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDidTapped)] ;
@@ -172,7 +171,6 @@
 }
 -(void)LoginButtonAction
 {
-    [[soundManager shared] buttonSound];
     if(UserNameTextField.text.length<1)
     {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:@"Enter the email" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
@@ -262,8 +260,8 @@
                 Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
                 
                 
-                [self createDataBaseFunction];
-                [self InsertIntoDataBase];
+                //[self createDataBaseFunction];
+               // [self InsertIntoDataBase];
                 
                 VerifyAccountDetailViewController *veri=[[VerifyAccountDetailViewController  alloc]init];
                 [self.navigationController pushViewController:veri animated:YES];
@@ -320,38 +318,36 @@
     sqlite3_close(MyMediDB);
 }
 
--(void) InsertIntoDataBase
-{
-    
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = dirPaths[0];
-    NSString *databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:@"MyMedi.db"]];
-    sqlite3 *MyMediDB;
-    sqlite3_stmt *statement;
-    const char *dbpath = [databasePath UTF8String];
-    if (sqlite3_open(dbpath, &MyMediDB) == SQLITE_OK)
-    {
-        NSString *insertStatement = [NSString stringWithFormat: @"INSERT INTO UserInformationTable(UserID, FirstName, LastName, Email, Image, Address, Zip, DOB, Height, Weight, PhoneNumber, Gender) VALUES ('%@', '%@' , '%@' , '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@' )",userId, firstName, lastName, Email, image, Address, Zip, DOB, Height, Weight, PhoneNumber, Gender ];
-        NSLog(@"insertStatement=%@",insertStatement);
-        const char *insert_stmt = [insertStatement UTF8String];
-        sqlite3_prepare_v2(MyMediDB, insert_stmt,-1, &statement, NULL);
-        if (sqlite3_step(statement) == SQLITE_DONE)
-        {
-            NSLog(@"Insertion Successful");
-        }
-        else
-        {
-            NSLog(@"Insertion Failure: %s",sqlite3_errmsg(MyMediDB));
-        }
-    }
-    sqlite3_close(MyMediDB);
-}
+//-(void) InsertIntoDataBase
+//{
+//    
+//    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *docsDir = dirPaths[0];
+//    NSString *databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent:@"MyMedi.db"]];
+//    sqlite3 *MyMediDB;
+//    sqlite3_stmt *statement;
+//    const char *dbpath = [databasePath UTF8String];
+//    if (sqlite3_open(dbpath, &MyMediDB) == SQLITE_OK)
+//    {
+//        NSString *insertStatement = [NSString stringWithFormat: @"INSERT INTO UserInformationTable(UserID, FirstName, LastName, Email, Image, Address, Zip, DOB, Height, Weight, PhoneNumber, Gender) VALUES ('%@', '%@' , '%@' , '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@', '%@' )",userId, firstName, lastName, Email, image, Address, Zip, DOB, Height, Weight, PhoneNumber, Gender ];
+//        NSLog(@"insertStatement=%@",insertStatement);
+//        const char *insert_stmt = [insertStatement UTF8String];
+//        sqlite3_prepare_v2(MyMediDB, insert_stmt,-1, &statement, NULL);
+//        if (sqlite3_step(statement) == SQLITE_DONE)
+//        {
+//            NSLog(@"Insertion Successful");
+//        }
+//        else
+//        {
+//            NSLog(@"Insertion Failure: %s",sqlite3_errmsg(MyMediDB));
+//        }
+//    }
+//    sqlite3_close(MyMediDB);
+//}
 
 
 -(void)ForgetPasswordPopUp
 {
-    
-    [[soundManager shared] buttonSound];
     ForgetPasswordBackGroundView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     ForgetPasswordBackGroundView.backgroundColor=[UIColor blackColor];
     ForgetPasswordBackGroundView.alpha=0.8;
@@ -437,8 +433,7 @@
     else
     {
         [textField resignFirstResponder];
-        [self ShowActivityIndicatorWithTitle:@"Loading..."];
-        [self performSelector:@selector(serverCallForLoginData) withObject:nil afterDelay:0.1];
+        [self LoginButtonAction];
         
     }
     return YES;
@@ -446,7 +441,6 @@
 -(void)ForgetPasswordAction
 {
     ResetPasswordButton.backgroundColor=[UIColor whiteColor];
-    [[soundManager shared] buttonSound];
     if(ForgetEmailTextField.text.length<1)
     {
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:nil message:@"Enter the email" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
@@ -464,13 +458,56 @@
         }
         else
         {
-            AlertViewOK=[[UIAlertView alloc]initWithTitle:nil message:@"Check your email" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [AlertViewOK show];
-            AlertViewOK.tag=1;
-            AlertViewOK.delegate=self;
             [ForgetEmailTextField resignFirstResponder];
+           // [self ShowActivityIndicatorWithTitle:@"Loading..."];
+            //[self performSelector:@selector(serverCallForForgotPassword) withObject:nil afterDelay:0.1];
         }
     
+}
+-(void)serverCallForForgotPassword
+
+{
+    
+    
+    Reachability *reach = [Reachability reachabilityForInternetConnection];
+    NetworkStatus netStatus = [reach currentReachabilityStatus];
+    if (netStatus == NotReachable)
+    {
+        [self HideActivityIndicator];
+        
+        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [unable show];
+    }
+    else
+    {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"accesstoken":[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"accesstoken"],
+                                 };
+        NSLog(@"Parameter=>%@",params);
+        
+        [manager POST:[NSString stringWithFormat:@"%@/forgot_password",kBaseUrl] parameters:params success:^(AFHTTPRequestOperation *operation, id json)
+        {
+            NSLog(@"Forgot Email JSON--->%@",json);
+            if([[json objectForKey:@"log"] isEqualToString:@"Password is sent to your email."])
+            {
+                [ForgetEmailTextField setText:@""];
+                
+                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"log"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [myAlertView show];
+                
+                
+            }
+            
+            [self HideActivityIndicator];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error.description);
+            [self HideActivityIndicator];
+            UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [unable show];
+        }];
+        
+    }
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -508,7 +545,6 @@
 }
 -(void)BackVeiwController
 {
-    [[soundManager shared] buttonSound];
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)didReceiveMemoryWarning
@@ -544,8 +580,6 @@
     ForgetPasswordView=nil;
     [ForgetEmailTextField removeFromSuperview];
     ForgetEmailTextField=nil;
-    [AlertViewOK removeFromSuperview];
-    AlertViewOK=nil;
     [paddingView removeFromSuperview];
     paddingView=nil;
     [TopBarView removeFromSuperview];
@@ -566,6 +600,90 @@
     [PasswordTextField resignFirstResponder];
     [UserNameTextField resignFirstResponder];
 }
+
+//-(void)TestingStart
+//{
+//    
+//    Reachability *reach = [Reachability reachabilityForInternetConnection];
+//    NetworkStatus netStatus = [reach currentReachabilityStatus];
+//    if (netStatus == NotReachable)
+//    {
+//        [self HideActivityIndicator];
+//        
+//        UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//        [unable show];
+//    }
+//    else
+//    {
+//        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//        NSDictionary *params = @{
+//                                 @"from_email":@"prashantkumat@applify.guru",
+//                                 @"to_email": @"applify@applify.guru",
+//                                 };
+//        NSLog(@"Parameter=>%@",params);
+//        
+//        [manager POST:[NSString stringWithFormat:@"http://teamhood.applifytech.com/index.php/chat_conversion"] parameters:params success:^(AFHTTPRequestOperation *operation, id json) {
+//            NSLog(@"JSON--->%@",json);
+//            if([json objectForKey:@"error"])
+//            {
+//                UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"error"]] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//                [myAlertView show];
+//            }
+//            else
+//            {
+//                
+//                
+//                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kLoginData];
+//                
+//                NSLog(@"count=%d",[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"response"] count]);
+//                for (int k=0; k<[[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData] objectForKey:@"response"] count]; k++) {
+//                    
+//                    
+//                    NSLog(@"message_status>>>>>>>>>>=%@",[[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]objectForKey:@"response"] objectAtIndex:k] objectForKey:@"to_email_user_id"]);
+//                }
+//                
+//                [[[[[NSUserDefaults standardUserDefaults]objectForKey:kLoginData]objectForKey:@"response"] objectAtIndex:0] valueForKey:@"massage"];
+//                
+//                [[NSUserDefaults standardUserDefaults] synchronize];
+//                
+//                
+//                
+//                
+////                userId = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"userid"]];
+////                firstName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"firstname"]];
+////                lastName  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"lastname"]];
+////                Email  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"email"]];
+////                //image  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"image"]];
+////                image = @"";
+////                Address  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"address"]];
+////                Zip  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"zip"]];
+////                DOB  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"dob"]];
+////                Height  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"height"]];
+////                Weight  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"weight"]];
+////                PhoneNumber  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"phone"]];
+////                Gender  = [NSString stringWithFormat:@"%@",[[[NSUserDefaults standardUserDefaults] objectForKey:kLoginData]valueForKey:@"gender"]];
+////                
+////                
+////                [self createDataBaseFunction];
+////                [self InsertIntoDataBase];
+//                
+//                VerifyAccountDetailViewController *veri=[[VerifyAccountDetailViewController  alloc]init];
+//                [self.navigationController pushViewController:veri animated:YES];
+//            }
+//            
+//            [self HideActivityIndicator];
+//            NSLog(@"JSON: %@", json);
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error)
+//         {
+//             NSLog(@"Error: %@", error.description);
+//             [self HideActivityIndicator];
+//             UIAlertView *unable=[[UIAlertView alloc]initWithTitle:nil  message:@"Unable to connect with server." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+//             [unable show];
+//         }];
+//        
+//    }
+//}
+
 /*
  #pragma mark - Navigation
  

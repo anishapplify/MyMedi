@@ -200,22 +200,22 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     //seemoreArrow.png
     
     
-    DropImageButtonArrow=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"seemoreArrow.png"].size.width, [UIImage imageNamed:@"seemoreArrow.png"].size.height)];
-    DropImageButtonArrow.image=[UIImage imageNamed:@"seemoreArrow.png"];
+    DropImageButtonArrow=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"PlusImage.png"].size.height)];
+    DropImageButtonArrow.image=[UIImage imageNamed:@"PlusImage.png"];
     
-    DropImageButtonArrow2=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"seemoreArrow.png"].size.width, [UIImage imageNamed:@"seemoreArrow.png"].size.height)];
-    DropImageButtonArrow2.image=[UIImage imageNamed:@"seemoreArrow.png"];
+    DropImageButtonArrow2=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"PlusImage.png"].size.height)];
+    DropImageButtonArrow2.image=[UIImage imageNamed:@"PlusImage.png"];
 
     //
     
-    DropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"openup.png"].size.width, [UIImage imageNamed:@"openup.png"].size.height)];
+    DropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"MinusImage.png"].size.width, [UIImage imageNamed:@"MinusImage.png"].size.height)];
     
-    DropImageButtonImageView.image=[UIImage imageNamed:@"openup.png"];
+    DropImageButtonImageView.image=[UIImage imageNamed:@"MinusImage.png"];
     
    ViewByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, TopBarView.frame.size.height+TopBarView.frame.origin.y+10, 320 , 45)];
     //ViewByButton.backgroundColor=[UIColor colorWithRed:138/255.0 green:140/255.0 blue:143/255.0 alpha:1.0];
    
-    ViewByButton.backgroundColor=[UIColor lightGrayColor];
+    ViewByButton.backgroundColor=[UIColor colorWithRed:2/255.0 green:145/255.0 blue:195/255.0 alpha:1.0];
     ViewByButton.tag=100;
     [ViewByButton setTitle:@"View By" forState:UIControlStateNormal];
     [ViewByButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -230,13 +230,13 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     [self.view addSubview:ViewByButton];
     
     
-    CancelDropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"openup.png"].size.width, [UIImage imageNamed:@"openup.png"].size.height)];
+    CancelDropImageButtonImageView=[[UIImageView alloc]initWithFrame:CGRectMake(280, 5, [UIImage imageNamed:@"PlusImage.png"].size.width, [UIImage imageNamed:@"PlusImage.png"].size.height)];
     
-    CancelDropImageButtonImageView.image=[UIImage imageNamed:@"openup.png"];
+    CancelDropImageButtonImageView.image=[UIImage imageNamed:@"PlusImage.png"];
     
     SortByButton=[[UIButton  alloc]initWithFrame:CGRectMake(0, ViewByButton.frame.size.height+ViewByButton.frame.origin.y+10, 320 , 45)];
    // SortByButton.backgroundColor=[UIColor colorWithRed:138/255.0 green:140/255.0 blue:143/255.0 alpha:1.0];
-     SortByButton.backgroundColor=[UIColor lightGrayColor];
+     SortByButton.backgroundColor=[UIColor colorWithRed:2/255.0 green:145/255.0 blue:195/255.0 alpha:1.0];
     
     SortByButton.tag=100;
     [SortByButton setTitle:@"Sort By" forState:UIControlStateNormal];
@@ -246,7 +246,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     SortByButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
     [SortByButton addTarget:self action:@selector(listBySortAction:) forControlEvents:UIControlEventTouchUpInside];
     SortByButton.exclusiveTouch=YES;
-      CancelDropImageButtonImageView.hidden=YES;
+    CancelDropImageButtonImageView.hidden=YES;
     [SortByButton addSubview:DropImageButtonArrow2];
      [SortByButton addSubview:CancelDropImageButtonImageView];
     
@@ -1254,6 +1254,15 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
 }
 -(void)BackButtonAction{
+    
+//    UserHomeScreenViewController *nextView=[[UserHomeScreenViewController alloc] init];
+//    [UIView  beginAnimations:nil context:NULL];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    [UIView setAnimationDuration:0.80];
+//    [self.navigationController pushViewController:nextView animated:NO];
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+//    [UIView commitAnimations];
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)previousDateSelected
@@ -2309,9 +2318,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                 
             {
                 
+                [[NSUserDefaults standardUserDefaults] setObject:json forKey:kSortDataShow];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
-              
-                
+                 [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isSortCreatedByUser"];
                // [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"isNewAppointmentCreatedByUser"];
                 
                 UIAlertView *complete=[[UIAlertView alloc]initWithTitle:nil  message:@"Done" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
