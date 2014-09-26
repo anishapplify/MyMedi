@@ -1,0 +1,63 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#import "Constants.h"
+#import "Reachability.h"
+#import "AsyncImageView.h"
+#import "AFHTTPRequestOperation.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "SVProgressHUD.h"
+#import "NMCustomLabel.h"
+#import "ASIFormDataRequest.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <MapKit/MapKit.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
+
+#import "MyMediViewController.h"
+#import "CreateAccountViewController.h"
+#import "CreateVerificationViewController.h"
+#import "HomeScreenViewController.h"
+#import "SWTableViewCell.h"
+#import "SettingScreenViewController.h"
+#import "NewMapViewController.h"
+#import "AppointmentListViewController.h"
+#import "MedicalListViewController.h"
+#import "AddAppointmentViewController.h"
+#import "AddMedicalRecordViewController.h"
+#import "AppointmentCalenderViewController.h"
+#import "EditListViewController.h"
+#import "TypeViewController.h"
+#import "ProviderViewController.h"
+#import "NotesViewController.h"
+#import "AttachmentsViewController.h"
+#import "ProfileViewController.h"
+#import "PersonalDetailsViewController.h"
+#import "AddressDetailViewController.h"
+#import "ContactDetailsViewController.h"
+#import "GPDetailsViewController.h"
+
+#import "MedicalTypesViewController.h"
+#import "MedicalProviderViewController.h"
+#import "MedicalNotesViewController.h"
+#import "MedicalAttachmentsViewController.h"
+#import "EmergencyContactViewController.h"
+#import "EmploymentDetailsViewController.h"
+#import "MedicationsViewController.h"
+#import "AllergiesDetailsViewController.h"
+#define NSLog(s,...)
+
+#endif
